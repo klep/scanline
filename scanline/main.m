@@ -7,15 +7,18 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "AppController.h"
 
 int main (int argc, const char * argv[])
 {
 
     NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
 
-    // insert code here...
-    NSLog(@"Hello, World!");
-
+    AppController* appController = [[AppController alloc] init];
+    [appController setArguments:argv withCount:argc];
+    [appController go];
+    
+    CFRunLoopRun();
     [pool drain];
     return 0;
 }
