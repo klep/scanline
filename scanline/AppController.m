@@ -18,6 +18,10 @@
    x make it possible to do double sided scanning or whatever it's called
    * clean it up!
    * -name option should also be used for aliases
+   * allow customization of Archive directory, or provide sensible default that doesn't include "klep"
+   * allow a .scanline.conf file to provide defaults
+   * have log levels so you don't see tons of stuff scrolling on every scan
+   * unit tests
  */
 
 //---------------------------------------------------------------------------------------------------------------- AppController
