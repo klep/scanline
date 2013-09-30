@@ -7,6 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "DDLog.h"
 
 @interface ScanConfiguration : NSObject {
     NSMutableArray*                 mTags;
@@ -29,3 +30,5 @@
 
 - (NSString*)configFilePath;
 @end
+
+extern int ddLogLevel;

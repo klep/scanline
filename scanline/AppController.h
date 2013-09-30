@@ -6,20 +6,18 @@
 #import <ImageCaptureCore/ImageCaptureCore.h>
 #import <PDFKit/PDFKit.h>
 
+#import "ScanConfiguration.h"
+
 //------------------------------------------------------------------------------------------------------------------------------
 
 @interface AppController : NSObject <ICDeviceBrowserDelegate, ICScannerDeviceDelegate>
 {
+    ScanConfiguration*              configuration;
     
     ICDeviceBrowser*                mDeviceBrowser;
     NSMutableArray*                 mScanners;
-    NSMutableArray*                 mTags;
     NSMutableArray*                 mScannedDestinationURLs;
-    NSString*                       mDir;
-    NSString*                       mName;
-    BOOL                            fDuplex;
-    BOOL                            fBatch;
-    BOOL                            fFlatbed;
+
     IBOutlet  NSWindow*             mWindow;
     IBOutlet  NSTableView*          mScannersTableView;
     IBOutlet  NSArrayController*    mScannersController;
@@ -28,7 +26,7 @@
     IBOutlet  NSTextField*          mStatusText;
 }
 
-@property(retain)   NSMutableArray* scanners;
+@property(strong)   NSMutableArray* scanners;
 
 - (void)setArguments:(const char* [])argv withCount:(int)argc;
 - (void)go;

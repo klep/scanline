@@ -21,6 +21,14 @@
 		FC656CA217F4BFC0001B3314 /* OCMock.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FC656CA117F4BFC0001B3314 /* OCMock.framework */; };
 		FC656CA617F4C646001B3314 /* OCMock.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = FC656CA117F4BFC0001B3314 /* OCMock.framework */; };
 		FC656CA817F4CF6D001B3314 /* config_test.conf in Resources */ = {isa = PBXBuildFile; fileRef = FC656CA717F4CF6D001B3314 /* config_test.conf */; };
+		FC656CFF17F50995001B3314 /* DDASLLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = FC656CF017F50995001B3314 /* DDASLLogger.m */; };
+		FC656D0017F50995001B3314 /* DDASLLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = FC656CF017F50995001B3314 /* DDASLLogger.m */; };
+		FC656D0117F50995001B3314 /* DDFileLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = FC656CF217F50995001B3314 /* DDFileLogger.m */; };
+		FC656D0217F50995001B3314 /* DDFileLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = FC656CF217F50995001B3314 /* DDFileLogger.m */; };
+		FC656D0317F50995001B3314 /* DDLog.m in Sources */ = {isa = PBXBuildFile; fileRef = FC656CF417F50995001B3314 /* DDLog.m */; };
+		FC656D0417F50995001B3314 /* DDLog.m in Sources */ = {isa = PBXBuildFile; fileRef = FC656CF417F50995001B3314 /* DDLog.m */; };
+		FC656D0517F50995001B3314 /* DDTTYLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = FC656CF617F50995001B3314 /* DDTTYLogger.m */; };
+		FC656D0617F50995001B3314 /* DDTTYLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = FC656CF617F50995001B3314 /* DDTTYLogger.m */; };
 		FC93E68E162946CB00D8C298 /* PDFKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FC93E68D162946CB00D8C298 /* PDFKit.framework */; };
 /* End PBXBuildFile section */
 
@@ -64,7 +72,7 @@
 		FC07A9E115FBEE7F005E7856 /* scanline.1 */ = {isa = PBXFileReference; lastKnownFileType = text.man; path = scanline.1; sourceTree = "<group>"; };
 		FC07A9E715FBEEAE005E7856 /* ImageCaptureCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ImageCaptureCore.framework; path = ../../../../System/Library/Frameworks/ImageCaptureCore.framework; sourceTree = "<group>"; };
 		FC07A9E915FBEFAA005E7856 /* AppController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppController.h; sourceTree = "<group>"; };
-		FC07A9EA15FBEFAA005E7856 /* AppController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppController.m; sourceTree = "<group>"; };
+		FC07A9EA15FBEFAA005E7856 /* AppController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = AppController.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		FC07A9EC15FBF0C6005E7856 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = ../../../../System/Library/Frameworks/CoreData.framework; sourceTree = "<group>"; };
 		FC07A9EE15FBF0DF005E7856 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = ../../../../System/Library/Frameworks/Cocoa.framework; sourceTree = "<group>"; };
 		FC656C8C17F4B29B001B3314 /* scanline Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "scanline Tests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -77,6 +85,14 @@
 		FC656C9E17F4B40A001B3314 /* ScanConfiguration.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ScanConfiguration.m; sourceTree = "<group>"; };
 		FC656CA117F4BFC0001B3314 /* OCMock.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = OCMock.framework; sourceTree = "<group>"; };
 		FC656CA717F4CF6D001B3314 /* config_test.conf */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = config_test.conf; sourceTree = "<group>"; };
+		FC656CEF17F50995001B3314 /* DDASLLogger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = DDASLLogger.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		FC656CF017F50995001B3314 /* DDASLLogger.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDASLLogger.m; sourceTree = "<group>"; };
+		FC656CF117F50995001B3314 /* DDFileLogger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDFileLogger.h; sourceTree = "<group>"; };
+		FC656CF217F50995001B3314 /* DDFileLogger.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = DDFileLogger.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
+		FC656CF317F50995001B3314 /* DDLog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = DDLog.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		FC656CF417F50995001B3314 /* DDLog.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = DDLog.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
+		FC656CF517F50995001B3314 /* DDTTYLogger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = DDTTYLogger.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		FC656CF617F50995001B3314 /* DDTTYLogger.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = DDTTYLogger.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		FC93E68D162946CB00D8C298 /* PDFKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PDFKit.framework; path = ../../../../System/Library/Frameworks/Quartz.framework/Versions/A/Frameworks/PDFKit.framework; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -127,6 +143,7 @@
 		FC07A9D915FBEE7F005E7856 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				FC656CEC17F50995001B3314 /* Lumberjack */,
 				FC656CA117F4BFC0001B3314 /* OCMock.framework */,
 				FC93E68D162946CB00D8C298 /* PDFKit.framework */,
 				FC07A9EE15FBF0DF005E7856 /* Cocoa.framework */,
@@ -178,6 +195,22 @@
 				FC656C9717F4B29C001B3314 /* scanline Tests-Prefix.pch */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		FC656CEC17F50995001B3314 /* Lumberjack */ = {
+			isa = PBXGroup;
+			children = (
+				FC656CEF17F50995001B3314 /* DDASLLogger.h */,
+				FC656CF017F50995001B3314 /* DDASLLogger.m */,
+				FC656CF117F50995001B3314 /* DDFileLogger.h */,
+				FC656CF217F50995001B3314 /* DDFileLogger.m */,
+				FC656CF317F50995001B3314 /* DDLog.h */,
+				FC656CF417F50995001B3314 /* DDLog.m */,
+				FC656CF517F50995001B3314 /* DDTTYLogger.h */,
+				FC656CF617F50995001B3314 /* DDTTYLogger.m */,
+			);
+			name = Lumberjack;
+			path = "CocoaLumberjack-master/Lumberjack";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -267,9 +300,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FC656D0317F50995001B3314 /* DDLog.m in Sources */,
+				FC656D0517F50995001B3314 /* DDTTYLogger.m in Sources */,
 				FC07A9DE15FBEE7F005E7856 /* main.m in Sources */,
+				FC656D0117F50995001B3314 /* DDFileLogger.m in Sources */,
 				FC07A9EB15FBEFAA005E7856 /* AppController.m in Sources */,
 				FC656C9F17F4B40A001B3314 /* ScanConfiguration.m in Sources */,
+				FC656CFF17F50995001B3314 /* DDASLLogger.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -277,8 +314,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FC656D0417F50995001B3314 /* DDLog.m in Sources */,
+				FC656D0017F50995001B3314 /* DDASLLogger.m in Sources */,
 				FC656C9617F4B29C001B3314 /* scanline_Tests.m in Sources */,
 				FC656CA017F4B40A001B3314 /* ScanConfiguration.m in Sources */,
+				FC656D0617F50995001B3314 /* DDTTYLogger.m in Sources */,
+				FC656D0217F50995001B3314 /* DDFileLogger.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -356,6 +397,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ENABLE_OBJC_ARC = YES;
 				COPY_PHASE_STRIP = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -365,6 +407,7 @@
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "scanline/scanline-Prefix.pch";
+				MACOSX_DEPLOYMENT_TARGET = 10.6.8;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -373,6 +416,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ENABLE_OBJC_ARC = YES;
 				COPY_PHASE_STRIP = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				FRAMEWORK_SEARCH_PATHS = (
@@ -382,6 +426,7 @@
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "scanline/scanline-Prefix.pch";
+				MACOSX_DEPLOYMENT_TARGET = 10.6.8;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;

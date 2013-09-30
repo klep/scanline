@@ -12,14 +12,14 @@
 int main (int argc, const char * argv[])
 {
 
-    NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
+    @autoreleasepool {
 
-    AppController* appController = [[AppController alloc] init];
-    [appController setArguments:argv withCount:argc];
-    [appController go];
-    
-    CFRunLoopRun();
-    [pool drain];
+        AppController* appController = [[AppController alloc] init];
+        [appController setArguments:argv withCount:argc];
+        [appController go];
+        
+        CFRunLoopRun();
+    }
     return 0;
 }
 

@@ -7,6 +7,9 @@
 //
 
 #import "ScanConfiguration.h"
+#import "DDLog.h"
+
+int ddLogLevel = LOG_LEVEL_INFO;
 
 @implementation ScanConfiguration
 
@@ -14,6 +17,12 @@
 {
     if (self = [super init]) {
         _tags = [NSMutableArray array];
+        _duplex = NO;
+        _batch = NO;
+        _flatbed = NO;
+        _dir = [NSString stringWithFormat:@"%@/Documents/Archive", NSHomeDirectory()];
+        _name = nil;
+        
         [self loadConfigurationDefaults];
         [self loadConfigurationFromFile];
     }
@@ -41,7 +50,7 @@
 - (void)loadConfigurationFromFile
 {
     NSString* configPath = [self configFilePath];
-    NSLog(@"configPath: %@", configPath);
+    DDLogVerbose(@"configPath: %@", configPath);
     
     if ([[NSFileManager defaultManager] isReadableFileAtPath:configPath]) {
         NSString* valueString = [NSString stringWithContentsOfFile:configPath encoding:NSUTF8StringEncoding error:nil];
@@ -71,6 +80,9 @@
                 i++;
                 [self setName:[NSString stringWithString:[inArguments objectAtIndex:i]]];
             }
+        } else if ([theArg isEqualToString:@"-v"] || [theArg isEqualToString:@"-verbose"]) {
+            ddLogLevel = LOG_LEVEL_VERBOSE;
+            DDLogVerbose(@"Verbose logging enabled.");
         } else {
             [_tags addObject:theArg];
         }

@@ -3,6 +3,9 @@
  */
 
 #import "AppController.h"
+#import "DDLog.h"
+#import "DDASLLogger.h"
+#import "DDTTYLogger.h"
 
 /*
  *****
@@ -18,10 +21,17 @@
    x make it possible to do double sided scanning or whatever it's called
    * clean it up!
    * -name option should also be used for aliases
-   * allow customization of Archive directory, or provide sensible default that doesn't include "klep"
-   * allow a .scanline.conf file to provide defaults
-   * have log levels so you don't see tons of stuff scrolling on every scan
-   * unit tests
+   x allow customization of Archive directory, or provide sensible default that doesn't include "klep"
+   x allow a .scanline.conf file to provide defaults
+   x have log levels so you don't see tons of stuff scrolling on every scan
+   x config unit tests
+   * actual scanning unit tests
+   * get rid of UI cruft
+   * exit cfrunloop properly (timer?)
+   * quit if no scanners are detected in a certain time period
+   * add an option for scan resolution
+   * scanner listing/selection (support for multiple scanners)
+   * jpeg mode?
  */
 
 //---------------------------------------------------------------------------------------------------------------- AppController
@@ -37,47 +47,11 @@
 
 - (void)setArguments:(const char* [])argv withCount:(int)argc
 {
-    NSLog(@"Received %d arguments", argc);
-    
-    fDuplex = NO;
-    fBatch = NO;
-    fFlatbed = NO;
-    mDir = @"/Users/klep/Documents/Archive";
-    mName = nil;
-    
-    mTags = [NSMutableArray arrayWithCapacity:(argc-1)];
-
+    NSMutableArray *argArray = [NSMutableArray arrayWithCapacity:argc];
     for (int i = 1; i < argc; i++) {
-        NSString* theArg = [NSString stringWithFormat:@"%s", argv[i]];
-        if ([theArg isEqualToString:@"-duplex"]) {
-            NSLog(@"Duplex");
-            fDuplex = YES;
-        } else if ([theArg isEqualToString:@"-batch"]) {
-            NSLog(@"Batch");
-            fBatch = YES;
-        } else if ([theArg isEqualToString:@"-flatbed"]) {
-            NSLog(@"Flatbed");
-            fFlatbed = YES;
-        } else if ([theArg isEqualToString:@"-dir"]) {
-            NSLog(@"Dir");
-            if (i < argc && argv[i+1] != nil) {
-                i++;
-                mDir = [NSString stringWithFormat:@"%s", argv[i]];
-                NSLog(@"Dir: %@", mDir);
-            }
-        } else if ([theArg isEqualToString:@"-name"]) {
-            NSLog(@"Name");
-            if (i < argc && argv[i+1] != nil) {
-                i++;
-                mName = [NSString stringWithFormat:@"%s", argv[i]];
-                NSLog(@"Name: %@", mName);
-            }
-        } else {
-            NSLog(@"Tag: %s", argv[i]);
-            [mTags addObject:theArg];
-        }
+        [argArray addObject:[NSString stringWithCString:argv[i] encoding:NSUTF8StringEncoding]];
     }
-    
+    configuration = [[ScanConfiguration alloc] initWithArguments:argArray];
     mScannedDestinationURLs = [NSMutableArray arrayWithCapacity:1];
 }
 
@@ -85,25 +59,23 @@
 
 + (void)initialize
 {
-  //  CGImageRefToNSImageTransformer *imageTransformer = [[CGImageRefToNSImageTransformer alloc] init];
-  //  [NSValueTransformer setValueTransformer:imageTransformer forName:@"NSImageFromCGImage"];
 }
 
 //----------------------------------------------------------------------------------------------- applicationDidFinishLaunching:
 
 - (void)applicationDidFinishLaunching:(NSNotification*)notification
 {
+    [DDLog addLogger:[DDASLLogger sharedInstance]];
+    [DDLog addLogger:[DDTTYLogger sharedInstance]];
+    
     mScanners = [[NSMutableArray alloc] initWithCapacity:0];
     [mScannersController setSelectsInsertedObjects:NO];
 
     mDeviceBrowser = [[ICDeviceBrowser alloc] init];
     mDeviceBrowser.delegate = self;
     mDeviceBrowser.browsedDeviceTypeMask = ICDeviceLocationTypeMaskLocal|ICDeviceLocationTypeMaskRemote|ICDeviceTypeMaskScanner;
-    NSLog(@"starting device browser...");
     [mDeviceBrowser start];
-    
-//    [mFunctionalUnitMenu removeAllItems];
-//    [mFunctionalUnitMenu setEnabled:NO];
+    DDLogVerbose(@"Looking for available scanners...");
 }
 
 //---------------------------------------------------------------------------------------------------- applicationWillTerminate:
@@ -121,7 +93,8 @@
 
 - (void)deviceBrowser:(ICDeviceBrowser*)browser didAddDevice:(ICDevice*)addedDevice moreComing:(BOOL)moreComing
 {
-  //  NSLog( @"deviceBrowser:didAddDevice:moreComing: \n%@\n", addedDevice );
+    DDLogVerbose(@"Found scanner: %@", addedDevice.name);
+  // DDLogVerbose( @"deviceBrowser:didAddDevice:moreComing: \n%@\n", addedDevice );
     
     if ( (addedDevice.type & ICDeviceTypeMaskScanner) == ICDeviceTypeScanner )
     {
@@ -132,7 +105,7 @@
     }
     
     if (!moreComing) {
-        NSLog(@"All devices have been added.");
+        DDLogVerbose(@"All devices have been added.");
         [self openCloseSession:nil];
  //       [self selectFunctionalUnit:0];
     }
@@ -142,7 +115,7 @@
 
 - (void)deviceBrowser:(ICDeviceBrowser*)browser didRemoveDevice:(ICDevice*)removedDevice moreGoing:(BOOL)moreGoing;
 {
-    NSLog( @"deviceBrowser:didRemoveDevice: \n%@\n", removedDevice );
+    DDLogVerbose( @"deviceBrowser:didRemoveDevice: \n%@\n", removedDevice );
     [mScannersController removeObject:removedDevice];
 }
 
@@ -150,21 +123,21 @@
 
 - (void)deviceBrowser:(ICDeviceBrowser*)browser deviceDidChangeName:(ICDevice*)device;
 {
-    NSLog( @"deviceBrowser:\n%@\ndeviceDidChangeName: \n%@\n", browser, device );
+    DDLogVerbose( @"deviceBrowser:\n%@\ndeviceDidChangeName: \n%@\n", browser, device );
 }
 
 //----------------------------------------------------------------------------------- deviceBrowser:deviceDidChangeSharingState:
 
 - (void)deviceBrowser:(ICDeviceBrowser*)browser deviceDidChangeSharingState:(ICDevice*)device;
 {
-    NSLog( @"deviceBrowser:\n%@\ndeviceDidChangeSharingState: \n%@\n", browser, device );
+    DDLogVerbose( @"deviceBrowser:\n%@\ndeviceDidChangeSharingState: \n%@\n", browser, device );
 }
 
 //--------------------------------------------------------------------------------- deviceBrowser:didReceiveButtonPressOnDevice:
 
 - (void)deviceBrowser:(ICDeviceBrowser*)browser requestsSelectDevice:(ICDevice*)device
 {
-    NSLog( @"deviceBrowser:\n%@\nrequestsSelectDevice: \n%@\n", browser, device );
+    DDLogVerbose( @"deviceBrowser:\n%@\nrequestsSelectDevice: \n%@\n", browser, device );
 }
 
 #pragma mark -
@@ -173,7 +146,7 @@
 
 - (void)didRemoveDevice:(ICDevice*)removedDevice
 {
-    NSLog( @"didRemoveDevice: \n%@\n", removedDevice );
+    DDLogVerbose( @"didRemoveDevice: \n%@\n", removedDevice );
     [mScannersController removeObject:removedDevice];
 }
 
@@ -181,9 +154,9 @@
 
 - (void)device:(ICDevice*)device didOpenSessionWithError:(NSError*)error
 {
-    NSLog( @"device:didOpenSessionWithError: \n" );
-//    NSLog( @"  device: %@\n", device );
-    NSLog( @"  error : %@\n", error );
+    DDLogVerbose( @"device:didOpenSessionWithError: \n" );
+//    DDLogVerbose( @"  device: %@\n", device );
+    DDLogVerbose( @"  error : %@\n", error );
  //   [self startScan:self];
     
     [self selectFunctionalUnit:0];
@@ -196,7 +169,7 @@
     NSArray*                    availabeTypes   = [scanner availableFunctionalUnitTypes];
     ICScannerFunctionalUnit*    functionalUnit  = scanner.selectedFunctionalUnit;
         
- //   NSLog( @"scannerDeviceDidBecomeReady: \n%@\n", scanner );
+ //   DDLogVerbose( @"scannerDeviceDidBecomeReady: \n%@\n", scanner );
         
 //    [mFunctionalUnitMenu removeAllItems];
 //    [mFunctionalUnitMenu setEnabled:NO];
@@ -241,7 +214,7 @@
         [mFunctionalUnitMenu setMenu:menu];
     }
     */
- //   NSLog( @"observeValueForKeyPath - functionalUnit: %@\n", functionalUnit );
+ //   DDLogVerbose( @"observeValueForKeyPath - functionalUnit: %@\n", functionalUnit );
     
 //    [self selectFunctionalUnit:nil];
     // TODO: I think we need to manually select a functional unit
@@ -254,30 +227,30 @@
 
 - (void)device:(ICDevice*)device didCloseSessionWithError:(NSError*)error
 {
-    NSLog( @"device:didCloseSessionWithError: \n" );
- //   NSLog( @"  device: %@\n", device );
-    NSLog( @"  error : %@\n", error );
+    DDLogVerbose( @"device:didCloseSessionWithError: \n" );
+ //   DDLogVerbose( @"  device: %@\n", device );
+    DDLogVerbose( @"  error : %@\n", error );
 }
 
 //--------------------------------------------------------------------------------------------------------- deviceDidChangeName:
 
 - (void)deviceDidChangeName:(ICDevice*)device;
 {
-    NSLog( @"deviceDidChangeName: \n%@\n", device );
+    DDLogVerbose( @"deviceDidChangeName: \n%@\n", device );
 }
 
 //------------------------------------------------------------------------------------------------- deviceDidChangeSharingState:
 
 - (void)deviceDidChangeSharingState:(ICDevice*)device
 {
-    NSLog( @"deviceDidChangeSharingState: \n%@\n", device );
+    DDLogVerbose( @"deviceDidChangeSharingState: \n%@\n", device );
 }
 
 //------------------------------------------------------------------------------------------ device:didReceiveStatusInformation:
 
 - (void)device:(ICDevice*)device didReceiveStatusInformation:(NSDictionary*)status
 {
-    NSLog( @"device: \n%@\ndidReceiveStatusInformation: \n%@\n", device, status );
+    DDLogVerbose( @"device: \n%@\ndidReceiveStatusInformation: \n%@\n", device, status );
     
     if ( [[status objectForKey:ICStatusNotificationKey] isEqualToString:ICScannerStatusWarmingUp] )
     {
@@ -299,21 +272,21 @@
 
 - (void)device:(ICDevice*)device didEncounterError:(NSError*)error
 {
-    NSLog( @"device: \n%@\ndidEncounterError: \n%@\n", device, error );
+    DDLogVerbose( @"device: \n%@\ndidEncounterError: \n%@\n", device, error );
 }
 
 //----------------------------------------------------------------------------------------- scannerDevice:didReceiveButtonPress:
 
 - (void)device:(ICDevice*)device didReceiveButtonPress:(NSString*)button
 {
-    NSLog( @"device: \n%@\ndidReceiveButtonPress: \n%@\n", device, button );
+    DDLogVerbose( @"device: \n%@\ndidReceiveButtonPress: \n%@\n", device, button );
 }
 
 //--------------------------------------------------------------------------------------------- scannerDeviceDidBecomeAvailable:
 
 - (void)scannerDeviceDidBecomeAvailable:(ICScannerDevice*)scanner;
 {
-    NSLog( @"scannerDeviceDidBecomeAvailable: \n%@\n", scanner );
+    DDLogVerbose( @"scannerDeviceDidBecomeAvailable: \n%@\n", scanner );
     [scanner requestOpenSession];
 }
 
@@ -321,17 +294,17 @@
 
 - (void)scannerDevice:(ICScannerDevice*)scanner didSelectFunctionalUnit:(ICScannerFunctionalUnit*)functionalUnit error:(NSError*)error
 {
- //   NSLog( @"scannerDevice:didSelectFunctionalUnit:error:contextInfo:\n" );
-  //  NSLog( @"  scanner:        %@:\n", scanner );
- //   NSLog( @"  functionalUnit: %@:\n", functionalUnit );
- //   NSLog( @"  functionalUnit: %@:\n", scanner.selectedFunctionalUnit );
-    NSLog( @"  selected functionalUnitType: %ld\n", scanner.selectedFunctionalUnit.type);
+ //   DDLogVerbose( @"scannerDevice:didSelectFunctionalUnit:error:contextInfo:\n" );
+  //  DDLogVerbose( @"  scanner:        %@:\n", scanner );
+ //   DDLogVerbose( @"  functionalUnit: %@:\n", functionalUnit );
+ //   DDLogVerbose( @"  functionalUnit: %@:\n", scanner.selectedFunctionalUnit );
+    DDLogVerbose( @"  selected functionalUnitType: %ld\n", scanner.selectedFunctionalUnit.type);
 
-    BOOL correctFunctionalUnit = (fFlatbed && scanner.selectedFunctionalUnit.type == ICScannerFunctionalUnitTypeFlatbed) || (!fFlatbed && scanner.selectedFunctionalUnit.type == ICScannerFunctionalUnitTypeDocumentFeeder);
+    BOOL correctFunctionalUnit = ([configuration isFlatbed] && scanner.selectedFunctionalUnit.type == ICScannerFunctionalUnitTypeFlatbed) || (![configuration isFlatbed] && scanner.selectedFunctionalUnit.type == ICScannerFunctionalUnitTypeDocumentFeeder);
     if (correctFunctionalUnit && error == NULL) {
        [self startScan:self];
     } else {
-        NSLog( @"  error:          %@\n", error );
+        DDLogVerbose( @"  error:          %@\n", error );
        [self selectFunctionalUnit:self];
     }
 
@@ -341,10 +314,10 @@
 
 - (void)scannerDevice:(ICScannerDevice*)scanner didScanToURL:(NSURL*)url data:(NSData*)data
 {
-    NSLog( @"scannerDevice:didScanToURL:data: \n" );
-//    NSLog( @"  scanner: %@", scanner );
-    NSLog( @"  url:     %@", url );
-    NSLog( @"  data:    %p\n", data );
+    DDLogVerbose( @"scannerDevice:didScanToURL:data: \n" );
+//    DDLogVerbose( @"  scanner: %@", scanner );
+    DDLogVerbose( @"  url:     %@", url );
+    DDLogVerbose( @"  data:    %p\n", data );
     
     [mScannedDestinationURLs addObject:url];
     
@@ -355,7 +328,7 @@
 
 - (void)scannerDevice:(ICScannerDevice*)scanner didCompleteOverviewScanWithError:(NSError*)error;
 {
-    NSLog( @"scannerDevice: \n%@\ndidCompleteOverviewScanWithError: \n%@\n", scanner, error );
+    DDLogVerbose( @"scannerDevice: \n%@\ndidCompleteOverviewScanWithError: \n%@\n", scanner, error );
     [mProgressIndicator setHidden:YES];
 }
 
@@ -363,10 +336,10 @@
 
 - (void)scannerDevice:(ICScannerDevice*)scanner didCompleteScanWithError:(NSError*)error;
 {
-    NSLog( @"scannerDevice: \n%@\ndidCompleteScanWithError: \n%@\n", scanner, error );
+    DDLogVerbose( @"scannerDevice: \n%@\ndidCompleteScanWithError: \n%@\n", scanner, error );
 
-    if (fBatch) {
-        NSLog(@"Press RETURN to scan next page or S to stop");
+    if ([configuration isBatch]) {
+        DDLogVerbose(@"Press RETURN to scan next page or S to stop");
         int userInput;
         userInput = getchar();
         if (userInput != 's' && userInput != 'S')
@@ -385,27 +358,26 @@
     NSInteger minute = [dateComponents minute];
     NSInteger second = [dateComponents second];
     NSInteger year = [dateComponents year];
-    [gregorian release];
     
     NSFileManager *fm = [NSFileManager defaultManager];
     // If there's a tag, move the file to the first tag location
 
-    NSLog(@"creating directory");
-    NSString* path = mDir;
-    if ([mTags count] > 0) {
-        path = [NSString stringWithFormat:@"%@/%@/%ld", mDir, [mTags objectAtIndex:0], year];
+    DDLogVerbose(@"creating directory");
+    NSString* path = [configuration dir];
+    if ([[configuration tags] count] > 0) {
+        path = [NSString stringWithFormat:@"%@/%@/%ld", [configuration dir], [[configuration tags] objectAtIndex:0], year];
     }
-    NSLog(@"path: %@", path);
+    DDLogVerbose(@"path: %@", path);
     [fm createDirectoryAtPath:path withIntermediateDirectories:YES attributes:nil error:nil];
 
-    NSString* destinationFileRoot = (mName == nil) ? [NSString stringWithFormat:@"%@/scan_%02ld%02ld%02ld", path, hour, minute, second] :
-                                                     [NSString stringWithFormat:@"%@/%@", path, mName];
+    NSString* destinationFileRoot = ([configuration name] == nil) ? [NSString stringWithFormat:@"%@/scan_%02ld%02ld%02ld", path, hour, minute, second] :
+                                                     [NSString stringWithFormat:@"%@/%@", path, [configuration name]];
     NSString* destinationFile = [NSString stringWithFormat:@"%@.pdf", destinationFileRoot];
-    NSLog(@"destinationFileRoot: %@", destinationFileRoot   );
+    DDLogVerbose(@"destinationFileRoot: %@", destinationFileRoot   );
     int i = 0;
     while ([fm fileExistsAtPath:destinationFile]) {
         destinationFile = [NSString stringWithFormat:@"%@_%d.pdf", destinationFileRoot, i];
-        NSLog(@"destinationFile: %@", destinationFile);
+        DDLogVerbose(@"destinationFile: %@", destinationFile);
         i++;
     }
     
@@ -418,18 +390,19 @@
     // NOTE: Since we're now scanning JPEGs, this will turn any number of JPEGs into a single PDF.
     NSURL* scannedDestinationURL = [self combinedScanDestinations];
     if (scannedDestinationURL == NULL) {
-        NSLog(@"No document was scanned.");
+        DDLogError(@"No document was scanned.");
         exit(0);
     }
     
-    NSLog(@"about to copy %@ to %@", scannedDestinationURL, [NSURL fileURLWithPath:destinationFile]);
+    DDLogVerbose(@"about to copy %@ to %@", scannedDestinationURL, [NSURL fileURLWithPath:destinationFile]);
     [fm copyItemAtURL:scannedDestinationURL toURL:[NSURL fileURLWithPath:destinationFile] error:nil];
-    NSLog(@"file copied");
+    DDLogVerbose(@"file copied");
+    DDLogInfo(@"Scanned to: %@", destinationFile);
     
     // alias to all the other tag locations
-    for (int i = 1; i < [mTags count]; i++) {
-        NSLog(@"aliasing to tag: %@", [mTags objectAtIndex:i]);
-        NSString* aliasDirPath = [NSString stringWithFormat:@"%@/%@/%ld", mDir, [mTags objectAtIndex:i], year];
+    for (int i = 1; i < [[configuration tags] count]; i++) {
+        DDLogVerbose(@"aliasing to tag: %@", [[configuration tags] objectAtIndex:i]);
+        NSString* aliasDirPath = [NSString stringWithFormat:@"%@/%@/%ld", [configuration dir], [[configuration tags] objectAtIndex:i], year];
         [fm createDirectoryAtPath:aliasDirPath withIntermediateDirectories:YES attributes:nil error:nil];
         NSString* aliasFilePath = [NSString stringWithFormat:@"%@/scan_%02ld%02ld%02ld.pdf", aliasDirPath, hour, minute, second];
         int suffix = 0;
@@ -437,8 +410,9 @@
             aliasFilePath = [NSString stringWithFormat:@"%@/scan_%02ld%02ld%02ld_%d.pdf", aliasDirPath, hour, minute, second, suffix];
             suffix++;
         }
-        NSLog(@"aliasing to %@", aliasFilePath);
+        DDLogVerbose(@"aliasing to %@", aliasFilePath);
         [fm createSymbolicLinkAtPath:aliasFilePath withDestinationPath:destinationFile error:nil];
+        DDLogInfo(@"Aliased to: %@", aliasFilePath);
     }
 
     exit(0);
@@ -468,21 +442,21 @@
     
     // save the document
     NSString* tempFile = [NSTemporaryDirectory() stringByAppendingPathComponent:@"scan.pdf"];
-    NSLog(@"writing to tempFile: %@", tempFile);
+    DDLogVerbose(@"writing to tempFile: %@", tempFile);
     [outputDocument writeToFile:tempFile];
     return [[NSURL alloc] initFileURLWithPath:tempFile];
 }
 
 - (void)go
 {
-    NSLog( @"go");
+    DDLogVerbose( @"go");
     
     [self applicationDidFinishLaunching:nil];
     
     // wait
   /*  while ([mScanners count] == 0) {
         [NSThread sleepUntilDate:[NSDate dateWithTimeIntervalSinceNow:2]];
-        NSLog(@"waiting...");
+        DDLogVerbose(@"waiting...");
     }*/
 }
 
@@ -498,33 +472,33 @@
 
 - (IBAction)selectFunctionalUnit:(id)sender
 {
-    NSLog(@"setting functional unit");
+    DDLogVerbose(@"setting functional unit");
     ICScannerDevice* scanner = [mScanners objectAtIndex:0];
 
     /*  ICScannerFunctionalUnit* unit = [[scanner availableFunctionalUnitTypes] objectAtIndex:0];
     
     for (int i = 0; i < [[scanner availableFunctionalUnitTypes] count]; i++) {
         ICScannerFunctionalUnit* thisUnit = [[scanner availableFunctionalUnitTypes] objectAtIndex:i];
-        NSLog(@"this unit: %@", thisUnit);
+        DDLogVerbose(@"this unit: %@", thisUnit);
         if (fFlatbed && thisUnit != nil && thisUnit.type == ICScannerFunctionalUnitTypeFlatbed) {
-            NSLog(@"found flatbed");
+            DDLogVerbose(@"found flatbed");
             unit = thisUnit;
         } else if (!fFlatbed && thisUnit != nil && thisUnit.type == ICScannerFunctionalUnitTypeDocumentFeeder) {
-            NSLog(@"FOUND DOC FEEDER!");
+            DDLogVerbose(@"FOUND DOC FEEDER!");
             unit = thisUnit;
         }
     }*/
   
-   // NSLog( @"  scanner: %@", scanner );
+   // DDLogVerbose( @"  scanner: %@", scanner );
 
-//    NSLog(@"unit: %@", unit);
+//    DDLogVerbose(@"unit: %@", unit);
    
-    NSLog(@"current functional unit: %ld", scanner.selectedFunctionalUnit.type);
-    NSLog(@"doc feeder is %d", ICScannerFunctionalUnitTypeDocumentFeeder);
-    NSLog(@"flatbed is %d", ICScannerFunctionalUnitTypeFlatbed);
+    DDLogVerbose(@"current functional unit: %ld", scanner.selectedFunctionalUnit.type);
+    DDLogVerbose(@"doc feeder is %d", ICScannerFunctionalUnitTypeDocumentFeeder);
+    DDLogVerbose(@"flatbed is %d", ICScannerFunctionalUnitTypeFlatbed);
   
 //    [scanner requestSelectFunctionalUnit:(long)[[scanner availableFunctionalUnitTypes] objectAtIndex:1]];
-    [scanner requestSelectFunctionalUnit:(ICScannerFunctionalUnitType) (fFlatbed ? ICScannerFunctionalUnitTypeFlatbed : ICScannerFunctionalUnitTypeDocumentFeeder) ];
+    [scanner requestSelectFunctionalUnit:(ICScannerFunctionalUnitType) ([configuration isFlatbed] ? ICScannerFunctionalUnitTypeFlatbed : ICScannerFunctionalUnitTypeDocumentFeeder) ];
 //    if (scanner.selectedFunctionalUnit.type != unit.type) {
   //      [scanner requestSelectFunctionalUnit:unit.type];
     //}
@@ -573,7 +547,7 @@
    
   //  [self selectFunctionalUnit:nil];
     
-    NSLog(@"starting scan");
+    DDLogVerbose(@"starting scan");
     
     if ( ( fu.scanInProgress == NO ) && ( fu.overviewScanInProgress == NO ) )
     {
@@ -582,7 +556,7 @@
             ICScannerFunctionalUnitDocumentFeeder* dfu = (ICScannerFunctionalUnitDocumentFeeder*)fu;
             
             dfu.documentType  = ICScannerDocumentTypeUSLetter;
-            dfu.duplexScanningEnabled = fDuplex;
+            dfu.duplexScanningEnabled = [configuration isDuplex];
         }
         else
         {
@@ -611,8 +585,8 @@
         scanner.documentUTI             = (id)kUTTypeJPEG;
 
 
- //       NSLog(@"current scanner: %@", scanner);
-        NSLog(@"final functional unit before scanning: %d", (int)scanner.selectedFunctionalUnit.type);
+ //       DDLogVerbose(@"current scanner: %@", scanner);
+        DDLogVerbose(@"final functional unit before scanning: %d", (int)scanner.selectedFunctionalUnit.type);
      //  exit(0); // TODO. this quits before scanning. remove to actually scan.
 
         [scanner requestScan];
