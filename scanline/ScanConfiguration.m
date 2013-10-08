@@ -19,9 +19,11 @@ int ddLogLevel = LOG_LEVEL_INFO;
         _tags = [NSMutableArray arrayWithCapacity:0];
         _duplex = NO;
         _batch = NO;
+        _list = NO;
         _flatbed = NO;
         _dir = [NSString stringWithFormat:@"%@/Documents/Archive", NSHomeDirectory()];
         _name = nil;
+        _scanner = nil;
         
         [self loadConfigurationDefaults];
         [self loadConfigurationFromFile];
@@ -44,11 +46,13 @@ int ddLogLevel = LOG_LEVEL_INFO;
 
 - (void)print
 {
-    DDLogInfo(@"fFlatbed: %d", fFlatbed);
-    DDLogInfo(@"fBatch: %d", fBatch);
-    DDLogInfo(@"mName: %@", mName);
-    DDLogInfo(@"mDir: %@", mDir);
-    DDLogInfo(@"mScannedDestinationURLs: %@", mScannedDestinationURLs);
+    DDLogInfo(@"fList: %d", _list);
+    DDLogInfo(@"fFlatbed: %d", _flatbed);
+    DDLogInfo(@"fBatch: %d", _batch);
+    DDLogInfo(@"fDuplex: %d", _duplex);
+    DDLogInfo(@"mName: %@", _name);
+    DDLogInfo(@"mDir: %@", _dir);
+    DDLogInfo(@"mScanner: %@", _scanner);
     DDLogInfo(@"mTags: %@", _tags);
 }
 
@@ -77,6 +81,8 @@ int ddLogLevel = LOG_LEVEL_INFO;
 
         if ([theArg isEqualToString:@"-duplex"]) {
             [self setDuplex:YES];
+        } else if ([theArg isEqualToString:@"-list"]) {
+            _list = YES;
         } else if ([theArg isEqualToString:@"-batch"]) {
             [self setBatch:YES];
         } else if ([theArg isEqualToString:@"-flatbed"]) {
@@ -94,6 +100,11 @@ int ddLogLevel = LOG_LEVEL_INFO;
         } else if ([theArg isEqualToString:@"-v"] || [theArg isEqualToString:@"-verbose"]) {
             ddLogLevel = LOG_LEVEL_VERBOSE;
             DDLogVerbose(@"Verbose logging enabled.");
+        } else if ([theArg isEqualToString:@"-scanner"]) {
+            if (i < [inArguments count] && [inArguments objectAtIndex:i+1] != nil) {
+                i++;
+                [self setScanner:[NSString stringWithString:[inArguments objectAtIndex:i]]];
+            }
         } else if (![theArg isEqualToString:@""]) {
             DDLogVerbose(@"Adding tag: %@", theArg);
             [_tags addObject:theArg];

@@ -17,16 +17,12 @@
     ICDeviceBrowser*                mDeviceBrowser;
     NSMutableArray*                 mScanners;
     NSMutableArray*                 mScannedDestinationURLs;
-
-    IBOutlet  NSWindow*             mWindow;
-    IBOutlet  NSTableView*          mScannersTableView;
-    IBOutlet  NSArrayController*    mScannersController;
-    IBOutlet  NSPopUpButton*        mFunctionalUnitMenu;
-    IBOutlet  NSProgressIndicator*  mProgressIndicator;
-    IBOutlet  NSTextField*          mStatusText;
+    
+    NSTimer*                        mDeviceTimer;
 }
 
-@property(strong)   NSMutableArray* scanners;
+@property(strong)                   NSMutableArray*     scanners;
+@property (getter = isSuccessful)   BOOL                successful;
 
 - (void)setArguments:(const char* [])argv withCount:(int)argc;
 - (void)go;

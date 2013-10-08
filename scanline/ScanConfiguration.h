@@ -10,19 +10,16 @@
 #import "DDLog.h"
 
 @interface ScanConfiguration : NSObject {
-    NSMutableArray*                 mScannedDestinationURLs;
-    NSString*                       mDir;
-    NSString*                       mName;
-    BOOL                            fBatch;
-    BOOL                            fFlatbed;
 }
 
 @property (getter = isDuplex)   BOOL               duplex;
 @property (getter = isBatch)    BOOL               batch;
 @property (getter = isFlatbed)  BOOL               flatbed;
+@property (getter = listOnly)   BOOL               list;
 @property (strong)              NSString*          dir;
 @property (strong)              NSString*          name;
 @property (strong)              NSMutableArray*    tags;
+@property (strong)              NSString*          scanner;
 
 - (id)init;
 - (id)initWithArguments:(NSArray *)inArguments;

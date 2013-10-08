@@ -78,5 +78,4 @@ ScanConfiguration *config;
     XCTAssertTrue([[[config tags] objectAtIndex:0] isEqualToString:@"taxes-2013"]);
 }
 
-
 @end

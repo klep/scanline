@@ -27,8 +27,8 @@
    x config unit tests
    * actual scanning unit tests
    * get rid of UI cruft
-   * exit cfrunloop properly (timer?)
-   * quit if no scanners are detected in a certain time period
+   x exit cfrunloop properly (timer?)
+   x quit if no scanners are detected in a certain time period
    * add an option for scan resolution
    * scanner listing/selection (support for multiple scanners)
    * jpeg mode?
@@ -70,13 +70,24 @@
     [DDLog addLogger:[DDTTYLogger sharedInstance]];
     
     mScanners = [[NSMutableArray alloc] initWithCapacity:0];
-    [mScannersController setSelectsInsertedObjects:NO];
+    _successful = NO;
 
     mDeviceBrowser = [[ICDeviceBrowser alloc] init];
     mDeviceBrowser.delegate = self;
     mDeviceBrowser.browsedDeviceTypeMask = ICDeviceLocationTypeMaskLocal|ICDeviceLocationTypeMaskRemote|ICDeviceTypeMaskScanner;
+    if ([configuration listOnly]) {
+        DDLogInfo(@"Available scanners:");
+    }
     [mDeviceBrowser start];
+    
     DDLogVerbose(@"Looking for available scanners...");
+    mDeviceTimer = [NSTimer scheduledTimerWithTimeInterval:20.0 target:self selector:@selector(noDevicesFound:) userInfo:nil repeats:NO];
+}
+
+- (void)noDevicesFound:(NSTimer*)theTimer
+{
+    DDLogInfo(@"No scanners found.");
+    [self exit];
 }
 
 //---------------------------------------------------------------------------------------------------- applicationWillTerminate:
@@ -84,7 +95,7 @@
 - (void)exit
 {
     [DDLog flushLog];
-    exit(0);
+    CFRunLoopStop(CFRunLoopGetCurrent());
 }
 
 - (void)applicationWillTerminate:(NSNotification*)notification
@@ -93,6 +104,7 @@
 
 #pragma mark -
 #pragma mark ICDeviceBrowser delegate methods
+
 //------------------------------------------------------------------------------------------------------------------------------
 // Please refer to the header files in ImageCaptureCore.framework for documentation about the following delegate methods.
 
@@ -104,16 +116,24 @@
     
     if ( (addedDevice.type & ICDeviceTypeMaskScanner) == ICDeviceTypeScanner )
     {
-        [self willChangeValueForKey:@"scanners"];
+        if (mDeviceTimer) {
+            [mDeviceTimer invalidate];
+            mDeviceTimer = nil;
+        }
         [mScanners addObject:addedDevice];
-        [self didChangeValueForKey:@"scanners"];
         addedDevice.delegate = self;
+        if ([configuration listOnly]) {
+            DDLogInfo(@"* %@", [addedDevice name]);
+        }
     }
     
     if (!moreComing) {
         DDLogVerbose(@"All devices have been added.");
-        [self openCloseSession:nil];
- //       [self selectFunctionalUnit:0];
+        if ([configuration listOnly]) {
+            [self exit];
+        } else {
+            [self openCloseSession:nil];
+        }
     }
 }
 
@@ -122,7 +142,6 @@
 - (void)deviceBrowser:(ICDeviceBrowser*)browser didRemoveDevice:(ICDevice*)removedDevice moreGoing:(BOOL)moreGoing;
 {
     DDLogVerbose( @"deviceBrowser:didRemoveDevice: \n%@\n", removedDevice );
-    [mScannersController removeObject:removedDevice];
 }
 
 //------------------------------------------------------------------------------------------- deviceBrowser:deviceDidChangeName:
@@ -153,7 +172,6 @@
 - (void)didRemoveDevice:(ICDevice*)removedDevice
 {
     DDLogVerbose( @"didRemoveDevice: \n%@\n", removedDevice );
-    [mScannersController removeObject:removedDevice];
 }
 
 //---------------------------------------------------------------------------------------------- device:didOpenSessionWithError:
@@ -161,9 +179,7 @@
 - (void)device:(ICDevice*)device didOpenSessionWithError:(NSError*)error
 {
     DDLogVerbose( @"device:didOpenSessionWithError: \n" );
-//    DDLogVerbose( @"  device: %@\n", device );
     DDLogVerbose( @"  error : %@\n", error );
- //   [self startScan:self];
     
     [self selectFunctionalUnit:0];
 }
@@ -172,61 +188,6 @@
 
 - (void)deviceDidBecomeReady:(ICScannerDevice*)scanner
 {
-    NSArray*                    availabeTypes   = [scanner availableFunctionalUnitTypes];
-    ICScannerFunctionalUnit*    functionalUnit  = scanner.selectedFunctionalUnit;
-        
- //   DDLogVerbose( @"scannerDeviceDidBecomeReady: \n%@\n", scanner );
-        
-//    [mFunctionalUnitMenu removeAllItems];
-//    [mFunctionalUnitMenu setEnabled:NO];
-  /*  
-    if ( [availabeTypes count] )
-    {
-        NSMenu*     menu = [[NSMenu alloc] init];
-        NSMenuItem* menuItem;
-        
-        [mFunctionalUnitMenu setEnabled:YES];
-        for ( NSNumber* n in availabeTypes )
-        {
-            switch ( [n intValue] )
-            {
-                case ICScannerFunctionalUnitTypeFlatbed:
-                    menuItem = [[NSMenuItem alloc] initWithTitle:@"Flatbed" action:@selector(selectFunctionalUnit:) keyEquivalent:@""];
-                    [menuItem setTarget:self];
-                    [menuItem setTag:ICScannerFunctionalUnitTypeFlatbed];
-                    [menu addItem:menuItem];
-                    break;
-                case ICScannerFunctionalUnitTypePositiveTransparency:
-                    menuItem = [[NSMenuItem alloc] initWithTitle:@"Postive Transparency" action:@selector(selectFunctionalUnit:) keyEquivalent:@""];
-                    [menuItem setTarget:self];
-                    [menuItem setTag:ICScannerFunctionalUnitTypePositiveTransparency];
-                    [menu addItem:menuItem];
-                    break;
-                case ICScannerFunctionalUnitTypeNegativeTransparency:
-                    menuItem = [[NSMenuItem alloc] initWithTitle:@"Negative Transparency" action:@selector(selectFunctionalUnit:) keyEquivalent:@""];
-                    [menuItem setTarget:self];
-                    [menuItem setTag:ICScannerFunctionalUnitTypeNegativeTransparency];
-                    [menu addItem:menuItem];
-                    break;
-                case ICScannerFunctionalUnitTypeDocumentFeeder:
-                    menuItem = [[NSMenuItem alloc] initWithTitle:@"Document Feeder" action:@selector(selectFunctionalUnit:) keyEquivalent:@""];
-                    [menuItem setTarget:self];
-                    [menuItem setTag:ICScannerFunctionalUnitTypeDocumentFeeder];
-                    [menu addItem:menuItem];
-                    break;
-            }
-        }
-        
-        [mFunctionalUnitMenu setMenu:menu];
-    }
-    */
- //   DDLogVerbose( @"observeValueForKeyPath - functionalUnit: %@\n", functionalUnit );
-    
-//    [self selectFunctionalUnit:nil];
-    // TODO: I think we need to manually select a functional unit
-//    if ( functionalUnit )
-
-        // [mFunctionalUnitMenu selectItemWithTag:functionalUnit.type];
 }
 
 //--------------------------------------------------------------------------------------------- device:didCloseSessionWithError:
@@ -234,7 +195,6 @@
 - (void)device:(ICDevice*)device didCloseSessionWithError:(NSError*)error
 {
     DDLogVerbose( @"device:didCloseSessionWithError: \n" );
- //   DDLogVerbose( @"  device: %@\n", device );
     DDLogVerbose( @"  error : %@\n", error );
 }
 
@@ -260,17 +220,11 @@
     
     if ( [[status objectForKey:ICStatusNotificationKey] isEqualToString:ICScannerStatusWarmingUp] )
     {
-        [mProgressIndicator setDisplayedWhenStopped:YES];
-        [mProgressIndicator setIndeterminate:YES];
-        [mProgressIndicator startAnimation:NULL];
-        [mStatusText setStringValue:[status objectForKey:ICLocalizedStatusNotificationKey]];
+        DDLogInfo(@"Scanner warming up...");
     }
     else if ( [[status objectForKey:ICStatusNotificationKey] isEqualToString:ICScannerStatusWarmUpDone] )
     {
-        [mStatusText setStringValue:@""];
-        [mProgressIndicator stopAnimation:NULL];
-        [mProgressIndicator setIndeterminate:NO];
-        [mProgressIndicator setDisplayedWhenStopped:NO];
+        DDLogInfo(@"Scanner done warming up.");
     }
 }
 
@@ -300,15 +254,12 @@
 
 - (void)scannerDevice:(ICScannerDevice*)scanner didSelectFunctionalUnit:(ICScannerFunctionalUnit*)functionalUnit error:(NSError*)error
 {
- //   DDLogVerbose( @"scannerDevice:didSelectFunctionalUnit:error:contextInfo:\n" );
-  //  DDLogVerbose( @"  scanner:        %@:\n", scanner );
- //   DDLogVerbose( @"  functionalUnit: %@:\n", functionalUnit );
- //   DDLogVerbose( @"  functionalUnit: %@:\n", scanner.selectedFunctionalUnit );
     DDLogVerbose( @"  selected functionalUnitType: %ld\n", scanner.selectedFunctionalUnit.type);
 
     BOOL correctFunctionalUnit = ([configuration isFlatbed] && scanner.selectedFunctionalUnit.type == ICScannerFunctionalUnitTypeFlatbed) || (![configuration isFlatbed] && scanner.selectedFunctionalUnit.type == ICScannerFunctionalUnitTypeDocumentFeeder);
     if (correctFunctionalUnit && error == NULL) {
-       [self startScan:self];
+        DDLogInfo(@"Starting scan...");
+        [self startScan:self];
     } else {
         DDLogVerbose( @"  error:          %@\n", error );
        [self selectFunctionalUnit:self];
@@ -320,14 +271,12 @@
 
 - (void)scannerDevice:(ICScannerDevice*)scanner didScanToURL:(NSURL*)url data:(NSData*)data
 {
+    DDLogInfo(@"Scan complete.");
     DDLogVerbose( @"scannerDevice:didScanToURL:data: \n" );
-//    DDLogVerbose( @"  scanner: %@", scanner );
     DDLogVerbose( @"  url:     %@", url );
     DDLogVerbose( @"  data:    %p\n", data );
     
     [mScannedDestinationURLs addObject:url];
-    
-    
 }
 
 //------------------------------------------------------------------------------ scannerDevice:didCompleteOverviewScanWithError:
@@ -335,7 +284,6 @@
 - (void)scannerDevice:(ICScannerDevice*)scanner didCompleteOverviewScanWithError:(NSError*)error;
 {
     DDLogVerbose( @"scannerDevice: \n%@\ndidCompleteOverviewScanWithError: \n%@\n", scanner, error );
-    [mProgressIndicator setHidden:YES];
 }
 
 //-------------------------------------------------------------------------------------- scannerDevice:didCompleteScanWithError:
@@ -353,9 +301,6 @@
             [self startScan:self];
             return;
         }
-//        NSFileHandle *input = [NSFileHandle fileHandleWithStandardInput];
-  //      NSData *inputData = [NSData dataWithData:[input readDataToEndOfFile]];
-    //    NSString *inputString = [[NSString alloc] initWithData:inputData encoding:NSUTF8StringEncoding];
     }
     
     NSCalendar *gregorian = [[NSCalendar alloc] initWithCalendarIdentifier:NSGregorianCalendar];
@@ -421,6 +366,7 @@
         DDLogInfo(@"Aliased to: %@", aliasFilePath);
     }
 
+    _successful = YES;
     [self exit];
 }
 
@@ -516,14 +462,15 @@
 
 - (ICScannerDevice*)selectedScanner
 {
-    return [mScanners objectAtIndex:0];
-/*    ICScannerDevice*  device          = NULL;
-    id                selectedObjects = [mScannersController selectedObjects];
-    
-    if ( [selectedObjects count] )
-        device = [selectedObjects objectAtIndex:0];
-        
-    return device;*/
+    for (ICScannerDevice *scanner in mScanners) {
+        if ([[scanner name] isEqualToString:[configuration scanner]] || [configuration scanner] == nil) {
+            return scanner;
+        }
+    }
+
+    DDLogInfo(@"Unable to find scanner named \"%@\"", [configuration scanner]);
+    [self exit];
+    return nil;
 }
 
 //------------------------------------------------------------------------------------------------------------ startOverviewScan
@@ -537,7 +484,6 @@
     {
         fu.overviewResolution = [fu.supportedResolutions indexGreaterThanOrEqualToIndex:72];
         [scanner requestOverviewScan];
-        [mProgressIndicator setHidden:NO];
     }
     else
         [scanner cancelScan];
@@ -595,7 +541,6 @@
      //  exit(0); // TODO. this quits before scanning. remove to actually scan.
 
         [scanner requestScan];
-        [mProgressIndicator setHidden:NO];
     }
     else
         [scanner cancelScan];

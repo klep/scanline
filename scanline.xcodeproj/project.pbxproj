@@ -13,6 +13,13 @@
 		FC07A9EB15FBEFAA005E7856 /* AppController.m in Sources */ = {isa = PBXBuildFile; fileRef = FC07A9EA15FBEFAA005E7856 /* AppController.m */; };
 		FC07A9ED15FBF0C6005E7856 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FC07A9EC15FBF0C6005E7856 /* CoreData.framework */; };
 		FC07A9EF15FBF0DF005E7856 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FC07A9EE15FBF0DF005E7856 /* Cocoa.framework */; };
+		FC6147E9180492910052EA4D /* ScanningTests.m in Sources */ = {isa = PBXBuildFile; fileRef = FC6147E8180492910052EA4D /* ScanningTests.m */; };
+		FC6147EA180498880052EA4D /* AppController.m in Sources */ = {isa = PBXBuildFile; fileRef = FC07A9EA15FBEFAA005E7856 /* AppController.m */; };
+		FC6147EB180498B20052EA4D /* PDFKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FC93E68D162946CB00D8C298 /* PDFKit.framework */; };
+		FC6147EC180498B60052EA4D /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FC07A9EE15FBF0DF005E7856 /* Cocoa.framework */; };
+		FC6147ED180498B90052EA4D /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FC07A9EC15FBF0C6005E7856 /* CoreData.framework */; };
+		FC6147EE180498BB0052EA4D /* ImageCaptureCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FC07A9E715FBEEAE005E7856 /* ImageCaptureCore.framework */; };
+		FC6147EF180498BE0052EA4D /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FC07A9DA15FBEE7F005E7856 /* Foundation.framework */; };
 		FC656C8E17F4B29C001B3314 /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FC656C8D17F4B29C001B3314 /* XCTest.framework */; };
 		FC656C9417F4B29C001B3314 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = FC656C9217F4B29C001B3314 /* InfoPlist.strings */; };
 		FC656C9617F4B29C001B3314 /* scanline_Tests.m in Sources */ = {isa = PBXBuildFile; fileRef = FC656C9517F4B29C001B3314 /* scanline_Tests.m */; };
@@ -76,6 +83,7 @@
 		FC07A9EA15FBEFAA005E7856 /* AppController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = AppController.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		FC07A9EC15FBF0C6005E7856 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = ../../../../System/Library/Frameworks/CoreData.framework; sourceTree = "<group>"; };
 		FC07A9EE15FBF0DF005E7856 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = ../../../../System/Library/Frameworks/Cocoa.framework; sourceTree = "<group>"; };
+		FC6147E8180492910052EA4D /* ScanningTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ScanningTests.m; sourceTree = "<group>"; };
 		FC656C8C17F4B29B001B3314 /* scanline Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "scanline Tests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		FC656C8D17F4B29C001B3314 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
 		FC656C9117F4B29C001B3314 /* scanline Tests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "scanline Tests-Info.plist"; sourceTree = "<group>"; };
@@ -115,9 +123,14 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FC6147EB180498B20052EA4D /* PDFKit.framework in Frameworks */,
 				FCAEBE9318032AF900AD08D9 /* AppKit.framework in Frameworks */,
 				FC656CA217F4BFC0001B3314 /* OCMock.framework in Frameworks */,
 				FC656C8E17F4B29C001B3314 /* XCTest.framework in Frameworks */,
+				FC6147EC180498B60052EA4D /* Cocoa.framework in Frameworks */,
+				FC6147ED180498B90052EA4D /* CoreData.framework in Frameworks */,
+				FC6147EE180498BB0052EA4D /* ImageCaptureCore.framework in Frameworks */,
+				FC6147EF180498BE0052EA4D /* Foundation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -187,6 +200,7 @@
 				FC656C9517F4B29C001B3314 /* scanline_Tests.m */,
 				FC656C9017F4B29C001B3314 /* Supporting Files */,
 				FC656CA717F4CF6D001B3314 /* config_test.conf */,
+				FC6147E8180492910052EA4D /* ScanningTests.m */,
 			);
 			path = "scanline Tests";
 			sourceTree = "<group>";
@@ -321,8 +335,10 @@
 				FC656D0417F50995001B3314 /* DDLog.m in Sources */,
 				FC656D0017F50995001B3314 /* DDASLLogger.m in Sources */,
 				FC656C9617F4B29C001B3314 /* scanline_Tests.m in Sources */,
+				FC6147EA180498880052EA4D /* AppController.m in Sources */,
 				FC656CA017F4B40A001B3314 /* ScanConfiguration.m in Sources */,
 				FC656D0617F50995001B3314 /* DDTTYLogger.m in Sources */,
+				FC6147E9180492910052EA4D /* ScanningTests.m in Sources */,
 				FC656D0217F50995001B3314 /* DDFileLogger.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -449,7 +465,8 @@
 					"$(DEVELOPER_FRAMEWORKS_DIR)",
 					"$(inherited)",
 					/Users/klep/src/scanline,
-					"\"$(SYSTEM_LIBRARY_DIR)/Frameworks/Quartz.framework/Versions/A/Frameworks\"",
+					"\\\"$(SYSTEM_LIBRARY_DIR)/Frameworks/Quartz.framework/Versions/A/Frameworks\\\"",
+					"$(SYSTEM_LIBRARY_DIR)/Frameworks/Quartz.framework/Versions/A/Frameworks",
 				);
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
@@ -483,7 +500,8 @@
 					"$(DEVELOPER_FRAMEWORKS_DIR)",
 					"$(inherited)",
 					/Users/klep/src/scanline,
-					"\"$(SYSTEM_LIBRARY_DIR)/Frameworks/Quartz.framework/Versions/A/Frameworks\"",
+					"\\\"$(SYSTEM_LIBRARY_DIR)/Frameworks/Quartz.framework/Versions/A/Frameworks\\\"",
+					"$(SYSTEM_LIBRARY_DIR)/Frameworks/Quartz.framework/Versions/A/Frameworks",
 				);
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
