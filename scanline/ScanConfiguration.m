@@ -16,7 +16,7 @@ int ddLogLevel = LOG_LEVEL_INFO;
 - (id)init
 {
     if (self = [super init]) {
-        _tags = [NSMutableArray array];
+        _tags = [NSMutableArray arrayWithCapacity:0];
         _duplex = NO;
         _batch = NO;
         _flatbed = NO;
@@ -42,6 +42,16 @@ int ddLogLevel = LOG_LEVEL_INFO;
     [self setDuplex:NO];
 }
 
+- (void)print
+{
+    DDLogInfo(@"fFlatbed: %d", fFlatbed);
+    DDLogInfo(@"fBatch: %d", fBatch);
+    DDLogInfo(@"mName: %@", mName);
+    DDLogInfo(@"mDir: %@", mDir);
+    DDLogInfo(@"mScannedDestinationURLs: %@", mScannedDestinationURLs);
+    DDLogInfo(@"mTags: %@", _tags);
+}
+
 - (NSString*)configFilePath
 {
     return [NSString stringWithFormat:@"%@/.scanline.conf", NSHomeDirectory()];
@@ -61,6 +71,7 @@ int ddLogLevel = LOG_LEVEL_INFO;
 
 - (void)loadConfigurationFromArguments:(NSArray*)inArguments
 {
+    DDLogVerbose(@"loading config from arguments: %@", inArguments);
     for (int i = 0; i < [inArguments count]; i++) {
         NSString* theArg = [inArguments objectAtIndex:i];
 
@@ -83,8 +94,10 @@ int ddLogLevel = LOG_LEVEL_INFO;
         } else if ([theArg isEqualToString:@"-v"] || [theArg isEqualToString:@"-verbose"]) {
             ddLogLevel = LOG_LEVEL_VERBOSE;
             DDLogVerbose(@"Verbose logging enabled.");
-        } else {
+        } else if (![theArg isEqualToString:@""]) {
+            DDLogVerbose(@"Adding tag: %@", theArg);
             [_tags addObject:theArg];
+            [self print];
         }
     }
 }

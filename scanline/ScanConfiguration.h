@@ -10,7 +10,6 @@
 #import "DDLog.h"
 
 @interface ScanConfiguration : NSObject {
-    NSMutableArray*                 mTags;
     NSMutableArray*                 mScannedDestinationURLs;
     NSString*                       mDir;
     NSString*                       mName;
@@ -27,6 +26,7 @@
 
 - (id)init;
 - (id)initWithArguments:(NSArray *)inArguments;
+- (void)print;
 
 - (NSString*)configFilePath;
 @end

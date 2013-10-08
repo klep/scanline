@@ -9,6 +9,10 @@
 #import <XCTest/XCTest.h>
 #import <OCMock/OCMock.h>
 
+#import "DDLog.h"
+#import "DDTTYLogger.h"
+#import "DDASLLogger.h"
+
 #import "ScanConfiguration.h"
 
 @interface scanline_Tests : XCTestCase
@@ -22,8 +26,11 @@ ScanConfiguration *config;
 - (void)setUp
 {
     [super setUp];
-    // Put setup code here. This method is called before the invocation of each test method in the class.
 
+    [DDLog addLogger:[DDASLLogger sharedInstance]];
+    [DDLog addLogger:[DDTTYLogger sharedInstance]];
+    ddLogLevel = LOG_LEVEL_VERBOSE;
+    
     config = [ScanConfiguration alloc];
     id mock = [OCMockObject partialMockForObject:config];
     [[[mock stub] andReturn:@"scanline Tests/config_test.conf"] configFilePath];
@@ -31,6 +38,8 @@ ScanConfiguration *config;
 
 - (void)tearDown
 {
+    [DDLog flushLog];
+    
     // Put teardown code here. This method is called after the invocation of each test method in the class.
     [super tearDown];
 }
@@ -60,6 +69,13 @@ ScanConfiguration *config;
     XCTAssertFalse([config isBatch]);
     XCTAssertTrue([config isFlatbed]);
     XCTAssertEqualObjects([config name], @"the_name");
+}
+
+- (void)testGettingTagsFromCommandline
+{
+    config = [config initWithArguments:[NSArray arrayWithObjects:@"taxes-2013", nil]];
+    DDLogInfo(@"first tag: %@", [[config tags] objectAtIndex:0]);
+    XCTAssertTrue([[[config tags] objectAtIndex:0] isEqualToString:@"taxes-2013"]);
 }
 
 

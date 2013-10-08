@@ -16,7 +16,7 @@
         x timing issue?
         x what if you select it again after it selects the wrong one?
    x multipage scan doesn't work -- maybe need to wait for scancomplete message
-   * increase default scan resolution
+   x increase default scan resolution
    x make it possible to configure scanner through command line options (flatbed, etc.)
    x make it possible to do double sided scanning or whatever it's called
    * clean it up!
@@ -32,6 +32,7 @@
    * add an option for scan resolution
    * scanner listing/selection (support for multiple scanners)
    * jpeg mode?
+   x NEED TO FLUSH LOG BEFORE EXITING
  */
 
 //---------------------------------------------------------------------------------------------------------------- AppController
@@ -80,6 +81,12 @@
 
 //---------------------------------------------------------------------------------------------------- applicationWillTerminate:
 
+- (void)exit
+{
+    [DDLog flushLog];
+    exit(0);
+}
+
 - (void)applicationWillTerminate:(NSNotification*)notification
 {
 }
@@ -94,7 +101,6 @@
 - (void)deviceBrowser:(ICDeviceBrowser*)browser didAddDevice:(ICDevice*)addedDevice moreComing:(BOOL)moreComing
 {
     DDLogVerbose(@"Found scanner: %@", addedDevice.name);
-  // DDLogVerbose( @"deviceBrowser:didAddDevice:moreComing: \n%@\n", addedDevice );
     
     if ( (addedDevice.type & ICDeviceTypeMaskScanner) == ICDeviceTypeScanner )
     {
@@ -391,7 +397,7 @@
     NSURL* scannedDestinationURL = [self combinedScanDestinations];
     if (scannedDestinationURL == NULL) {
         DDLogError(@"No document was scanned.");
-        exit(0);
+        [self exit];
     }
     
     DDLogVerbose(@"about to copy %@ to %@", scannedDestinationURL, [NSURL fileURLWithPath:destinationFile]);
@@ -415,8 +421,7 @@
         DDLogInfo(@"Aliased to: %@", aliasFilePath);
     }
 
-    exit(0);
-    [mProgressIndicator setHidden:YES];
+    [self exit];
 }
 
 #pragma mark -

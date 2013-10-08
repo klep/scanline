@@ -30,6 +30,7 @@
 		FC656D0517F50995001B3314 /* DDTTYLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = FC656CF617F50995001B3314 /* DDTTYLogger.m */; };
 		FC656D0617F50995001B3314 /* DDTTYLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = FC656CF617F50995001B3314 /* DDTTYLogger.m */; };
 		FC93E68E162946CB00D8C298 /* PDFKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FC93E68D162946CB00D8C298 /* PDFKit.framework */; };
+		FCAEBE9318032AF900AD08D9 /* AppKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FCAEBE9218032AF900AD08D9 /* AppKit.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -94,6 +95,7 @@
 		FC656CF517F50995001B3314 /* DDTTYLogger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = DDTTYLogger.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		FC656CF617F50995001B3314 /* DDTTYLogger.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = DDTTYLogger.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		FC93E68D162946CB00D8C298 /* PDFKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PDFKit.framework; path = ../../../../System/Library/Frameworks/Quartz.framework/Versions/A/Frameworks/PDFKit.framework; sourceTree = "<group>"; };
+		FCAEBE9218032AF900AD08D9 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -113,6 +115,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FCAEBE9318032AF900AD08D9 /* AppKit.framework in Frameworks */,
 				FC656CA217F4BFC0001B3314 /* OCMock.framework in Frameworks */,
 				FC656C8E17F4B29C001B3314 /* XCTest.framework in Frameworks */,
 			);
@@ -143,6 +146,7 @@
 		FC07A9D915FBEE7F005E7856 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				FCAEBE9218032AF900AD08D9 /* AppKit.framework */,
 				FC656CEC17F50995001B3314 /* Lumberjack */,
 				FC656CA117F4BFC0001B3314 /* OCMock.framework */,
 				FC93E68D162946CB00D8C298 /* PDFKit.framework */,
@@ -445,6 +449,7 @@
 					"$(DEVELOPER_FRAMEWORKS_DIR)",
 					"$(inherited)",
 					/Users/klep/src/scanline,
+					"\"$(SYSTEM_LIBRARY_DIR)/Frameworks/Quartz.framework/Versions/A/Frameworks\"",
 				);
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
@@ -478,6 +483,7 @@
 					"$(DEVELOPER_FRAMEWORKS_DIR)",
 					"$(inherited)",
 					/Users/klep/src/scanline,
+					"\"$(SYSTEM_LIBRARY_DIR)/Frameworks/Quartz.framework/Versions/A/Frameworks\"",
 				);
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -518,6 +524,7 @@
 				FC656C9B17F4B29C001B3314 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
