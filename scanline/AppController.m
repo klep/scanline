@@ -20,7 +20,7 @@
    x make it possible to configure scanner through command line options (flatbed, etc.)
    x make it possible to do double sided scanning or whatever it's called
    * clean it up!
-   * -name option should also be used for aliases
+   x -name option should also be used for aliases
    x allow customization of Archive directory, or provide sensible default that doesn't include "klep"
    x allow a .scanline.conf file to provide defaults
    x have log levels so you don't see tons of stuff scrolling on every scan
@@ -355,10 +355,12 @@
         DDLogVerbose(@"aliasing to tag: %@", [[configuration tags] objectAtIndex:i]);
         NSString* aliasDirPath = [NSString stringWithFormat:@"%@/%@/%ld", [configuration dir], [[configuration tags] objectAtIndex:i], year];
         [fm createDirectoryAtPath:aliasDirPath withIntermediateDirectories:YES attributes:nil error:nil];
-        NSString* aliasFilePath = [NSString stringWithFormat:@"%@/scan_%02ld%02ld%02ld.pdf", aliasDirPath, hour, minute, second];
+        NSString* aliasFileRoot = ([configuration name] == nil) ? [NSString stringWithFormat:@"%@/scan_%02ld%02ld%02ld", aliasDirPath, hour, minute, second] :
+                                                    [NSString stringWithFormat:@"%@/%@", aliasDirPath, [configuration name]];
+        NSString* aliasFilePath = [NSString stringWithFormat:@"%@.pdf", aliasFileRoot];
         int suffix = 0;
         while ([fm fileExistsAtPath:aliasFilePath]) {
-            aliasFilePath = [NSString stringWithFormat:@"%@/scan_%02ld%02ld%02ld_%d.pdf", aliasDirPath, hour, minute, second, suffix];
+            aliasFilePath = [NSString stringWithFormat:@"%@_%d.pdf", aliasFileRoot, i];
             suffix++;
         }
         DDLogVerbose(@"aliasing to %@", aliasFilePath);
