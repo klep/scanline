@@ -16,6 +16,7 @@
 #import "ScanConfiguration.h"
 #import "AppController.h"
 
+
 @interface ScanningTests : XCTestCase
 
 @end
@@ -95,4 +96,40 @@ DDFileLogger *fileLogger;
 
     XCTAssertFalse([app isSuccessful]);
 }
+
+- (void)testBasicScanToPDF
+{
+    NSString* outputName = [NSString stringWithFormat:@"testBasicScanToPDF_%d", arc4random_uniform(1000000)];
+    const char* args[] = {"scanline", "-dir", [NSTemporaryDirectory() UTF8String], "-name", [outputName UTF8String]};
+    [app setArguments:args withCount:5];
+    
+    [app go];
+    CFRunLoopRun();
+    [DDLog flushLog];
+
+    NSString* destinationDir = [NSString stringWithFormat:@"%@/%@.pdf", NSTemporaryDirectory(), outputName];
+    XCTAssertTrue([[NSFileManager defaultManager] fileExistsAtPath:destinationDir]);
+    
+    // clean up
+    [[NSFileManager defaultManager] removeItemAtPath:destinationDir error:Nil];
+}
+
+- (void)testBasicScanToJPG
+{
+    NSString* outputName = [NSString stringWithFormat:@"testBasicScanToJPG_%d", arc4random_uniform(1000000)];
+    const char* args[] = {"scanline", "-jpg", "-dir", [NSTemporaryDirectory() UTF8String], "-name", [outputName UTF8String]};
+    [app setArguments:args withCount:6];
+    
+    [app go];
+    CFRunLoopRun();
+    [DDLog flushLog];
+    
+    NSString* destinationDir = [NSString stringWithFormat:@"%@/%@.jpg", NSTemporaryDirectory(), outputName];
+    XCTAssertTrue([[NSFileManager defaultManager] fileExistsAtPath:destinationDir]);
+    
+    // clean up
+    [[NSFileManager defaultManager] removeItemAtPath:destinationDir error:Nil];
+}
+
+
 @end

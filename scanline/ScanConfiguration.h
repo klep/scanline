@@ -16,6 +16,7 @@
 @property (getter = isBatch)    BOOL               batch;
 @property (getter = isFlatbed)  BOOL               flatbed;
 @property (getter = listOnly)   BOOL               list;
+@property (getter = isJpeg)     BOOL               jpeg;
 @property (strong)              NSString*          dir;
 @property (strong)              NSString*          name;
 @property (strong)              NSMutableArray*    tags;

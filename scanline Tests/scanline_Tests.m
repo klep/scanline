@@ -78,4 +78,16 @@ ScanConfiguration *config;
     XCTAssertTrue([[[config tags] objectAtIndex:0] isEqualToString:@"taxes-2013"]);
 }
 
+- (void)testJpegOption
+{
+    config = [config initWithArguments:[NSArray arrayWithObjects:@"-jpeg", nil]];
+    XCTAssertTrue([config isJpeg]);
+}
+
+- (void)testJpegOptionWithJpg
+{
+    config = [config initWithArguments:[NSArray arrayWithObjects:@"-jpg", nil]];
+    XCTAssertTrue([config isJpeg]);
+}
+
 @end

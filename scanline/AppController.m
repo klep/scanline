@@ -303,6 +303,38 @@
         }
     }
     
+    /*NSURL* scannedDestinationURL;
+    if ([mScannedDestinationURLs count] > 1) {
+        scannedDestinationURL = [self combinedScanDestinations];
+    } else {
+        scannedDestinationURL = [mScannedDestinationURLs objectAtIndex:0];
+    }*/
+    
+    if ([configuration isJpeg]) {
+        // need to loop through all the scanned jpegs and output each of them
+        for (NSURL* scannedFile in mScannedDestinationURLs) {
+            [self outputAndTagFile:scannedFile];
+        }
+    } else {
+        // Combine the JPEGs into a single PDF
+        NSURL* scannedDestinationURL = [self combinedScanDestinations];
+        [self outputAndTagFile:scannedDestinationURL];
+    }
+
+    _successful = YES;
+    [self exit];
+}
+
+#pragma mark -
+//------------------------------------------------------------------------------------------------------------ openCloseSession:
+
+- (void)outputAndTagFile:(NSURL*) scannedURL
+{
+    if (scannedURL == NULL) {
+        DDLogError(@"No document was scanned.");
+        [self exit];
+    }
+    
     NSCalendar *gregorian = [[NSCalendar alloc] initWithCalendarIdentifier:NSGregorianCalendar];
     NSDateComponents *dateComponents = [gregorian components:(NSYearCalendarUnit | NSHourCalendarUnit  | NSMinuteCalendarUnit | NSSecondCalendarUnit) fromDate:[NSDate date]];
     NSInteger hour = [dateComponents hour];
@@ -312,7 +344,7 @@
     
     NSFileManager *fm = [NSFileManager defaultManager];
     // If there's a tag, move the file to the first tag location
-
+    
     DDLogVerbose(@"creating directory");
     NSString* path = [configuration dir];
     if ([[configuration tags] count] > 0) {
@@ -320,33 +352,21 @@
     }
     DDLogVerbose(@"path: %@", path);
     [fm createDirectoryAtPath:path withIntermediateDirectories:YES attributes:nil error:nil];
-
+    
+    NSString* destinationFileExtension = ([configuration isJpeg] ? @"jpg" : @"pdf");
     NSString* destinationFileRoot = ([configuration name] == nil) ? [NSString stringWithFormat:@"%@/scan_%02ld%02ld%02ld", path, hour, minute, second] :
-                                                     [NSString stringWithFormat:@"%@/%@", path, [configuration name]];
-    NSString* destinationFile = [NSString stringWithFormat:@"%@.pdf", destinationFileRoot];
-    DDLogVerbose(@"destinationFileRoot: %@", destinationFileRoot   );
+    [NSString stringWithFormat:@"%@/%@", path, [configuration name]];
+    NSString* destinationFile = [NSString stringWithFormat:@"%@.%@", destinationFileRoot, destinationFileExtension];
+    DDLogVerbose(@"destinationFileRoot: %@", destinationFileRoot);
     int i = 0;
     while ([fm fileExistsAtPath:destinationFile]) {
-        destinationFile = [NSString stringWithFormat:@"%@_%d.pdf", destinationFileRoot, i];
+        destinationFile = [NSString stringWithFormat:@"%@_%d.%@", destinationFileRoot, i, destinationFileExtension];
         DDLogVerbose(@"destinationFile: %@", destinationFile);
         i++;
     }
     
-    /*NSURL* scannedDestinationURL;
-    if ([mScannedDestinationURLs count] > 1) {
-        scannedDestinationURL = [self combinedScanDestinations];
-    } else {
-        scannedDestinationURL = [mScannedDestinationURLs objectAtIndex:0];
-    }*/
-    // NOTE: Since we're now scanning JPEGs, this will turn any number of JPEGs into a single PDF.
-    NSURL* scannedDestinationURL = [self combinedScanDestinations];
-    if (scannedDestinationURL == NULL) {
-        DDLogError(@"No document was scanned.");
-        [self exit];
-    }
-    
-    DDLogVerbose(@"about to copy %@ to %@", scannedDestinationURL, [NSURL fileURLWithPath:destinationFile]);
-    [fm copyItemAtURL:scannedDestinationURL toURL:[NSURL fileURLWithPath:destinationFile] error:nil];
+    DDLogVerbose(@"about to copy %@ to %@", scannedURL, [NSURL fileURLWithPath:destinationFile]);
+    [fm copyItemAtURL:scannedURL toURL:[NSURL fileURLWithPath:destinationFile] error:nil];
     DDLogVerbose(@"file copied");
     DDLogInfo(@"Scanned to: %@", destinationFile);
     
@@ -356,24 +376,18 @@
         NSString* aliasDirPath = [NSString stringWithFormat:@"%@/%@/%ld", [configuration dir], [[configuration tags] objectAtIndex:i], year];
         [fm createDirectoryAtPath:aliasDirPath withIntermediateDirectories:YES attributes:nil error:nil];
         NSString* aliasFileRoot = ([configuration name] == nil) ? [NSString stringWithFormat:@"%@/scan_%02ld%02ld%02ld", aliasDirPath, hour, minute, second] :
-                                                    [NSString stringWithFormat:@"%@/%@", aliasDirPath, [configuration name]];
-        NSString* aliasFilePath = [NSString stringWithFormat:@"%@.pdf", aliasFileRoot];
+        [NSString stringWithFormat:@"%@/%@", aliasDirPath, [configuration name]];
+        NSString* aliasFilePath = [NSString stringWithFormat:@"%@.%@", aliasFileRoot, destinationFileExtension];
         int suffix = 0;
         while ([fm fileExistsAtPath:aliasFilePath]) {
-            aliasFilePath = [NSString stringWithFormat:@"%@_%d.pdf", aliasFileRoot, i];
+            aliasFilePath = [NSString stringWithFormat:@"%@_%d.%@", aliasFileRoot, i, destinationFileExtension];
             suffix++;
         }
         DDLogVerbose(@"aliasing to %@", aliasFilePath);
         [fm createSymbolicLinkAtPath:aliasFilePath withDestinationPath:destinationFile error:nil];
         DDLogInfo(@"Aliased to: %@", aliasFilePath);
     }
-
-    _successful = YES;
-    [self exit];
 }
-
-#pragma mark -
-//------------------------------------------------------------------------------------------------------------ openCloseSession:
 
 - (NSURL*)combinedScanDestinations
 {
