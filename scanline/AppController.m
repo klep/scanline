@@ -19,19 +19,19 @@
    x increase default scan resolution
    x make it possible to configure scanner through command line options (flatbed, etc.)
    x make it possible to do double sided scanning or whatever it's called
-   * clean it up!
+   x clean it up!
    x -name option should also be used for aliases
    x allow customization of Archive directory, or provide sensible default that doesn't include "klep"
    x allow a .scanline.conf file to provide defaults
    x have log levels so you don't see tons of stuff scrolling on every scan
    x config unit tests
-   * actual scanning unit tests
-   * get rid of UI cruft
+   x actual scanning unit tests
+   x get rid of UI cruft
    x exit cfrunloop properly (timer?)
    x quit if no scanners are detected in a certain time period
    * add an option for scan resolution
-   * scanner listing/selection (support for multiple scanners)
-   * jpeg mode?
+   x scanner listing/selection (support for multiple scanners)
+   x jpeg mode?
    x NEED TO FLUSH LOG BEFORE EXITING
  */
 
