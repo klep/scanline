@@ -293,7 +293,7 @@
     DDLogVerbose( @"scannerDevice: \n%@\ndidCompleteScanWithError: \n%@\n", scanner, error );
 
     if ([configuration isBatch]) {
-        DDLogVerbose(@"Press RETURN to scan next page or S to stop");
+        DDLogInfo(@"Press RETURN to scan next page or S to stop");
         int userInput;
         userInput = getchar();
         if (userInput != 's' && userInput != 'S')
