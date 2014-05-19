@@ -33,6 +33,10 @@
    x scanner listing/selection (support for multiple scanners)
    x jpeg mode?
    x NEED TO FLUSH LOG BEFORE EXITING
+   * need to delete temp scan file because a failed scan will copy over the same file
+   * in fact, failed scans (such as feeder clogs) should be detected and errors reported
+   * HELP mode, with -h or with no options at command line
+   * Legal size scan mode if possible
  */
 
 //---------------------------------------------------------------------------------------------------------------- AppController
@@ -293,7 +297,7 @@
     DDLogVerbose( @"scannerDevice: \n%@\ndidCompleteScanWithError: \n%@\n", scanner, error );
 
     if ([configuration isBatch]) {
-        DDLogVerbose(@"Press RETURN to scan next page or S to stop");
+        DDLogError(@"Press RETURN to scan next page or S to stop");
         int userInput;
         userInput = getchar();
         if (userInput != 's' && userInput != 'S')

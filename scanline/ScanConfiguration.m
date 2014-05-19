@@ -91,7 +91,7 @@ int ddLogLevel = LOG_LEVEL_INFO;
             [self setFlatbed:YES];
         } else if ([theArg isEqualToString:@"-jpeg"] || [theArg isEqualToString:@"-jpg"]) {
             [self setJpeg:YES];
-        } else if ([theArg isEqualToString:@"-dir"]) {
+        } else if ([theArg isEqualToString:@"-dir"] || [theArg isEqualToString:@"-folder"]) {
             if (i < [inArguments count] && [inArguments objectAtIndex:i+1] != nil) {
                 i++;
                 [self setDir:[NSString stringWithString:[inArguments objectAtIndex:i]]];
