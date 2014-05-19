@@ -131,5 +131,53 @@ DDFileLogger *fileLogger;
     [[NSFileManager defaultManager] removeItemAtPath:destinationDir error:Nil];
 }
 
+- (void)testLegalSizeScan
+{
+    NSString* outputName = [NSString stringWithFormat:@"testLegalSizeScan_%d", arc4random_uniform(1000000)];
+    const char* args[] = {"scanline", "-legal", "-dir", [NSTemporaryDirectory() UTF8String], "-name", [outputName UTF8String]};
+    [app setArguments:args withCount:6];
+    
+    [app go];
+    CFRunLoopRun();
+    [DDLog flushLog];
+    
+    NSString* destinationDir = [NSString stringWithFormat:@"%@/%@.pdf", NSTemporaryDirectory(), outputName];
+    XCTAssertTrue([[NSFileManager defaultManager] fileExistsAtPath:destinationDir]);
+    
+    NSSize documentSize;
+    PDFDocument *myDocument = [[PDFDocument alloc] initWithURL:[NSURL fileURLWithPath:destinationDir]];
+    PDFPage *firstPage = [myDocument pageAtIndex:0];
+    NSRect bounds = [firstPage boundsForBox:kPDFDisplayBoxMediaBox];
+    NSSize pixelSize = bounds.size;
+    documentSize.width = pixelSize.width / 72; documentSize.height = pixelSize.height / 72;
+    XCTAssertTrue(documentSize.height == 14);
+    
+    // clean up
+    [[NSFileManager defaultManager] removeItemAtPath:destinationDir error:Nil];
+}
 
+- (void)testLetterSizeScanDefault
+{
+    NSString* outputName = [NSString stringWithFormat:@"testLetterSizeScanDefault_%d", arc4random_uniform(1000000)];
+    const char* args[] = {"scanline", "-dir", [NSTemporaryDirectory() UTF8String], "-name", [outputName UTF8String]};
+    [app setArguments:args withCount:5];
+    
+    [app go];
+    CFRunLoopRun();
+    [DDLog flushLog];
+    
+    NSString* destinationDir = [NSString stringWithFormat:@"%@/%@.pdf", NSTemporaryDirectory(), outputName];
+    XCTAssertTrue([[NSFileManager defaultManager] fileExistsAtPath:destinationDir]);
+    
+    NSSize documentSize;
+    PDFDocument *myDocument = [[PDFDocument alloc] initWithURL:[NSURL fileURLWithPath:destinationDir]];
+    PDFPage *firstPage = [myDocument pageAtIndex:0];
+    NSRect bounds = [firstPage boundsForBox:kPDFDisplayBoxMediaBox];
+    NSSize pixelSize = bounds.size;
+    documentSize.width = pixelSize.width / 72; documentSize.height = pixelSize.height / 72;
+    XCTAssertTrue(documentSize.height == 11);
+    
+    // clean up
+    [[NSFileManager defaultManager] removeItemAtPath:destinationDir error:Nil];
+}
 @end

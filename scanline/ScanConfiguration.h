@@ -17,6 +17,7 @@
 @property (getter = isFlatbed)  BOOL               flatbed;
 @property (getter = listOnly)   BOOL               list;
 @property (getter = isJpeg)     BOOL               jpeg;
+@property (getter = isLegal)    BOOL               legal;
 @property (strong)              NSString*          dir;
 @property (strong)              NSString*          name;
 @property (strong)              NSMutableArray*    tags;

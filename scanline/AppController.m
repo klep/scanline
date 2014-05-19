@@ -421,7 +421,8 @@
 - (void)go
 {
     DDLogVerbose( @"go");
-    
+
+     _successful = NO;
     [self applicationDidFinishLaunching:nil];
     
     // wait
@@ -518,6 +519,8 @@
    
   //  [self selectFunctionalUnit:nil];
     
+    if ([configuration listOnly]) return;
+    
     DDLogVerbose(@"starting scan");
     
     if ( ( fu.scanInProgress == NO ) && ( fu.overviewScanInProgress == NO ) )
@@ -526,7 +529,7 @@
         {
             ICScannerFunctionalUnitDocumentFeeder* dfu = (ICScannerFunctionalUnitDocumentFeeder*)fu;
             
-            dfu.documentType  = ICScannerDocumentTypeUSLetter;
+            dfu.documentType = ([configuration isLegal]) ? ICScannerDocumentTypeUSLegal : ICScannerDocumentTypeUSLetter;
             dfu.duplexScanningEnabled = [configuration isDuplex];
         }
         else

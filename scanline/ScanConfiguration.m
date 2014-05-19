@@ -22,6 +22,7 @@ int ddLogLevel = LOG_LEVEL_INFO;
         _list = NO;
         _flatbed = NO;
         _jpeg = NO;
+        _legal = NO;
         _dir = [NSString stringWithFormat:@"%@/Documents/Archive", NSHomeDirectory()];
         _name = nil;
         _scanner = nil;
@@ -52,6 +53,7 @@ int ddLogLevel = LOG_LEVEL_INFO;
     DDLogInfo(@"fBatch: %d", _batch);
     DDLogInfo(@"fDuplex: %d", _duplex);
     DDLogInfo(@"fJpeg: %d", _jpeg);
+    DDLogInfo(@"fLegal: %d", _legal);
     DDLogInfo(@"mName: %@", _name);
     DDLogInfo(@"mDir: %@", _dir);
     DDLogInfo(@"mScanner: %@", _scanner);
@@ -91,6 +93,10 @@ int ddLogLevel = LOG_LEVEL_INFO;
             [self setFlatbed:YES];
         } else if ([theArg isEqualToString:@"-jpeg"] || [theArg isEqualToString:@"-jpg"]) {
             [self setJpeg:YES];
+        } else if ([theArg isEqualToString:@"-legal"]) {
+            [self setLegal:YES];
+        } else if ([theArg isEqualToString:@"-letter"]) {
+            [self setLegal:NO];
         } else if ([theArg isEqualToString:@"-dir"] || [theArg isEqualToString:@"-folder"]) {
             if (i < [inArguments count] && [inArguments objectAtIndex:i+1] != nil) {
                 i++;
