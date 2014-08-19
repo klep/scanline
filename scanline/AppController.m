@@ -29,7 +29,7 @@
    x get rid of UI cruft
    x exit cfrunloop properly (timer?)
    x quit if no scanners are detected in a certain time period
-   * add an option for scan resolution
+   x add an option for scan resolution
    x scanner listing/selection (support for multiple scanners)
    x jpeg mode?
    x NEED TO FLUSH LOG BEFORE EXITING
@@ -37,6 +37,7 @@
    * in fact, failed scans (such as feeder clogs) should be detected and errors reported
    * HELP mode, with -h or with no options at command line
    * Legal size scan mode if possible
+   * Running with no doc in the feeder throws an exception -- should tell you about -flatbed
  */
 
 //---------------------------------------------------------------------------------------------------------------- AppController
@@ -495,7 +496,7 @@
 }
 
 //------------------------------------------------------------------------------------------------------------ startOverviewScan
-
+/*
 - (IBAction)startOverviewScan:(id)sender
 {
     ICScannerDevice*          scanner = [self selectedScanner];
@@ -509,7 +510,7 @@
     else
         [scanner cancelScan];
 }
-
+*/
 //------------------------------------------------------------------------------------------------------------ startOverviewScan
 
 - (IBAction)startScan:(id)sender
@@ -547,7 +548,7 @@
         }
         
      
-        fu.resolution                   = [fu.supportedResolutions indexGreaterThanOrEqualToIndex:150];
+        fu.resolution                   = [fu.supportedResolutions indexGreaterThanOrEqualToIndex:configuration.resolution];
         fu.bitDepth                     = ICScannerBitDepth8Bits;
         fu.pixelDataType                = ICScannerPixelDataTypeRGB;
         

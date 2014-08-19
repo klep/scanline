@@ -26,6 +26,7 @@ int ddLogLevel = LOG_LEVEL_INFO;
         _dir = [NSString stringWithFormat:@"%@/Documents/Archive", NSHomeDirectory()];
         _name = nil;
         _scanner = nil;
+        _resolution = 150;
         
         [self loadConfigurationDefaults];
         [self loadConfigurationFromFile];
@@ -58,6 +59,7 @@ int ddLogLevel = LOG_LEVEL_INFO;
     DDLogInfo(@"mDir: %@", _dir);
     DDLogInfo(@"mScanner: %@", _scanner);
     DDLogInfo(@"mTags: %@", _tags);
+    DDLogInfo(@"mResolution: %d", _resolution);
 }
 
 - (NSString*)configFilePath
@@ -115,6 +117,14 @@ int ddLogLevel = LOG_LEVEL_INFO;
                 i++;
                 [self setScanner:[NSString stringWithString:[inArguments objectAtIndex:i]]];
             }
+        } else if ([theArg isEqualToString:@"-resolution"] || [theArg isEqualToString:@"-minResolution"] || [theArg isEqualToString:@"-res"]) {
+            if (i < [inArguments count] && [inArguments objectAtIndex:i+1] != nil) {
+                i++;
+                [self setResolution:[[inArguments objectAtIndex:i] intValue]];
+                if (self.resolution == 0) {
+                    DDLogError(@"WARNING: Scanning at resolution of 0. This will scan at the scanner's lowest possible resolution.");
+                }
+            }
         } else if (![theArg isEqualToString:@""]) {
             DDLogVerbose(@"Adding tag: %@", theArg);
             [_tags addObject:theArg];
@@ -124,3 +134,24 @@ int ddLogLevel = LOG_LEVEL_INFO;
 }
 
 @end
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -22,6 +22,7 @@
 @property (strong)              NSString*          name;
 @property (strong)              NSMutableArray*    tags;
 @property (strong)              NSString*          scanner;
+@property                       int                resolution;
 
 - (id)init;
 - (id)initWithArguments:(NSArray *)inArguments;
