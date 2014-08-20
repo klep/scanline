@@ -156,6 +156,35 @@ DDFileLogger *fileLogger;
     [[NSFileManager defaultManager] removeItemAtPath:destinationDir error:Nil];
 }
 
+- (void)testVariousResolutionScans
+{
+    NSString* outputName = [NSString stringWithFormat:@"testVariousResolutionSizes_%d", arc4random_uniform(1000000)];
+    const char* args[] = {"scanline", "-dir", [NSTemporaryDirectory() UTF8String], "-name", [outputName UTF8String], "-resolution", "0"};
+    [app setArguments:args withCount:7];
+    
+    [app go];
+    CFRunLoopRun();
+    [DDLog flushLog];
+    
+    NSString* destinationFile = [NSString stringWithFormat:@"%@/%@.pdf", NSTemporaryDirectory(), outputName];
+    XCTAssertTrue([[NSFileManager defaultManager] fileExistsAtPath:destinationFile]);
+    NSDictionary* attributes = [[NSFileManager defaultManager] attributesOfItemAtPath:destinationFile error:Nil];
+    unsigned long long fileOneSize = attributes.fileSize;
+    
+    const char* args2[] = {"scanline", "-dir", [NSTemporaryDirectory() UTF8String], "-name", [[NSString stringWithFormat:@"%@_2", outputName] UTF8String], "-resolution", "300"};
+    [app setArguments:args2 withCount:7];
+
+    [app go];
+    CFRunLoopRun();
+    [DDLog flushLog];
+    
+    destinationFile = [NSString stringWithFormat:@"%@/%@_2.pdf", NSTemporaryDirectory(), outputName];
+    XCTAssertTrue([[NSFileManager defaultManager] fileExistsAtPath:destinationFile]);
+    attributes = [[NSFileManager defaultManager] attributesOfItemAtPath:destinationFile error:Nil];
+    unsigned long long fileTwoSize = attributes.fileSize;
+
+    XCTAssertTrue(fileTwoSize > fileOneSize);
+}
 - (void)testLetterSizeScanDefault
 {
     NSString* outputName = [NSString stringWithFormat:@"testLetterSizeScanDefault_%d", arc4random_uniform(1000000)];
@@ -180,4 +209,6 @@ DDFileLogger *fileLogger;
     // clean up
     [[NSFileManager defaultManager] removeItemAtPath:destinationDir error:Nil];
 }
+
+
 @end

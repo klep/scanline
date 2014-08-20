@@ -93,7 +93,7 @@ ScanConfiguration *config;
 - (void)testResolutionOptionWithNonNumericalValue
 {
     config = [config initWithArguments:[NSArray arrayWithObjects:@"-resolution", @"booger", nil]];
-    XCTAssertEqual([config resolution], 150);
+    XCTAssertEqual([config resolution], 0);
 }
 
 @end
