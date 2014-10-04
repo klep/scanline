@@ -38,6 +38,9 @@
    * HELP mode, with -h or with no options at command line
    * Legal size scan mode if possible
    * Running with no doc in the feeder throws an exception -- should tell you about -flatbed
+   * -opendir and/or -openfile options to open the scanned document or enclosing folder
+   * feature request: "color modes" (black and white?)
+   * feature request: TIFF
  */
 
 //---------------------------------------------------------------------------------------------------------------- AppController
@@ -392,6 +395,12 @@
         [fm createSymbolicLinkAtPath:aliasFilePath withDestinationPath:destinationFile error:nil];
         DDLogInfo(@"Aliased to: %@", aliasFilePath);
     }
+    
+    if (configuration.open) {
+        // open the file
+        NSWorkspace *workspace = [NSWorkspace sharedWorkspace];
+        [workspace openFile:destinationFile];
+    }
 }
 
 - (NSURL*)combinedScanDestinations
@@ -549,8 +558,13 @@
         
      
         fu.resolution                   = [fu.supportedResolutions indexGreaterThanOrEqualToIndex:configuration.resolution];
-        fu.bitDepth                     = ICScannerBitDepth8Bits;
-        fu.pixelDataType                = ICScannerPixelDataTypeRGB;
+        if (configuration.mono) {
+            fu.pixelDataType = ICScannerPixelDataTypeBW;
+            fu.bitDepth = ICScannerBitDepth1Bit;
+        } else {
+            fu.pixelDataType                = ICScannerPixelDataTypeRGB;
+            fu.bitDepth                     = ICScannerBitDepth8Bits;
+        }
         
         scanner.transferMode            = ICScannerTransferModeFileBased;
         scanner.downloadsDirectory      = [NSURL fileURLWithPath:NSTemporaryDirectory()];

@@ -18,11 +18,14 @@
 @property (getter = listOnly)   BOOL               list;
 @property (getter = isJpeg)     BOOL               jpeg;
 @property (getter = isLegal)    BOOL               legal;
+@property (getter = isMono)     BOOL               mono;
+@property                       BOOL               open;
 @property (strong)              NSString*          dir;
 @property (strong)              NSString*          name;
 @property (strong)              NSMutableArray*    tags;
 @property (strong)              NSString*          scanner;
 @property                       int                resolution;
+
 
 - (id)init;
 - (id)initWithArguments:(NSArray *)inArguments;

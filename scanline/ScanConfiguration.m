@@ -27,6 +27,8 @@ int ddLogLevel = LOG_LEVEL_INFO;
         _name = nil;
         _scanner = nil;
         _resolution = 150;
+        _mono = NO;
+        _open = NO;
         
         [self loadConfigurationDefaults];
         [self loadConfigurationFromFile];
@@ -60,6 +62,8 @@ int ddLogLevel = LOG_LEVEL_INFO;
     DDLogInfo(@"mScanner: %@", _scanner);
     DDLogInfo(@"mTags: %@", _tags);
     DDLogInfo(@"mResolution: %d", _resolution);
+    DDLogInfo(@"fMono: %d", _mono);
+    DDLogInfo(@"fOpen: %d", _open);
 }
 
 - (NSString*)configFilePath
@@ -99,6 +103,10 @@ int ddLogLevel = LOG_LEVEL_INFO;
             [self setLegal:YES];
         } else if ([theArg isEqualToString:@"-letter"]) {
             [self setLegal:NO];
+        } else if ([theArg isEqualToString:@"-mono"] || [theArg isEqualToString:@"-bw"]) {
+            [self setMono:YES];
+        } else if ([theArg isEqualToString:@"-open"]) {
+            [self setOpen:YES];
         } else if ([theArg isEqualToString:@"-dir"] || [theArg isEqualToString:@"-folder"]) {
             if (i < [inArguments count] && [inArguments objectAtIndex:i+1] != nil) {
                 i++;
