@@ -13,6 +13,26 @@ int ddLogLevel = LOG_LEVEL_INFO;
 
 @implementation ScanConfiguration
 
++ (NSDictionary*)configOptions
+{
+    return @{
+             @"duplex": @{
+                     @"type": @"flag",
+                     @"synonyms": @[@"dup"],
+                     @"setter": @"duplex",
+                     @"description": @"Duplex (two-sided) scanning mode, for scanners that support it."
+                     },
+             @"batch": @{
+                     @"type": @"flag",
+                     @"setter": @"batch",
+                     @"description": @"scanline will pause after each page, allowing you to continue to scan additional pages until you say you're done."
+                     },
+             @"list": @{
+                     @"description": @"List all available scanners, then exit."
+                     }
+             };
+}
+
 - (id)init
 {
     if (self = [super init]) {

@@ -9,8 +9,7 @@
 #import <Foundation/Foundation.h>
 #import "DDLog.h"
 
-@interface ScanConfiguration : NSObject {
-}
+@interface ScanConfiguration : NSObject
 
 @property (getter = isDuplex)   BOOL               duplex;
 @property (getter = isBatch)    BOOL               batch;
@@ -26,12 +25,13 @@
 @property (strong)              NSString*          scanner;
 @property                       int                resolution;
 
-
 - (id)init;
 - (id)initWithArguments:(NSArray *)inArguments;
 - (void)print;
 
 - (NSString*)configFilePath;
++ (NSDictionary*)configOptions;
+
 @end
 
 extern int ddLogLevel;
