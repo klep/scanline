@@ -9,6 +9,21 @@
 #import <Foundation/Foundation.h>
 #import "DDLog.h"
 
+static NSString * const ScanlineConfigOptionDuplex = @"duplex";
+static NSString * const ScanlineConfigOptionBatch = @"batch";
+static NSString * const ScanlineConfigOptionList = @"list";
+static NSString * const ScanlineConfigOptionFlatbed = @"flatbed";
+static NSString * const ScanlineConfigOptionJPEG = @"jpeg";
+static NSString * const ScanlineConfigOptionLegal = @"legal";
+static NSString * const ScanlineConfigOptionLetter = @"letter";
+static NSString * const ScanlineConfigOptionMono = @"mono";
+static NSString * const ScanlineConfigOptionOpen = @"open";
+static NSString * const ScanlineConfigOptionDir = @"dir";
+static NSString * const ScanlineConfigOptionName = @"name";
+static NSString * const ScanlineConfigOptionVerbose = @"verbose";
+static NSString * const ScanlineConfigOptionScanner = @"scanner";
+static NSString * const ScanlineConfigOptionResolution = @"resolution";
+
 @interface ScanConfiguration : NSObject
 
 @property (getter = isDuplex)   BOOL               duplex;
