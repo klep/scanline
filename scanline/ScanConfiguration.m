@@ -16,19 +16,63 @@ int ddLogLevel = LOG_LEVEL_INFO;
 + (NSDictionary*)configOptions
 {
     return @{
-             @"duplex": @{
+             ScanlineConfigOptionDuplex: @{
                      @"type": @"flag",
                      @"synonyms": @[@"dup"],
                      @"setter": @"duplex",
                      @"description": @"Duplex (two-sided) scanning mode, for scanners that support it."
                      },
-             @"batch": @{
+             ScanlineConfigOptionBatch: @{
                      @"type": @"flag",
-                     @"setter": @"batch",
                      @"description": @"scanline will pause after each page, allowing you to continue to scan additional pages until you say you're done."
                      },
-             @"list": @{
+             ScanlineConfigOptionList: @{
                      @"description": @"List all available scanners, then exit."
+                     },
+             ScanlineConfigOptionFlatbed: @{
+                     @"synonyms": @[@"fb"],
+                     @"description": @"Scan from the scanner's flatbed (default is paper feeder)"
+                     },
+             ScanlineConfigOptionJPEG: @{
+                     @"synonyms": @[@"jpg"],
+                     @"description": @"Scan to a JPEG file (default is PDF)"
+                     },
+             ScanlineConfigOptionLegal: @{
+                     @"description": @"Scan a legal size page"
+                     },
+             ScanlineConfigOptionLetter: @{
+                     @"description": @"Scan a letter size page"
+                     },
+             ScanlineConfigOptionMono: @{
+                     @"synonyms": @[@"bw"],
+                     @"description": @"Scan in monochrome (black and white)"
+                     },
+             ScanlineConfigOptionOpen: @{
+                     @"description": @"Open the scanned image when done."
+                     },
+             ScanlineConfigOptionDir: @{
+                     @"synonyms": @[@"folder"],
+                     @"type": @"string",
+                     @"description": @"Specify a directory where the files should go."
+                     },
+             ScanlineConfigOptionName: @{
+                     @"type": @"string",
+                     @"description": @"Specify a name for the output file."
+                     },
+             ScanlineConfigOptionVerbose: @{
+                     @"synonyms": @[@"v"],
+                     @"description": @"Provide verbose logging."
+                     },
+             ScanlineConfigOptionScanner: @{
+                     @"synonyms": @[@"s"],
+                     @"description": @"Specify which scanner to use (use -list to list available scanners).",
+                     @"type": @"string"
+                     },
+             ScanlineConfigOptionResolution: @{
+                     @"synonyms": @[@"res", @"minResolution"],
+                     @"type": @"string",
+                     @"description": @"Specify minimum resolution at which to scan (in dpi)",
+                     @"default": @"150"
                      }
              };
 }
@@ -62,6 +106,15 @@ int ddLogLevel = LOG_LEVEL_INFO;
         [self loadConfigurationFromArguments:inArguments];
     }
     return self;
+}
+
+- (void)help
+{
+    NSDictionary *configOptions = [ScanConfiguration configOptions];
+    
+    for (NSString *key in configOptions.keyEnumerator) {
+        NSLog(@"-%@:\t%@", key, configOptions[key][@"description"]);
+    }
 }
 
 - (void)loadConfigurationDefaults
@@ -109,7 +162,9 @@ int ddLogLevel = LOG_LEVEL_INFO;
     for (int i = 0; i < [inArguments count]; i++) {
         NSString* theArg = [inArguments objectAtIndex:i];
 
-        if ([theArg isEqualToString:@"-duplex"]) {
+        if ([theArg isEqualToString:@"-help"]) {
+            [self help]; // haha self help!
+        } else if([theArg isEqualToString:@"-duplex"]) {
             [self setDuplex:YES];
         } else if ([theArg isEqualToString:@"-list"]) {
             _list = YES;
