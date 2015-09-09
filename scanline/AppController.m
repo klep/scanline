@@ -41,6 +41,7 @@
    * -opendir and/or -openfile options to open the scanned document or enclosing folder
    * feature request: "color modes" (black and white?)
    * feature request: TIFF
+   * feature request: paper size
  */
 
 //---------------------------------------------------------------------------------------------------------------- AppController
@@ -82,7 +83,7 @@
 
     mDeviceBrowser = [[ICDeviceBrowser alloc] init];
     mDeviceBrowser.delegate = self;
-    mDeviceBrowser.browsedDeviceTypeMask = ICDeviceLocationTypeMaskLocal|ICDeviceLocationTypeMaskRemote|ICDeviceTypeMaskScanner;
+    mDeviceBrowser.browsedDeviceTypeMask = ICDeviceLocationTypeMaskBonjour | ICDeviceLocationTypeMaskShared | ICDeviceLocationTypeMaskLocal|ICDeviceLocationTypeMaskRemote|ICDeviceTypeMaskScanner;
     if ([configuration listOnly]) {
         DDLogInfo(@"Available scanners:");
     }
