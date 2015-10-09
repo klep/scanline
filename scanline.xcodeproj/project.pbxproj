@@ -8,13 +8,13 @@
 
 /* Begin PBXBuildFile section */
 		FC07A9DB15FBEE7F005E7856 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FC07A9DA15FBEE7F005E7856 /* Foundation.framework */; };
-		FC07A9DE15FBEE7F005E7856 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = FC07A9DD15FBEE7F005E7856 /* main.m */; };
 		FC07A9E815FBEEAE005E7856 /* ImageCaptureCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FC07A9E715FBEEAE005E7856 /* ImageCaptureCore.framework */; };
-		FC07A9EB15FBEFAA005E7856 /* AppController.m in Sources */ = {isa = PBXBuildFile; fileRef = FC07A9EA15FBEFAA005E7856 /* AppController.m */; };
 		FC07A9ED15FBF0C6005E7856 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FC07A9EC15FBF0C6005E7856 /* CoreData.framework */; };
 		FC07A9EF15FBF0DF005E7856 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FC07A9EE15FBF0DF005E7856 /* Cocoa.framework */; };
+		FC5C16531BA292E800F6A229 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = FC07A9DD15FBEE7F005E7856 /* main.m */; };
+		FC5C16541BA292EC00F6A229 /* AppController.m in Sources */ = {isa = PBXBuildFile; fileRef = FC07A9EA15FBEFAA005E7856 /* AppController.m */; };
+		FC5C16551BA2965900F6A229 /* AppController.m in Sources */ = {isa = PBXBuildFile; fileRef = FC07A9EA15FBEFAA005E7856 /* AppController.m */; };
 		FC6147E9180492910052EA4D /* ScanningTests.m in Sources */ = {isa = PBXBuildFile; fileRef = FC6147E8180492910052EA4D /* ScanningTests.m */; };
-		FC6147EA180498880052EA4D /* AppController.m in Sources */ = {isa = PBXBuildFile; fileRef = FC07A9EA15FBEFAA005E7856 /* AppController.m */; };
 		FC6147EB180498B20052EA4D /* PDFKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FC93E68D162946CB00D8C298 /* PDFKit.framework */; };
 		FC6147EC180498B60052EA4D /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FC07A9EE15FBF0DF005E7856 /* Cocoa.framework */; };
 		FC6147ED180498B90052EA4D /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FC07A9EC15FBF0C6005E7856 /* CoreData.framework */; };
@@ -320,10 +320,10 @@
 			files = (
 				FC656D0317F50995001B3314 /* DDLog.m in Sources */,
 				FC656D0517F50995001B3314 /* DDTTYLogger.m in Sources */,
-				FC07A9DE15FBEE7F005E7856 /* main.m in Sources */,
 				FC656D0117F50995001B3314 /* DDFileLogger.m in Sources */,
-				FC07A9EB15FBEFAA005E7856 /* AppController.m in Sources */,
 				FC656C9F17F4B40A001B3314 /* ScanConfiguration.m in Sources */,
+				FC5C16541BA292EC00F6A229 /* AppController.m in Sources */,
+				FC5C16531BA292E800F6A229 /* main.m in Sources */,
 				FC656CFF17F50995001B3314 /* DDASLLogger.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -335,11 +335,11 @@
 				FC656D0417F50995001B3314 /* DDLog.m in Sources */,
 				FC656D0017F50995001B3314 /* DDASLLogger.m in Sources */,
 				FC656C9617F4B29C001B3314 /* scanline_Tests.m in Sources */,
-				FC6147EA180498880052EA4D /* AppController.m in Sources */,
 				FC656CA017F4B40A001B3314 /* ScanConfiguration.m in Sources */,
 				FC656D0617F50995001B3314 /* DDTTYLogger.m in Sources */,
 				FC6147E9180492910052EA4D /* ScanningTests.m in Sources */,
 				FC656D0217F50995001B3314 /* DDFileLogger.m in Sources */,
+				FC5C16551BA2965900F6A229 /* AppController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

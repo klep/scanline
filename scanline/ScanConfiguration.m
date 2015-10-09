@@ -11,6 +11,9 @@
 
 int ddLogLevel = LOG_LEVEL_INFO;
 
+@interface ScanConfiguration()
+@end
+
 @implementation ScanConfiguration
 
 + (NSDictionary*)configOptions
@@ -53,11 +56,12 @@ int ddLogLevel = LOG_LEVEL_INFO;
              ScanlineConfigOptionDir: @{
                      @"synonyms": @[@"folder"],
                      @"type": @"string",
-                     @"description": @"Specify a directory where the files should go."
+                     @"description": @"Specify a directory where the files should go.",
+                     @"default": [NSString stringWithFormat:@"%@/Documents/Archive", NSHomeDirectory()]
                      },
              ScanlineConfigOptionName: @{
                      @"type": @"string",
-                     @"description": @"Specify a name for the output file."
+                     @"description": @"Specify a custom name for the output file."
                      },
              ScanlineConfigOptionVerbose: @{
                      @"synonyms": @[@"v"],
@@ -77,22 +81,27 @@ int ddLogLevel = LOG_LEVEL_INFO;
              };
 }
 
++ (NSString*)canonicalConfigKeyFor:(NSString*)key
+{
+    NSDictionary* configOptions = [ScanConfiguration configOptions];
+    
+    if (configOptions[key] != nil) return key;
+    
+    for (NSString *canonicalKey in configOptions.keyEnumerator) {
+        NSDictionary *details = configOptions[canonicalKey];
+        if ([(NSArray*)details[@"synonyms"] containsObject:key]) return canonicalKey;
+    }
+    
+    return nil;
+}
+
 - (id)init
 {
     if (self = [super init]) {
+        NSDictionary *configOptions = [ScanConfiguration configOptions];
+        _config = [NSMutableDictionary dictionaryWithCapacity:configOptions.attributeKeys.count];
+        
         _tags = [NSMutableArray arrayWithCapacity:0];
-        _duplex = NO;
-        _batch = NO;
-        _list = NO;
-        _flatbed = NO;
-        _jpeg = NO;
-        _legal = NO;
-        _dir = [NSString stringWithFormat:@"%@/Documents/Archive", NSHomeDirectory()];
-        _name = nil;
-        _scanner = nil;
-        _resolution = 150;
-        _mono = NO;
-        _open = NO;
         
         [self loadConfigurationDefaults];
         [self loadConfigurationFromFile];
@@ -112,32 +121,48 @@ int ddLogLevel = LOG_LEVEL_INFO;
 {
     NSDictionary *configOptions = [ScanConfiguration configOptions];
     
+    SKLog(@"Usage: scanline [-option] [-option] [tag] [tag] [tag]...");
+    SKLog(@"");
+    
     for (NSString *key in configOptions.keyEnumerator) {
-        NSLog(@"-%@:\t%@", key, configOptions[key][@"description"]);
+        SKLog(@"-%@:", key);
+        SKLog(@"Purpose: %@", configOptions[key][@"description"]);
+        if (configOptions[key][@"default"] != nil) {
+            SKLog(@"Default: %@", configOptions[key][@"default"]);
+        }
+        SKLog(@"");
     }
+    
+    SKLog(@"");
+    SKLog(@"Examples:");
+    SKLog(@"");
+    SKLog(@"scanline -duplex taxes");
+    SKLog(@"   ^-- Scan 2-sided and place in %@/taxes/", configOptions[ScanlineConfigOptionDir][@"default"]);
+    SKLog(@"scanline bills dental");
+    SKLog(@"   ^-- Scan and place in %@/bills/ with alias in %@/dental/",
+          configOptions[ScanlineConfigOptionDir][@"default"],
+          configOptions[ScanlineConfigOptionDir][@"default"]);
+    
 }
 
 - (void)loadConfigurationDefaults
 {
-    [self setDuplex:NO];
+    NSDictionary *configOptions = [ScanConfiguration configOptions];
+
+    for (NSString *key in configOptions.keyEnumerator) {
+        NSDictionary *details = configOptions[key];
+        if ([details[@"type"] isEqualToString:@"string"]) {
+            if (details[@"default"] != nil) {
+                _config[key] = details[@"default"];
+            } else {
+                // nil
+            }
+        } else {
+            // default config type is flag initialized to nil
+        }
+    }
 }
 
-- (void)print
-{
-    DDLogInfo(@"fList: %d", _list);
-    DDLogInfo(@"fFlatbed: %d", _flatbed);
-    DDLogInfo(@"fBatch: %d", _batch);
-    DDLogInfo(@"fDuplex: %d", _duplex);
-    DDLogInfo(@"fJpeg: %d", _jpeg);
-    DDLogInfo(@"fLegal: %d", _legal);
-    DDLogInfo(@"mName: %@", _name);
-    DDLogInfo(@"mDir: %@", _dir);
-    DDLogInfo(@"mScanner: %@", _scanner);
-    DDLogInfo(@"mTags: %@", _tags);
-    DDLogInfo(@"mResolution: %d", _resolution);
-    DDLogInfo(@"fMono: %d", _mono);
-    DDLogInfo(@"fOpen: %d", _open);
-}
 
 - (NSString*)configFilePath
 {
@@ -162,57 +187,41 @@ int ddLogLevel = LOG_LEVEL_INFO;
     for (int i = 0; i < [inArguments count]; i++) {
         NSString* theArg = [inArguments objectAtIndex:i];
 
-        if ([theArg isEqualToString:@"-help"]) {
+        if ([theArg isEqualToString:@"-help"] ||
+            [theArg isEqualToString:@"--help"]) {
             [self help]; // haha self help!
-        } else if([theArg isEqualToString:@"-duplex"]) {
-            [self setDuplex:YES];
-        } else if ([theArg isEqualToString:@"-list"]) {
-            _list = YES;
-        } else if ([theArg isEqualToString:@"-batch"]) {
-            [self setBatch:YES];
-        } else if ([theArg isEqualToString:@"-flatbed"]) {
-            [self setFlatbed:YES];
-        } else if ([theArg isEqualToString:@"-jpeg"] || [theArg isEqualToString:@"-jpg"]) {
-            [self setJpeg:YES];
-        } else if ([theArg isEqualToString:@"-legal"]) {
-            [self setLegal:YES];
-        } else if ([theArg isEqualToString:@"-letter"]) {
-            [self setLegal:NO];
-        } else if ([theArg isEqualToString:@"-mono"] || [theArg isEqualToString:@"-bw"]) {
-            [self setMono:YES];
-        } else if ([theArg isEqualToString:@"-open"]) {
-            [self setOpen:YES];
-        } else if ([theArg isEqualToString:@"-dir"] || [theArg isEqualToString:@"-folder"]) {
-            if (i < [inArguments count] && [inArguments objectAtIndex:i+1] != nil) {
-                i++;
-                [self setDir:[NSString stringWithString:[inArguments objectAtIndex:i]]];
-            }
-        } else if ([theArg isEqualToString:@"-name"]) {
-            if (i < [inArguments count] && [inArguments objectAtIndex:i+1] != nil) {
-                i++;
-                [self setName:[NSString stringWithString:[inArguments objectAtIndex:i]]];
-            }
-        } else if ([theArg isEqualToString:@"-v"] || [theArg isEqualToString:@"-verbose"]) {
-            ddLogLevel = LOG_LEVEL_VERBOSE;
-            DDLogVerbose(@"Verbose logging enabled.");
-        } else if ([theArg isEqualToString:@"-scanner"]) {
-            if (i < [inArguments count] && [inArguments objectAtIndex:i+1] != nil) {
-                i++;
-                [self setScanner:[NSString stringWithString:[inArguments objectAtIndex:i]]];
-            }
-        } else if ([theArg isEqualToString:@"-resolution"] || [theArg isEqualToString:@"-minResolution"] || [theArg isEqualToString:@"-res"]) {
-            if (i < [inArguments count] && [inArguments objectAtIndex:i+1] != nil) {
-                i++;
-                [self setResolution:[[inArguments objectAtIndex:i] intValue]];
-                if (self.resolution == 0) {
-                    DDLogError(@"WARNING: Scanning at resolution of 0. This will scan at the scanner's lowest possible resolution.");
+            exit(1);
+        } else if([theArg hasPrefix:@"-"]) {
+            NSString *canonicalKey = [ScanConfiguration canonicalConfigKeyFor:[theArg substringFromIndex:1]];
+            
+            if (canonicalKey == nil) {
+                SKLog(@"WARNING: Unknown option '%@' will be ignored", theArg);
+            } else {
+                NSDictionary *configDetails = [ScanConfiguration configOptions][canonicalKey];
+                if ([(NSString *)configDetails[@"type"] isEqualToString:@"string"]) {
+                    if (i < [inArguments count] && [inArguments objectAtIndex:i+1] != nil) {
+                        NSString *value = [inArguments objectAtIndex:++i];
+                        self.config[canonicalKey] = value;
+                    } else {
+                        SKLog(@"WARNING: No value provided for option '%@'", theArg);
+                    }
+                } else {
+                    self.config[canonicalKey] = @YES;
                 }
             }
         } else if (![theArg isEqualToString:@""]) {
             DDLogVerbose(@"Adding tag: %@", theArg);
             [_tags addObject:theArg];
-            [self print];
         }
+    }
+
+    if (self.config[ScanlineConfigOptionVerbose]) {
+        ddLogLevel = LOG_LEVEL_VERBOSE;
+        DDLogVerbose(@"Verbose logging enabled.");
+    }
+
+    if ([self.config[ScanlineConfigOptionResolution] isEqualToString:@"0"]) {
+        DDLogError(@"WARNING: Scanning at resolution of 0. This will scan at the scanner's lowest possible resolution.");
     }
 }
 
