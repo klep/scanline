@@ -35,13 +35,13 @@
    x NEED TO FLUSH LOG BEFORE EXITING
    * need to delete temp scan file because a failed scan will copy over the same file
    * in fact, failed scans (such as feeder clogs) should be detected and errors reported
-   * HELP mode, with -h or with no options at command line
-   * Legal size scan mode if possible
+   x HELP mode, with -h or with no options at command line
+   x Legal size scan mode if possible
    * Running with no doc in the feeder throws an exception -- should tell you about -flatbed
    * -opendir and/or -openfile options to open the scanned document or enclosing folder
-   * feature request: "color modes" (black and white?)
+   x feature request: "color modes" (black and white?)
    * feature request: TIFF
-   * feature request: paper size
+   x feature request: paper size
  */
 
 //---------------------------------------------------------------------------------------------------------------- AppController
