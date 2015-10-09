@@ -33,7 +33,9 @@ ScanConfiguration *config;
     
     config = [ScanConfiguration alloc];
     id mock = [OCMockObject partialMockForObject:config];
-    [[[mock stub] andReturn:@"scanline Tests/config_test.conf"] configFilePath];
+    NSString *testConfPath = ((NSURL*)[NSURL fileURLWithPath:@"config_test.conf"]).path;
+
+    [[[mock stub] andReturn:testConfPath] configFilePath];
 }
 
 - (void)tearDown
@@ -47,28 +49,28 @@ ScanConfiguration *config;
 - (void)testLoadConfigurationFromFile
 {
     config = [config init];
-    XCTAssertTrue([config isDuplex]);
-    XCTAssertFalse([config isBatch]);
-    XCTAssertFalse([config isFlatbed]);
-    XCTAssertEqualObjects([config name], @"the_name");
+    XCTAssertTrue(config.config[ScanlineConfigOptionDuplex]);
+    XCTAssertFalse(config.config[ScanlineConfigOptionBatch]);
+    XCTAssertFalse(config.config[ScanlineConfigOptionFlatbed]);
+    XCTAssertEqualObjects(config.config[ScanlineConfigOptionName], @"the_name");
 }
 
 - (void)testLoadConfigurationFromFileUsingEmptyArguments
 {
     config = [config initWithArguments:[NSArray array]];
-    XCTAssertTrue([config isDuplex]);
-    XCTAssertFalse([config isBatch]);
-    XCTAssertFalse([config isFlatbed]);
-    XCTAssertEqualObjects([config name], @"the_name");
+    XCTAssertTrue(config.config[ScanlineConfigOptionDuplex]);
+    XCTAssertFalse(config.config[ScanlineConfigOptionBatch]);
+    XCTAssertFalse(config.config[ScanlineConfigOptionFlatbed]);
+    XCTAssertEqualObjects(config.config[ScanlineConfigOptionName], @"the_name");
 }
 
 - (void)testLoadConfigurationFromFileWithArgumentOverride
 {
     config = [config initWithArguments:[NSArray arrayWithObjects:@"-flatbed", nil]];
-    XCTAssertTrue([config isDuplex]);
-    XCTAssertFalse([config isBatch]);
-    XCTAssertTrue([config isFlatbed]);
-    XCTAssertEqualObjects([config name], @"the_name");
+    XCTAssertTrue(config.config[ScanlineConfigOptionDuplex]);
+    XCTAssertFalse(config.config[ScanlineConfigOptionBatch]);
+    XCTAssertTrue(config.config[ScanlineConfigOptionFlatbed]);
+    XCTAssertEqualObjects(config.config[ScanlineConfigOptionName], @"the_name");
 }
 
 - (void)testGettingTagsFromCommandline
@@ -81,19 +83,32 @@ ScanConfiguration *config;
 - (void)testJpegOption
 {
     config = [config initWithArguments:[NSArray arrayWithObjects:@"-jpeg", nil]];
-    XCTAssertTrue([config isJpeg]);
+    XCTAssertTrue(config.config[ScanlineConfigOptionJPEG]);
 }
 
 - (void)testJpegOptionWithJpg
 {
     config = [config initWithArguments:[NSArray arrayWithObjects:@"-jpg", nil]];
-    XCTAssertTrue([config isJpeg]);
+    XCTAssertTrue(config.config[ScanlineConfigOptionJPEG]);
 }
 
 - (void)testResolutionOptionWithNonNumericalValue
 {
     config = [config initWithArguments:[NSArray arrayWithObjects:@"-resolution", @"booger", nil]];
-    XCTAssertEqual([config resolution], 0);
+    XCTAssertEqual([config.config[ScanlineConfigOptionResolution] intValue], 0);
 }
 
+- (void)testLetterNotLegal
+{
+    config = [config initWithArguments:@[@"-letter"]];
+    XCTAssertTrue(config.config[ScanlineConfigOptionLetter]);
+    XCTAssertFalse(config.config[ScanlineConfigOptionLegal]);
+}
+
+- (void)testLegalNotLetter
+{
+    config = [config initWithArguments:@[@"-legal"]];
+    XCTAssertTrue(config.config[ScanlineConfigOptionLegal]);
+    XCTAssertFalse(config.config[ScanlineConfigOptionLetter]);
+}
 @end

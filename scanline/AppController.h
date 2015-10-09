@@ -54,7 +54,6 @@
 - (ICScannerDevice*)selectedScanner;
 - (IBAction)openCloseSession:(id)sender;
 - (IBAction)selectFunctionalUnit:(id)sender;
-- (IBAction)startOverviewScan:(id)sender;
 - (IBAction)startScan:(id)sender;
 @end
 
