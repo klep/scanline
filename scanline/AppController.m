@@ -83,7 +83,8 @@
     mDeviceBrowser = [[ICDeviceBrowser alloc] init];
     mDeviceBrowser.delegate = self;
     mDeviceBrowser.browsedDeviceTypeMask = ICDeviceLocationTypeMaskLocal|ICDeviceLocationTypeMaskRemote|ICDeviceTypeMaskScanner;
-    if ([configuration listOnly]) {
+    
+    if (configuration.config[ScanlineConfigOptionList]) {
         DDLogInfo(@"Available scanners:");
     }
     [mDeviceBrowser start];
@@ -130,14 +131,14 @@
         }
         [mScanners addObject:addedDevice];
         addedDevice.delegate = self;
-        if ([configuration listOnly]) {
+        if (configuration.config[ScanlineConfigOptionList]) {
             DDLogInfo(@"* %@", [addedDevice name]);
         }
     }
     
     if (!moreComing) {
         DDLogVerbose(@"All devices have been added.");
-        if ([configuration listOnly]) {
+        if (configuration.config[ScanlineConfigOptionList]) {
             [self exit];
         } else {
             [self openCloseSession:nil];
@@ -264,7 +265,7 @@
 {
     DDLogVerbose( @"  selected functionalUnitType: %ld\n", scanner.selectedFunctionalUnit.type);
 
-    BOOL correctFunctionalUnit = ([configuration isFlatbed] && scanner.selectedFunctionalUnit.type == ICScannerFunctionalUnitTypeFlatbed) || (![configuration isFlatbed] && scanner.selectedFunctionalUnit.type == ICScannerFunctionalUnitTypeDocumentFeeder);
+    BOOL correctFunctionalUnit = (configuration.config[ScanlineConfigOptionFlatbed] && scanner.selectedFunctionalUnit.type == ICScannerFunctionalUnitTypeFlatbed) || (!(configuration.config[ScanlineConfigOptionFlatbed]) && scanner.selectedFunctionalUnit.type == ICScannerFunctionalUnitTypeDocumentFeeder);
     if (correctFunctionalUnit && error == NULL) {
         DDLogInfo(@"Starting scan...");
         [self startScan:self];
@@ -300,7 +301,7 @@
 {
     DDLogVerbose( @"scannerDevice: \n%@\ndidCompleteScanWithError: \n%@\n", scanner, error );
 
-    if ([configuration isBatch]) {
+    if (configuration.config[ScanlineConfigOptionBatch]) {
         DDLogInfo(@"Press RETURN to scan next page or S to stop");
         int userInput;
         userInput = getchar();
@@ -318,7 +319,7 @@
         scannedDestinationURL = [mScannedDestinationURLs objectAtIndex:0];
     }*/
     
-    if ([configuration isJpeg]) {
+    if (configuration.config[ScanlineConfigOptionJPEG]) {
         // need to loop through all the scanned jpegs and output each of them
         for (NSURL* scannedFile in mScannedDestinationURLs) {
             [self outputAndTagFile:scannedFile];
@@ -341,6 +342,7 @@
     if (scannedURL == NULL) {
         DDLogError(@"No document was scanned.");
         [self exit];
+        return;
     }
     
     NSCalendar *gregorian = [[NSCalendar alloc] initWithCalendarIdentifier:NSGregorianCalendar];
@@ -354,16 +356,16 @@
     // If there's a tag, move the file to the first tag location
     
     DDLogVerbose(@"creating directory");
-    NSString* path = [configuration dir];
+    NSString* path = configuration.config[ScanlineConfigOptionDir];
     if ([[configuration tags] count] > 0) {
-        path = [NSString stringWithFormat:@"%@/%@/%ld", [configuration dir], [[configuration tags] objectAtIndex:0], year];
+        path = [NSString stringWithFormat:@"%@/%@/%ld", path, [[configuration tags] objectAtIndex:0], year];
     }
     DDLogVerbose(@"path: %@", path);
     [fm createDirectoryAtPath:path withIntermediateDirectories:YES attributes:nil error:nil];
     
-    NSString* destinationFileExtension = ([configuration isJpeg] ? @"jpg" : @"pdf");
-    NSString* destinationFileRoot = ([configuration name] == nil) ? [NSString stringWithFormat:@"%@/scan_%02ld%02ld%02ld", path, hour, minute, second] :
-    [NSString stringWithFormat:@"%@/%@", path, [configuration name]];
+    NSString* destinationFileExtension = (configuration.config[ScanlineConfigOptionJPEG] ? @"jpg" : @"pdf");
+    NSString* destinationFileRoot = (configuration.config[ScanlineConfigOptionName] == nil) ? [NSString stringWithFormat:@"%@/scan_%02ld%02ld%02ld", path, hour, minute, second] :
+    [NSString stringWithFormat:@"%@/%@", path, configuration.config[ScanlineConfigOptionName]];
     NSString* destinationFile = [NSString stringWithFormat:@"%@.%@", destinationFileRoot, destinationFileExtension];
     DDLogVerbose(@"destinationFileRoot: %@", destinationFileRoot);
     int i = 0;
@@ -381,10 +383,10 @@
     // alias to all the other tag locations
     for (int i = 1; i < [[configuration tags] count]; i++) {
         DDLogVerbose(@"aliasing to tag: %@", [[configuration tags] objectAtIndex:i]);
-        NSString* aliasDirPath = [NSString stringWithFormat:@"%@/%@/%ld", [configuration dir], [[configuration tags] objectAtIndex:i], year];
+        NSString* aliasDirPath = [NSString stringWithFormat:@"%@/%@/%ld", configuration.config[ScanlineConfigOptionDir], [[configuration tags] objectAtIndex:i], year];
         [fm createDirectoryAtPath:aliasDirPath withIntermediateDirectories:YES attributes:nil error:nil];
-        NSString* aliasFileRoot = ([configuration name] == nil) ? [NSString stringWithFormat:@"%@/scan_%02ld%02ld%02ld", aliasDirPath, hour, minute, second] :
-        [NSString stringWithFormat:@"%@/%@", aliasDirPath, [configuration name]];
+        NSString* aliasFileRoot = (configuration.config[ScanlineConfigOptionName] == nil) ? [NSString stringWithFormat:@"%@/scan_%02ld%02ld%02ld", aliasDirPath, hour, minute, second] :
+        [NSString stringWithFormat:@"%@/%@", aliasDirPath, configuration.config[ScanlineConfigOptionName]];
         NSString* aliasFilePath = [NSString stringWithFormat:@"%@.%@", aliasFileRoot, destinationFileExtension];
         int suffix = 0;
         while ([fm fileExistsAtPath:aliasFilePath]) {
@@ -396,7 +398,7 @@
         DDLogInfo(@"Aliased to: %@", aliasFilePath);
     }
     
-    if (configuration.open) {
+    if (configuration.config[ScanlineConfigOptionOpen]) {
         // open the file
         NSWorkspace *workspace = [NSWorkspace sharedWorkspace];
         [workspace openFile:destinationFile];
@@ -480,7 +482,7 @@
     DDLogVerbose(@"flatbed is %d", ICScannerFunctionalUnitTypeFlatbed);
   
 //    [scanner requestSelectFunctionalUnit:(long)[[scanner availableFunctionalUnitTypes] objectAtIndex:1]];
-    [scanner requestSelectFunctionalUnit:(ICScannerFunctionalUnitType) ([configuration isFlatbed] ? ICScannerFunctionalUnitTypeFlatbed : ICScannerFunctionalUnitTypeDocumentFeeder) ];
+    [scanner requestSelectFunctionalUnit:(ICScannerFunctionalUnitType) (configuration.config[ScanlineConfigOptionFlatbed] ? ICScannerFunctionalUnitTypeFlatbed : ICScannerFunctionalUnitTypeDocumentFeeder) ];
 //    if (scanner.selectedFunctionalUnit.type != unit.type) {
   //      [scanner requestSelectFunctionalUnit:unit.type];
     //}
@@ -494,12 +496,12 @@
 - (ICScannerDevice*)selectedScanner
 {
     for (ICScannerDevice *scanner in mScanners) {
-        if ([[scanner name] isEqualToString:[configuration scanner]] || [configuration scanner] == nil) {
+        if ([[scanner name] isEqualToString:configuration.config[ScanlineConfigOptionScanner]] || configuration.config[ScanlineConfigOptionScanner] == nil) {
             return scanner;
         }
     }
 
-    DDLogInfo(@"Unable to find scanner named \"%@\"", [configuration scanner]);
+    DDLogInfo(@"Unable to find scanner named \"%@\"", configuration.config[ScanlineConfigOptionScanner]);
     [self exit];
     return nil;
 }
@@ -529,7 +531,7 @@
    
   //  [self selectFunctionalUnit:nil];
     
-    if ([configuration listOnly]) return;
+    if (configuration.config[ScanlineConfigOptionList]) return;
     
     DDLogVerbose(@"starting scan");
     
@@ -539,8 +541,8 @@
         {
             ICScannerFunctionalUnitDocumentFeeder* dfu = (ICScannerFunctionalUnitDocumentFeeder*)fu;
             
-            dfu.documentType = ([configuration isLegal]) ? ICScannerDocumentTypeUSLegal : ICScannerDocumentTypeUSLetter;
-            dfu.duplexScanningEnabled = [configuration isDuplex];
+            dfu.documentType = (configuration.config[ScanlineConfigOptionLegal]) ? ICScannerDocumentTypeUSLegal : ICScannerDocumentTypeUSLetter;
+            dfu.duplexScanningEnabled = (BOOL)configuration.config[ScanlineConfigOptionDuplex];
         }
         else
         {
@@ -557,8 +559,8 @@
         }
         
      
-        fu.resolution                   = [fu.supportedResolutions indexGreaterThanOrEqualToIndex:configuration.resolution];
-        if (configuration.mono) {
+        fu.resolution                   = [fu.supportedResolutions indexGreaterThanOrEqualToIndex:[configuration.config[ScanlineConfigOptionResolution] intValue]];
+        if (configuration.config[ScanlineConfigOptionMono]) {
             fu.pixelDataType = ICScannerPixelDataTypeBW;
             fu.bitDepth = ICScannerBitDepth1Bit;
         } else {

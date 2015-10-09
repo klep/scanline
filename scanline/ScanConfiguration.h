@@ -9,6 +9,8 @@
 #import <Foundation/Foundation.h>
 #import "DDLog.h"
 
+#define SKLog(FORMAT, ...) printf("%s\n", [[NSString stringWithFormat:FORMAT, ##__VA_ARGS__] UTF8String]);
+
 static NSString * const ScanlineConfigOptionDuplex = @"duplex";
 static NSString * const ScanlineConfigOptionBatch = @"batch";
 static NSString * const ScanlineConfigOptionList = @"list";
@@ -26,23 +28,11 @@ static NSString * const ScanlineConfigOptionResolution = @"resolution";
 
 @interface ScanConfiguration : NSObject
 
-@property (getter = isDuplex)   BOOL               duplex;
-@property (getter = isBatch)    BOOL               batch;
-@property (getter = isFlatbed)  BOOL               flatbed;
-@property (getter = listOnly)   BOOL               list;
-@property (getter = isJpeg)     BOOL               jpeg;
-@property (getter = isLegal)    BOOL               legal;
-@property (getter = isMono)     BOOL               mono;
-@property                       BOOL               open;
-@property (strong)              NSString*          dir;
-@property (strong)              NSString*          name;
-@property (strong)              NSMutableArray*    tags;
-@property (strong)              NSString*          scanner;
-@property                       int                resolution;
+@property (strong, nonatomic) NSMutableArray *tags;
+@property (strong, nonatomic) NSMutableDictionary *config;
 
 - (id)init;
 - (id)initWithArguments:(NSArray *)inArguments;
-- (void)print;
 
 - (NSString*)configFilePath;
 + (NSDictionary*)configOptions;
