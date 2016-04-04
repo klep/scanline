@@ -538,15 +538,17 @@
     
     if ( ( fu.scanInProgress == NO ) && ( fu.overviewScanInProgress == NO ) )
     {
-        if ( fu.type == ICScannerFunctionalUnitTypeDocumentFeeder )
-        {
-            ICScannerFunctionalUnitDocumentFeeder* dfu = (ICScannerFunctionalUnitDocumentFeeder*)fu;
+
+        ICScannerFunctionalUnitDocumentFeeder* dfu = (ICScannerFunctionalUnitDocumentFeeder*)fu;
+        
+        if (configuration.config[ScanlineConfigOptionLegal]) {
+            dfu.documentType = ICScannerDocumentTypeUSLegal;
+        } else if (configuration.config[ScanlineConfigOptionLetter]) {
+            dfu.documentType = ICScannerDocumentTypeUSLetter;
+        } else if (configuration.config[ScanlineConfigOptionA4]) {
+            dfu.documentType = ICScannerDocumentTypeA4;
+        } else {
             
-            dfu.documentType = (configuration.config[ScanlineConfigOptionLegal]) ? ICScannerDocumentTypeUSLegal : ICScannerDocumentTypeUSLetter;
-            dfu.duplexScanningEnabled = (BOOL)configuration.config[ScanlineConfigOptionDuplex];
-        }
-        else
-        {
             NSSize s;
             
             fu.measurementUnit  = ICScannerMeasurementUnitInches;
@@ -557,8 +559,13 @@
             else
                 s = ((ICScannerFunctionalUnitNegativeTransparency*)fu).physicalSize;
             fu.scanArea         = NSMakeRect( 0.0, 0.0, s.width, s.height );
+            
         }
         
+        if ( fu.type == ICScannerFunctionalUnitTypeDocumentFeeder )
+        {
+            dfu.duplexScanningEnabled = (BOOL)configuration.config[ScanlineConfigOptionDuplex];
+        }
      
         fu.resolution                   = [fu.supportedResolutions indexGreaterThanOrEqualToIndex:[configuration.config[ScanlineConfigOptionResolution] intValue]];
         if (configuration.config[ScanlineConfigOptionMono]) {

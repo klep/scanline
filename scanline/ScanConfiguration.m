@@ -40,6 +40,9 @@ int ddLogLevel = LOG_LEVEL_INFO;
                      @"synonyms": @[@"jpg"],
                      @"description": @"Scan to a JPEG file (default is PDF)"
                      },
+             ScanlineConfigOptionA4: @{
+                     @"description": @"Scan an A4 size page"
+                     },
              ScanlineConfigOptionLegal: @{
                      @"description": @"Scan a legal size page"
                      },
@@ -76,7 +79,7 @@ int ddLogLevel = LOG_LEVEL_INFO;
                      @"synonyms": @[@"res", @"minResolution"],
                      @"type": @"string",
                      @"description": @"Specify minimum resolution at which to scan (in dpi)",
-                     @"default": @"150"
+                     @"default": @"300"
                      }
              };
 }
