@@ -541,8 +541,17 @@
         if ( fu.type == ICScannerFunctionalUnitTypeDocumentFeeder )
         {
             ICScannerFunctionalUnitDocumentFeeder* dfu = (ICScannerFunctionalUnitDocumentFeeder*)fu;
-            
-            dfu.documentType = (configuration.config[ScanlineConfigOptionLegal]) ? ICScannerDocumentTypeUSLegal : ICScannerDocumentTypeUSLetter;
+
+            if (configuration.config[ScanlineConfigOptionLegal]) {
+                dfu.documentType = ICScannerDocumentTypeUSLegal;
+            }
+            else if (configuration.config[ScanlineConfigOptionA4]) {
+                dfu.documentType = ICScannerDocumentTypeA4;
+            }
+            else {
+                dfu.documentType = ICScannerDocumentTypeUSLetter;
+            }
+
             dfu.duplexScanningEnabled = (BOOL)configuration.config[ScanlineConfigOptionDuplex];
         }
         else

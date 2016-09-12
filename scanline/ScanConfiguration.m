@@ -46,6 +46,9 @@ int ddLogLevel = LOG_LEVEL_INFO;
              ScanlineConfigOptionLetter: @{
                      @"description": @"Scan a letter size page"
                      },
+             ScanlineConfigOptionA4: @{
+                     @"description": @"Scan a A4 size page"
+                     },
              ScanlineConfigOptionMono: @{
                      @"synonyms": @[@"bw"],
                      @"description": @"Scan in monochrome (black and white)"
