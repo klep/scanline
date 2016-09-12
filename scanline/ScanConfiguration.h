@@ -18,6 +18,7 @@ static NSString * const ScanlineConfigOptionFlatbed = @"flatbed";
 static NSString * const ScanlineConfigOptionJPEG = @"jpeg";
 static NSString * const ScanlineConfigOptionLegal = @"legal";
 static NSString * const ScanlineConfigOptionLetter = @"letter";
+static NSString * const ScanlineConfigOptionA4 = @"a4";
 static NSString * const ScanlineConfigOptionMono = @"mono";
 static NSString * const ScanlineConfigOptionOpen = @"open";
 static NSString * const ScanlineConfigOptionDir = @"dir";
