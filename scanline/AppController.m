@@ -46,6 +46,10 @@
 
 //---------------------------------------------------------------------------------------------------------------- AppController
 
+@interface AppController()
+@property (nonatomic, strong) ICScannerDevice * _Nullable selectedScanner;
+@end
+
 @implementation AppController
 
 @synthesize scanners = mScanners;
@@ -91,12 +95,15 @@
     [mDeviceBrowser start];
     
     DDLogVerbose(@"Looking for available scanners...");
-    mDeviceTimer = [NSTimer scheduledTimerWithTimeInterval:20.0 target:self selector:@selector(noDevicesFound:) userInfo:nil repeats:NO];
+    mDeviceTimer = [NSTimer scheduledTimerWithTimeInterval:10.0 target:self selector:@selector(noDevicesFound:) userInfo:nil repeats:NO];
 }
 
 - (void)noDevicesFound:(NSTimer*)theTimer
 {
-    DDLogInfo(@"No scanners found.");
+    if (!configuration.config[ScanlineConfigOptionList]) {
+        DDLogInfo(@"No scanners found.");
+    }
+
     [self exit];
 }
 
@@ -126,24 +133,22 @@
     
     if ( (addedDevice.type & ICDeviceTypeMaskScanner) == ICDeviceTypeScanner )
     {
-        if (mDeviceTimer) {
-            [mDeviceTimer invalidate];
-            mDeviceTimer = nil;
-        }
         [mScanners addObject:addedDevice];
         addedDevice.delegate = self;
         if (configuration.config[ScanlineConfigOptionList]) {
             DDLogInfo(@"* %@", [addedDevice name]);
         }
     }
-    
-    if (!moreComing) {
-        DDLogVerbose(@"All devices have been added.");
-        if (configuration.config[ScanlineConfigOptionList]) {
-            [self exit];
-        } else {
-            [self openCloseSession:nil];
+
+    if (self.selectedScanner == nil &&
+        configuration.config[ScanlineConfigOptionScanner] &&
+        [addedDevice.name isEqualToString:configuration.config[ScanlineConfigOptionScanner]]) {
+        if (mDeviceTimer) {
+            [mDeviceTimer invalidate];
+            mDeviceTimer = nil;
         }
+        self.selectedScanner = (ICScannerDevice*)addedDevice;
+        [self openCloseSession];
     }
 }
 
@@ -445,12 +450,12 @@
     }*/
 }
 
-- (IBAction)openCloseSession:(id)sender
+- (void)openCloseSession
 {
-    if ( [self selectedScanner].hasOpenSession )
-        [[self selectedScanner] requestCloseSession];
+    if (self.selectedScanner.hasOpenSession )
+        [self.selectedScanner requestCloseSession];
     else
-        [[self selectedScanner] requestOpenSession];
+        [self.selectedScanner requestOpenSession];
 }
 
 //-------------------------------------------------------------------------------------------------------- selectFunctionalUnit:
@@ -479,8 +484,8 @@
 //    DDLogVerbose(@"unit: %@", unit);
    
     DDLogVerbose(@"current functional unit: %ld", scanner.selectedFunctionalUnit.type);
-    DDLogVerbose(@"doc feeder is %d", ICScannerFunctionalUnitTypeDocumentFeeder);
-    DDLogVerbose(@"flatbed is %d", ICScannerFunctionalUnitTypeFlatbed);
+    DDLogVerbose(@"doc feeder is %lu", (unsigned long)ICScannerFunctionalUnitTypeDocumentFeeder);
+    DDLogVerbose(@"flatbed is %lu", (unsigned long)ICScannerFunctionalUnitTypeFlatbed);
   
 //    [scanner requestSelectFunctionalUnit:(long)[[scanner availableFunctionalUnitTypes] objectAtIndex:1]];
     [scanner requestSelectFunctionalUnit:(ICScannerFunctionalUnitType) (configuration.config[ScanlineConfigOptionFlatbed] ? ICScannerFunctionalUnitTypeFlatbed : ICScannerFunctionalUnitTypeDocumentFeeder) ];
@@ -490,21 +495,42 @@
     // klepklep uncomment to go back to doc feeder
     //   [scanner requestSelectFunctionalUnit:ICScannerFunctionalUnitTypeDocumentFeeder];
 }
-
-
-//-------------------------------------------------------------------------------------------------------------- selectedScanner
-
-- (ICScannerDevice*)selectedScanner
+/*
+- (ICScannerDevice * _Nullable)selectScanner
 {
+    if (configuration.config[ScanlineConfigOptionScanner] != nil) {
+        DDLogInfo(@"Waiting for scanner named: <<%@>>", configuration.config[ScanlineConfigOptionScanner]);
+        int count = 0;
+        while (![self hasScannerNamed:configuration.config[ScanlineConfigOptionScanner]]) {
+            [NSThread sleepForTimeInterval:5];
+            count++;
+            if (count > 4) break;
+        }
+    }
+
     for (ICScannerDevice *scanner in mScanners) {
+        DDLogInfo(@"Scanner name: <<<%@>>>", [scanner name]);
         if ([[scanner name] isEqualToString:configuration.config[ScanlineConfigOptionScanner]] || configuration.config[ScanlineConfigOptionScanner] == nil) {
-            return scanner;
+            [self openCloseSession];
+            self.selectedScanner = scanner;
         }
     }
 
     DDLogInfo(@"Unable to find scanner named \"%@\"", configuration.config[ScanlineConfigOptionScanner]);
     [self exit];
     return nil;
+
+}
+ */
+- (BOOL)hasScannerNamed:(NSString * _Nonnull)name
+{
+    for (ICScannerDevice * _Nonnull scanner in mScanners) {
+        if ([[scanner name] isEqualToString:name]) {
+            return YES;
+        }
+    }
+
+    return NO;
 }
 
 //------------------------------------------------------------------------------------------------------------ startOverviewScan
@@ -527,7 +553,7 @@
 
 - (IBAction)startScan:(id)sender
 {
-    ICScannerDevice*          scanner = [self selectedScanner];
+    ICScannerDevice * _Nonnull scanner = self.selectedScanner;
     ICScannerFunctionalUnit*  fu      = scanner.selectedFunctionalUnit;
    
   //  [self selectFunctionalUnit:nil];

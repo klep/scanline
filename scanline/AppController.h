@@ -52,7 +52,6 @@
 - (void)scannerDevice:(ICScannerDevice*)scanner didCompleteScanWithError:(NSError*)error;
 
 - (ICScannerDevice*)selectedScanner;
-- (IBAction)openCloseSession:(id)sender;
 - (IBAction)selectFunctionalUnit:(id)sender;
 - (IBAction)startScan:(id)sender;
 @end
