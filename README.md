@@ -30,7 +30,7 @@ scanline -help
 
 You can download the latest binary from:
 
-https://github.com/klep/scanline/blob/master/build/scanline/Build/Products/Debug/scanline?raw=true
+https://github.com/klep/scanline/blob/master/build/Products/Debug/scanline?raw=true
 
 Note that you may need to chmod it so it's executable:
 
