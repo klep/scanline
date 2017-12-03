@@ -9,8 +9,19 @@
 import Foundation
 
 class Logger: NSObject {
+    let configuration: ScanConfiguration
     
-    class func verbose(message: String...) {
+    init(configuration: ScanConfiguration) {
+        self.configuration = configuration
+        super.init()
+    }
+    
+    func verbose(_ message: String) {
+        guard configuration.config[ScanlineConfigOptionVerbose] != nil else { return }
+        print(message)
+    }
+    
+    func log(_ message: String) {
         print(message)
     }
 }
