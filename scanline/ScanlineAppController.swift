@@ -7,6 +7,8 @@
 
 import Foundation
 import ImageCaptureCore
+import AppKit
+import Quartz
 
 class ScanlineAppController: NSObject, ScannerBrowserDelegate, ScannerControllerDelegate {
     let configuration: ScanConfiguration
@@ -17,10 +19,11 @@ class ScanlineAppController: NSObject, ScannerBrowserDelegate, ScannerController
     var scannerController: ScannerController?
     
     init(arguments: [String]) {
-//        configuration = ScanConfiguration(arguments: arguments)
-//        configuration = ScanConfiguration(arguments: ["-name", "Dell Color MFP E525w (31:4D:90)", "-exact", "-v"])
-        configuration = ScanConfiguration(arguments: ["-name", "epson", "-v", "-resolution", "600"])
+        configuration = ScanConfiguration(arguments: Array(arguments[1..<arguments.count]))
+//        configuration = ScanConfiguration(arguments: ["-scanner", "Dell Color MFP E525w (31:4D:90)", "-exact", "-v"])
+//        configuration = ScanConfiguration(arguments: ["-scanner", "epson", "-v", "-resolution", "600"])
 //        configuration = ScanConfiguration(arguments: ["-list", "-v"])
+//        configuration = ScanConfiguration(arguments: ["-scanner", "epson", "-v", "scanlinetest"])
         logger = Logger(configuration: configuration)
         scannerBrowser = ScannerBrowser(configuration: configuration, logger: logger)
         
@@ -77,17 +80,23 @@ class ScanlineAppController: NSObject, ScannerBrowserDelegate, ScannerController
         logger.log("Failed to scan document.")
         exit()
     }
+    
+    func scannerControllerDidSucceed(_ scannerController: ScannerController) {
+        exit()
+    }
 
 }
 
 protocol ScannerControllerDelegate: class {
     func scannerControllerDidFail(_ scannerController: ScannerController)
+    func scannerControllerDidSucceed(_ scannerController: ScannerController)
 }
 
 class ScannerController: NSObject, ICScannerDeviceDelegate {
     let scanner: ICScannerDevice
     let configuration: ScanConfiguration
     let logger: Logger
+    var scannedURLs = [URL]()
     weak var delegate: ScannerControllerDelegate?
     var desiredFunctionalUnitType: ICScannerFunctionalUnitType {
         return (configuration.config[ScanlineConfigOptionFlatbed] == nil) ?
@@ -147,6 +156,34 @@ class ScannerController: NSObject, ICScannerDeviceDelegate {
 
     func scannerDevice(_ scanner: ICScannerDevice, didScanTo url: URL) {
         logger.verbose("didScanTo \(url)")
+        
+        scannedURLs.append(url)
+    }
+    
+    func scannerDevice(_ scanner: ICScannerDevice, didCompleteScanWithError error: Error?) {
+        logger.verbose("didCompleteScanWithError \(error?.localizedDescription ?? "[no error]")")
+        
+        guard error == nil else {
+            logger.log("ERROR: \(error!.localizedDescription)")
+            delegate?.scannerControllerDidFail(self)
+            return
+        }
+
+        if self.configuration.config[ScanlineConfigOptionBatch] != nil {
+            logger.log("Press RETURN to scan next page or S to stop")
+            let userInput = String(format: "%c", getchar())
+            if !"sS".contains(userInput) {
+                self.scan()
+                return
+            }
+        }
+
+        let outputProcessor = ScanlineOutputProcessor(urls: self.scannedURLs, configuration: configuration, logger: logger)
+        if outputProcessor.process() {
+            delegate?.scannerControllerDidSucceed(self)
+        } else {
+            delegate?.scannerControllerDidFail(self)
+        }
     }
     
     // MARK: Private Methods
@@ -206,5 +243,165 @@ class ScannerController: NSObject, ICScannerDeviceDelegate {
 //
 //        functionalUnit.measurementUnit = .inches
 //
+    }
+}
+
+extension Int {
+    // format to 2 decimal places
+    func f02ld() -> String {
+        return String(format: "%02ld", self)
+    }
+    
+    func fld() -> String {
+        return String(format: "%ld", self)
+    }
+}
+class ScanlineOutputProcessor {
+    let logger: Logger
+    let configuration: ScanConfiguration
+    let urls: [URL]
+    
+    init(urls: [URL], configuration: ScanConfiguration, logger: Logger) {
+        self.urls = urls
+        self.configuration = configuration
+        self.logger = logger
+    }
+    
+    func process() -> Bool {
+        if configuration.config[ScanlineConfigOptionJPEG] != nil {
+            for url in urls {
+                outputAndTag(url: url)
+            }
+        } else {
+            // Combine into a single PDF
+            if let combinedURL = combine(urls: urls) {
+                outputAndTag(url: combinedURL)
+            } else {
+                logger.log("Error while creating PDF")
+                return false
+            }
+        }
+        
+        return true
+    }
+    
+    func combine(urls: [URL]) -> URL? {
+        let document = PDFDocument()
+        
+        for url in urls {
+            if let page = PDFPage(image: NSImage(byReferencing: url)) {
+                document.insert(page, at: document.pageCount)
+            }
+        }
+        
+        let tempFilePath = "\(NSTemporaryDirectory())/scan.pdf"
+        document.write(toFile: tempFilePath)
+        
+        return URL(fileURLWithPath: tempFilePath)
+    }
+    /*
+ 
+ PDFDocument *outputDocument = [[PDFDocument alloc] init];
+ NSUInteger pageIndex = 0;
+ for (NSURL* inputDocument in mScannedDestinationURLs) {
+ /*
+ PDFDocument *inputPDF = [[PDFDocument alloc] initWithURL:inputDocument];
+ for (int i = 0; i < [inputPDF pageCount]; i++) {
+ [outputDocument insertPage:[inputPDF pageAtIndex:i] atIndex:pageIndex++];
+ }
+ [inputPDF release];*/
+ // TODO: big memory leak here (?)
+ PDFPage *thePage = [[PDFPage alloc] initWithImage:[[NSImage alloc] initByReferencingURL:inputDocument]];
+ [outputDocument insertPage:thePage atIndex:pageIndex++];
+ }
+ 
+ // save the document
+ NSString* tempFile = [NSTemporaryDirectory() stringByAppendingPathComponent:@"scan.pdf"];
+ DDLogVerbose(@"writing to tempFile: %@", tempFile);
+ [outputDocument writeToFile:tempFile];
+ return [[NSURL alloc] initFileURLWithPath:tempFile];*/
+    func outputAndTag(url: URL) {
+        let gregorian = NSCalendar(calendarIdentifier: .gregorian)!
+        let dateComponents = gregorian.components([.year, .hour, .minute, .second], from: Date())
+        
+        let outputRootDirectory = configuration.config[ScanlineConfigOptionDir] as! String
+        var path = outputRootDirectory
+        
+        // If there's a tag, move the file to the first tag location
+        if configuration.tags.count > 0 {
+            path = "\(path)/\(configuration.tags[0])/\(dateComponents.year!.fld())"
+        }
+        
+        logger.verbose("Output path: \(path)")
+
+        do {
+            try FileManager.default.createDirectory(atPath: path, withIntermediateDirectories: true, attributes: nil)
+        } catch {
+            logger.log("Error while creating directory \(path)")
+            return
+        }
+        let destinationFileExtension = (configuration.config[ScanlineConfigOptionJPEG] != nil ? "jpg" : "pdf")
+        let destinationFileRoot: String = { () -> String in
+            if let fileName = self.configuration.config[ScanlineConfigOptionName] {
+                return "\(path)/\(fileName)"
+            }
+            return "\(path)/scan_\(dateComponents.hour!.f02ld())\(dateComponents.minute!.f02ld())\(dateComponents.second!.f02ld())"
+        }()
+        
+        var destinationFilePath = "\(destinationFileRoot).\(destinationFileExtension)"
+        var i = 0
+        while FileManager.default.fileExists(atPath: destinationFilePath) {
+            destinationFilePath = "\(destinationFileRoot).\(destinationFileExtension).\(i)"
+            i += 1
+        }
+        
+        logger.verbose("About to copy \(url.absoluteString) to \(destinationFilePath)")
+
+        let destinationURL = URL(fileURLWithPath: destinationFilePath)
+        do {
+            try FileManager.default.copyItem(at: url, to: destinationURL)
+        } catch {
+            logger.log("Error while copying file to \(destinationURL.absoluteString)")
+            return
+        }
+
+        // Alias to all other tag locations
+        // todo: this is super repetitive with above...
+        if configuration.tags.count > 1 {
+            for tag in configuration.tags.subarray(with: NSMakeRange(1, configuration.tags.count - 1)) {
+                logger.verbose("Aliasing to tag \(tag)")
+                let aliasDirPath = "\(outputRootDirectory)/\(tag)/\(dateComponents.year!.fld())"
+                do {
+                    try FileManager.default.createDirectory(atPath: aliasDirPath, withIntermediateDirectories: true, attributes: nil)
+                } catch {
+                    logger.log("Error while creating directory \(aliasDirPath)")
+                    return
+                }
+                let aliasFileRoot = { () -> String in
+                    if let name = configuration.config[ScanlineConfigOptionName] {
+                        return "\(aliasDirPath)/\(name)"
+                    }
+                    return "\(aliasDirPath)/scan_\(dateComponents.hour!.f02ld())\(dateComponents.minute!.f02ld())\(dateComponents.second!.f02ld())"
+                }()
+                var aliasFilePath = "\(aliasFileRoot).\(destinationFileExtension)"
+                var i = 0
+                while FileManager.default.fileExists(atPath: aliasFilePath) {
+                    aliasFilePath = "\(aliasFileRoot).\(destinationFileExtension).\(i)"
+                    i += 1
+                }
+                logger.verbose("Aliasing to \(aliasFilePath)")
+                do {
+                    try FileManager.default.createSymbolicLink(atPath: aliasFilePath, withDestinationPath: destinationFilePath)
+                } catch {
+                    logger.log("Error while creating alias at \(aliasFilePath)")
+                    return
+                }
+            }
+        }
+        
+        if configuration.config[ScanlineConfigOptionOpen] != nil {
+            logger.verbose("Opening file at \(destinationFilePath)")
+            NSWorkspace.shared.openFile(destinationFilePath)
+        }
     }
 }
