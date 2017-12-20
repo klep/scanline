@@ -20,6 +20,7 @@ class ScanlineAppController: NSObject, ScannerBrowserDelegate, ScannerController
     
     init(arguments: [String]) {
         configuration = ScanConfiguration(arguments: Array(arguments[1..<arguments.count]))
+//        configuration = ScanConfiguration(arguments: ["-flatbed", "house", "-v"])
 //        configuration = ScanConfiguration(arguments: ["-scanner", "Dell Color MFP E525w (31:4D:90)", "-exact", "-v"])
 //        configuration = ScanConfiguration(arguments: ["-scanner", "epson", "-v", "-resolution", "600"])
 //        configuration = ScanConfiguration(arguments: ["-list", "-v"])
@@ -147,7 +148,8 @@ class ScannerController: NSObject, ICScannerDeviceDelegate {
     func scannerDevice(_ scanner: ICScannerDevice, didSelect functionalUnit: ICScannerFunctionalUnit, error: Error?) {
         logger.verbose("didSelectFunctionalUnit: \(functionalUnit) error: \(error?.localizedDescription ?? "[no error]")")
         
-        if functionalUnit.type == self.desiredFunctionalUnitType {
+        // NOTE: Despite the fact that `functionalUnit` is not an optional, it still sometimes comes in as `nil` even when `error` is `nil`
+        if functionalUnit != nil && functionalUnit.type == self.desiredFunctionalUnitType {
             configureScanner()
             logger.log("Starting scan...")
             scanner.requestScan()
@@ -223,6 +225,8 @@ class ScannerController: NSObject, ICScannerDeviceDelegate {
     }
 
     fileprivate func configureDocumentFeeder() {
+        logger.verbose("Configuring Document Feeder")
+
         guard let functionalUnit = scanner.selectedFunctionalUnit as? ICScannerFunctionalUnitDocumentFeeder else { return }
         
         functionalUnit.documentType = { () -> ICScannerDocumentType in
@@ -239,10 +243,13 @@ class ScannerController: NSObject, ICScannerDeviceDelegate {
     }
     
     fileprivate func configureFlatbed() {
-//        guard let functionalUnit = scanner.selectedFunctionalUnit as? ICScannerFunctionalUnitFlatbed else { return }
-//
-//        functionalUnit.measurementUnit = .inches
-//
+        logger.verbose("Configuring Flatbed")
+        
+        guard let functionalUnit = scanner.selectedFunctionalUnit as? ICScannerFunctionalUnitFlatbed else { return }
+
+        functionalUnit.measurementUnit = .inches
+        let physicalSize = functionalUnit.physicalSize
+        functionalUnit.scanArea = NSMakeRect(0, 0, physicalSize.width, physicalSize.height)
     }
 }
 
