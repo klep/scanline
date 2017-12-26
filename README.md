@@ -26,6 +26,10 @@ You can see all of scanline's options by typing:
 scanline -help
 ```
 
+## Swift Rewrite
+
+In December, 2017, the Swift rewrite of scanline was merged into `master`. Let me know if you experience any new issues.
+
 ## Installing scanline
 
 You can download the latest binary from:
