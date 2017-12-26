@@ -35,8 +35,8 @@ static NSString * const ScanlineConfigOptionExactName = @"exactname";
 
 - (id)init;
 - (id)initWithArguments:(NSArray *)inArguments;
+- (id)initWithArguments:(NSArray *)inArguments configFilePath:(NSString *)configFilePath;
 
-- (NSString*)configFilePath;
 + (NSDictionary*)configOptions;
 
 @end

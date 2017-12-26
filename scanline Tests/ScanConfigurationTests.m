@@ -7,57 +7,33 @@
 //
 
 #import <XCTest/XCTest.h>
-#import "OCMock/OCMock.h"
-
-#import "DDLog.h"
-#import "DDTTYLogger.h"
-#import "DDASLLogger.h"
 
 #import "ScanConfiguration.h"
 
-@interface scanline_Tests : XCTestCase
+@interface ScanConfigurationTests : XCTestCase
 
 @end
 
-@implementation scanline_Tests
+@implementation ScanConfigurationTests
 
 ScanConfiguration *testConfig;
 
 - (void)setUp
 {
     [super setUp];
-
-    [DDLog addLogger:[DDASLLogger sharedInstance]];
-    [DDLog addLogger:[DDTTYLogger sharedInstance]];
-    ddLogLevel = LOG_LEVEL_VERBOSE;
     
     testConfig = [ScanConfiguration alloc];
-    id mock = [OCMockObject partialMockForObject:testConfig];
-    NSString *testConfPath = ((NSURL*)[NSURL fileURLWithPath:@"config_test.conf"]).path;
-
-    [[[mock stub] andReturn:testConfPath] configFilePath];
 }
 
 - (void)tearDown
 {
-    [DDLog flushLog];
-    
     // Put teardown code here. This method is called after the invocation of each test method in the class.
     [super tearDown];
 }
 
 - (void)testLoadConfigurationFromFile
 {
-    testConfig = [testConfig init];
-    XCTAssertTrue(testConfig.config[ScanlineConfigOptionDuplex]);
-    XCTAssertFalse(testConfig.config[ScanlineConfigOptionBatch]);
-    XCTAssertFalse(testConfig.config[ScanlineConfigOptionFlatbed]);
-    XCTAssertEqualObjects(testConfig.config[ScanlineConfigOptionName], @"the_name");
-}
-
-- (void)testLoadConfigurationFromFileUsingEmptyArguments
-{
-    testConfig = [testConfig initWithArguments:[NSArray array]];
+    testConfig = [testConfig initWithArguments:@[] configFilePath:@"Scanline Tests.xctest/Contents/Resources/config_test.conf"];
     XCTAssertTrue(testConfig.config[ScanlineConfigOptionDuplex]);
     XCTAssertFalse(testConfig.config[ScanlineConfigOptionBatch]);
     XCTAssertFalse(testConfig.config[ScanlineConfigOptionFlatbed]);
@@ -66,7 +42,7 @@ ScanConfiguration *testConfig;
 
 - (void)testLoadConfigurationFromFileWithArgumentOverride
 {
-    testConfig = [testConfig initWithArguments:[NSArray arrayWithObjects:@"-flatbed", nil]];
+    testConfig = [testConfig initWithArguments:[NSArray arrayWithObjects:@"-flatbed", nil] configFilePath:@"Scanline Tests.xctest/Contents/Resources/config_test.conf"];
     XCTAssertTrue(testConfig.config[ScanlineConfigOptionDuplex]);
     XCTAssertFalse(testConfig.config[ScanlineConfigOptionBatch]);
     XCTAssertTrue(testConfig.config[ScanlineConfigOptionFlatbed]);
@@ -75,26 +51,25 @@ ScanConfiguration *testConfig;
 
 - (void)testGettingTagsFromCommandline
 {
-    testConfig = [testConfig initWithArguments:[NSArray arrayWithObjects:@"taxes-2013", nil]];
-    DDLogInfo(@"first tag: %@", [[testConfig tags] objectAtIndex:0]);
+    testConfig = [testConfig initWithArguments:[NSArray arrayWithObjects:@"taxes-2013", nil] configFilePath:@"Scanline Tests.xctest/Contents/Resources/config_test.conf"];
     XCTAssertTrue([[[testConfig tags] objectAtIndex:0] isEqualToString:@"taxes-2013"]);
 }
 
 - (void)testJpegOption
 {
-    testConfig = [testConfig initWithArguments:[NSArray arrayWithObjects:@"-jpeg", nil]];
+    testConfig = [testConfig initWithArguments:[NSArray arrayWithObjects:@"-jpeg", nil] configFilePath:@"Scanline Tests.xctest/Contents/Resources/config_test.conf"];
     XCTAssertTrue(testConfig.config[ScanlineConfigOptionJPEG]);
 }
 
 - (void)testJpegOptionWithJpg
 {
-    testConfig = [testConfig initWithArguments:[NSArray arrayWithObjects:@"-jpg", nil]];
+    testConfig = [testConfig initWithArguments:[NSArray arrayWithObjects:@"-jpg", nil] configFilePath:@"Scanline Tests.xctest/Contents/Resources/config_test.conf"];
     XCTAssertTrue(testConfig.config[ScanlineConfigOptionJPEG]);
 }
 
 - (void)testResolutionOptionWithNonNumericalValue
 {
-    testConfig = [testConfig initWithArguments:[NSArray arrayWithObjects:@"-resolution", @"booger", nil]];
+    testConfig = [testConfig initWithArguments:[NSArray arrayWithObjects:@"-resolution", @"booger", nil] configFilePath:@"Scanline Tests.xctest/Contents/Resources/config_test.conf"];
     XCTAssertEqual([testConfig.config[ScanlineConfigOptionResolution] intValue], 0);
 }
 

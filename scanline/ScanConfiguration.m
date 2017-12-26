@@ -111,6 +111,16 @@ BOOL debugLogging = NO;
 
 - (id)init
 {
+    return [self initWithArguments:@[]];
+}
+
+- (id)initWithArguments:(NSArray *)inArguments
+{
+    return [self initWithArguments:inArguments configFilePath:[ScanConfiguration defaultConfigFilePath]];
+}
+
+- (id)initWithArguments:(NSArray *)inArguments configFilePath:(NSString *)configFilePath
+{
     if (self = [super init]) {
         NSDictionary *configOptions = [ScanConfiguration configOptions];
         _config = [NSMutableDictionary dictionaryWithCapacity:configOptions.attributeKeys.count];
@@ -118,14 +128,7 @@ BOOL debugLogging = NO;
         _tags = [NSMutableArray arrayWithCapacity:0];
         
         [self loadConfigurationDefaults];
-        [self loadConfigurationFromFile];
-    }
-    return self;
-}
-
-- (id)initWithArguments:(NSArray *)inArguments
-{
-    if (self = [self init]) {
+        [self loadConfigurationFromFile:configFilePath];
         [self loadConfigurationFromArguments:inArguments];
     }
     return self;
@@ -178,16 +181,13 @@ BOOL debugLogging = NO;
 }
 
 
-- (NSString*)configFilePath
++ (NSString*)defaultConfigFilePath
 {
     return [NSString stringWithFormat:@"%@/.scanline.conf", NSHomeDirectory()];
 }
 
-- (void)loadConfigurationFromFile
+- (void)loadConfigurationFromFile:(NSString *)configPath
 {
-    NSString* configPath = [self configFilePath];
-//    [Logger verbose: @"configPath: %@", configPath];
-    
     if ([[NSFileManager defaultManager] isReadableFileAtPath:configPath]) {
         NSString* valueString = [NSString stringWithContentsOfFile:configPath encoding:NSUTF8StringEncoding error:nil];
         NSArray* values = [valueString componentsSeparatedByString:@"\n"];

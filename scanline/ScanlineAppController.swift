@@ -306,27 +306,7 @@ class ScanlineOutputProcessor {
         
         return URL(fileURLWithPath: tempFilePath)
     }
-    /*
- 
- PDFDocument *outputDocument = [[PDFDocument alloc] init];
- NSUInteger pageIndex = 0;
- for (NSURL* inputDocument in mScannedDestinationURLs) {
- /*
- PDFDocument *inputPDF = [[PDFDocument alloc] initWithURL:inputDocument];
- for (int i = 0; i < [inputPDF pageCount]; i++) {
- [outputDocument insertPage:[inputPDF pageAtIndex:i] atIndex:pageIndex++];
- }
- [inputPDF release];*/
- // TODO: big memory leak here (?)
- PDFPage *thePage = [[PDFPage alloc] initWithImage:[[NSImage alloc] initByReferencingURL:inputDocument]];
- [outputDocument insertPage:thePage atIndex:pageIndex++];
- }
- 
- // save the document
- NSString* tempFile = [NSTemporaryDirectory() stringByAppendingPathComponent:@"scan.pdf"];
- DDLogVerbose(@"writing to tempFile: %@", tempFile);
- [outputDocument writeToFile:tempFile];
- return [[NSURL alloc] initFileURLWithPath:tempFile];*/
+
     func outputAndTag(url: URL) {
         let gregorian = NSCalendar(calendarIdentifier: .gregorian)!
         let dateComponents = gregorian.components([.year, .hour, .minute, .second], from: Date())
