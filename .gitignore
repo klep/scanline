@@ -15,6 +15,9 @@ profile
 *.moved-aside
 DerivedData
 .idea/
+Index/
+build/Products/Debug/scanline.swiftmodule/
+build/Intermediates.noindex
 Samples/ScannerBrowser/AppController.h
 Samples/ScannerBrowser/AppController.m
 Samples/ScannerBrowser/Info.plist
