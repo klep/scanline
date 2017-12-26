@@ -7,7 +7,6 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "DDLog.h"
 
 #define SKLog(FORMAT, ...) printf("%s\n", [[NSString stringWithFormat:FORMAT, ##__VA_ARGS__] UTF8String]);
 
@@ -26,6 +25,8 @@ static NSString * const ScanlineConfigOptionName = @"name";
 static NSString * const ScanlineConfigOptionVerbose = @"verbose";
 static NSString * const ScanlineConfigOptionScanner = @"scanner";
 static NSString * const ScanlineConfigOptionResolution = @"resolution";
+static NSString * const ScanlineConfigOptionBrowseSecs = @"browsesecs";
+static NSString * const ScanlineConfigOptionExactName = @"exactname";
 
 @interface ScanConfiguration : NSObject
 
@@ -34,10 +35,10 @@ static NSString * const ScanlineConfigOptionResolution = @"resolution";
 
 - (id)init;
 - (id)initWithArguments:(NSArray *)inArguments;
+- (id)initWithArguments:(NSArray *)inArguments configFilePath:(NSString *)configFilePath;
 
-- (NSString*)configFilePath;
 + (NSDictionary*)configOptions;
 
 @end
 
-extern int ddLogLevel;
+extern BOOL verboseLogging;

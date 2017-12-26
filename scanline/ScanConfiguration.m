@@ -7,9 +7,9 @@
 //
 
 #import "ScanConfiguration.h"
-#import "DDLog.h"
+#import "scanline-Swift.h"
 
-int ddLogLevel = LOG_LEVEL_INFO;
+BOOL debugLogging = NO;
 
 @interface ScanConfiguration()
 @end
@@ -80,7 +80,18 @@ int ddLogLevel = LOG_LEVEL_INFO;
                      @"type": @"string",
                      @"description": @"Specify minimum resolution at which to scan (in dpi)",
                      @"default": @"150"
-                     }
+                     },
+             ScanlineConfigOptionBrowseSecs: @{
+                     @"synonyms": @[@"time", @"t"],
+                     @"type": @"string",
+                     @"description": @"Specify how long to wait when searching for scanners (in seconds)",
+                     @"default": @"10"
+                     },
+             ScanlineConfigOptionExactName: @{
+                     @"synonyms": @[@"exact"],
+                     @"type": @"flag",
+                     @"description": @"When specified, only the scanner with the exact name specified will be used (no fuzzy matching)"
+                     },
              };
 }
 
@@ -100,6 +111,16 @@ int ddLogLevel = LOG_LEVEL_INFO;
 
 - (id)init
 {
+    return [self initWithArguments:@[]];
+}
+
+- (id)initWithArguments:(NSArray *)inArguments
+{
+    return [self initWithArguments:inArguments configFilePath:[ScanConfiguration defaultConfigFilePath]];
+}
+
+- (id)initWithArguments:(NSArray *)inArguments configFilePath:(NSString *)configFilePath
+{
     if (self = [super init]) {
         NSDictionary *configOptions = [ScanConfiguration configOptions];
         _config = [NSMutableDictionary dictionaryWithCapacity:configOptions.attributeKeys.count];
@@ -107,14 +128,7 @@ int ddLogLevel = LOG_LEVEL_INFO;
         _tags = [NSMutableArray arrayWithCapacity:0];
         
         [self loadConfigurationDefaults];
-        [self loadConfigurationFromFile];
-    }
-    return self;
-}
-
-- (id)initWithArguments:(NSArray *)inArguments
-{
-    if (self = [self init]) {
+        [self loadConfigurationFromFile:configFilePath];
         [self loadConfigurationFromArguments:inArguments];
     }
     return self;
@@ -167,16 +181,13 @@ int ddLogLevel = LOG_LEVEL_INFO;
 }
 
 
-- (NSString*)configFilePath
++ (NSString*)defaultConfigFilePath
 {
     return [NSString stringWithFormat:@"%@/.scanline.conf", NSHomeDirectory()];
 }
 
-- (void)loadConfigurationFromFile
+- (void)loadConfigurationFromFile:(NSString *)configPath
 {
-    NSString* configPath = [self configFilePath];
-    DDLogVerbose(@"configPath: %@", configPath);
-    
     if ([[NSFileManager defaultManager] isReadableFileAtPath:configPath]) {
         NSString* valueString = [NSString stringWithContentsOfFile:configPath encoding:NSUTF8StringEncoding error:nil];
         NSArray* values = [valueString componentsSeparatedByString:@"\n"];
@@ -186,7 +197,7 @@ int ddLogLevel = LOG_LEVEL_INFO;
 
 - (void)loadConfigurationFromArguments:(NSArray*)inArguments
 {
-    DDLogVerbose(@"loading config from arguments: %@", inArguments);
+//    DDLogVerbose(@"loading config from arguments: %@", inArguments);
     for (int i = 0; i < [inArguments count]; i++) {
         NSString* theArg = [inArguments objectAtIndex:i];
 
@@ -213,18 +224,18 @@ int ddLogLevel = LOG_LEVEL_INFO;
                 }
             }
         } else if (![theArg isEqualToString:@""]) {
-            DDLogVerbose(@"Adding tag: %@", theArg);
+//            DDLogVerbose(@"Adding tag: %@", theArg);
             [_tags addObject:theArg];
         }
     }
 
     if (self.config[ScanlineConfigOptionVerbose]) {
-        ddLogLevel = LOG_LEVEL_VERBOSE;
-        DDLogVerbose(@"Verbose logging enabled.");
+//        ddLogLevel = DDLogLevelVerbose;
+//        DDLogVerbose(@"Verbose logging enabled.");
     }
 
     if ([self.config[ScanlineConfigOptionResolution] isEqualToString:@"0"]) {
-        DDLogError(@"WARNING: Scanning at resolution of 0. This will scan at the scanner's lowest possible resolution.");
+//        DDLogError(@"WARNING: Scanning at resolution of 0. This will scan at the scanner's lowest possible resolution.");
     }
 }
 
