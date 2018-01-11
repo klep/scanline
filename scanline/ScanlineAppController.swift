@@ -25,7 +25,7 @@ class ScanlineAppController: NSObject, ScannerBrowserDelegate, ScannerController
 //        configuration = ScanConfiguration(arguments: ["-scanner", "epson", "-v", "-resolution", "600"])
 //        configuration = ScanConfiguration(arguments: ["-list", "-v"])
 //        configuration = ScanConfiguration(arguments: ["-scanner", "epson", "-v", "scanlinetest"])
-//        configuration = ScanConfiguration(arguments: ["-scanner", "epson", "-script", "\"tesseract %INPUT% tesseract_output", "scanlinetest"])
+//        configuration = ScanConfiguration(arguments: ["-scanner", "epson", "-script", "\"/usr/local/bin/tesseract %INPUT% %OUTPUT%", "scanlinetest"])
         logger = Logger(configuration: configuration)
         scannerBrowser = ScannerBrowser(configuration: configuration, logger: logger)
         
@@ -277,9 +277,11 @@ class ScanlineOutputProcessor {
     
     func process() -> Bool {
         // Apply post-processing to each image, if specified
-        if let cmd = configuration.config[ScanlineConfigOptionScript] as? String {
+        
+        if let cmd = configuration.config[ScanlineConfigOptionScript] as? String,
+            let destinationFileRoot = self.destinationFileRoot {
             for url in urls {
-                script(url: url, command: cmd)
+                script(url: url, outputPath: destinationFileRoot, command: cmd)
             }
         }
         if configuration.config[ScanlineConfigOptionJPEG] != nil {
@@ -299,8 +301,8 @@ class ScanlineOutputProcessor {
         return true
     }
     
-    func script(url: URL, command cmd: String) {
-        var parsedCommand = cmd.replacingOccurrences(of: "%INPUT%", with: "\"\(url.path)\"")
+    func script(url: URL, outputPath: String, command cmd: String) {
+        var parsedCommand = cmd.replacingOccurrences(of: "%INPUT%", with: "\"\(url.path)\"").replacingOccurrences(of: "%OUTPUT%", with: "\"\(outputPath)\"")
         if parsedCommand.prefix(1) == "\"" {
             parsedCommand = String(parsedCommand.suffix(from: parsedCommand.index(parsedCommand.startIndex, offsetBy:1)))
         }
@@ -347,27 +349,27 @@ class ScanlineOutputProcessor {
         return URL(fileURLWithPath: tempFilePath)
     }
 
-    func outputAndTag(url: URL) {
+    lazy var outputRootDirectory: String = {
+        return configuration.config[ScanlineConfigOptionDir] as! String
+    }()
+
+    lazy var destinationFileRoot: String? = {
         let gregorian = NSCalendar(calendarIdentifier: .gregorian)!
         let dateComponents = gregorian.components([.year, .hour, .minute, .second], from: Date())
         
-        let outputRootDirectory = configuration.config[ScanlineConfigOptionDir] as! String
-        var path = outputRootDirectory
+        var path = self.outputRootDirectory
         
         // If there's a tag, move the file to the first tag location
         if configuration.tags.count > 0 {
             path = "\(path)/\(configuration.tags[0])/\(dateComponents.year!.fld())"
         }
-        
-        logger.verbose("Output path: \(path)")
 
         do {
             try FileManager.default.createDirectory(atPath: path, withIntermediateDirectories: true, attributes: nil)
         } catch {
             logger.log("Error while creating directory \(path)")
-            return
+            return nil
         }
-        let destinationFileExtension = (configuration.config[ScanlineConfigOptionJPEG] != nil ? "jpg" : "pdf")
         let destinationFileRoot: String = { () -> String in
             if let fileName = self.configuration.config[ScanlineConfigOptionName] {
                 return "\(path)/\(fileName)"
@@ -375,6 +377,15 @@ class ScanlineOutputProcessor {
             return "\(path)/scan_\(dateComponents.hour!.f02ld())\(dateComponents.minute!.f02ld())\(dateComponents.second!.f02ld())"
         }()
         
+        return destinationFileRoot
+    }()
+
+    func outputAndTag(url: URL) {
+        let gregorian = NSCalendar(calendarIdentifier: .gregorian)!
+        let dateComponents = gregorian.components([.year, .hour, .minute, .second], from: Date())
+
+        guard let destinationFileRoot = self.destinationFileRoot else { return }
+        let destinationFileExtension = (configuration.config[ScanlineConfigOptionJPEG] != nil ? "jpg" : "pdf")
         var destinationFilePath = "\(destinationFileRoot).\(destinationFileExtension)"
         var i = 0
         while FileManager.default.fileExists(atPath: destinationFilePath) {

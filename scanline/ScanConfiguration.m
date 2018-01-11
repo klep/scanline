@@ -95,7 +95,7 @@ BOOL debugLogging = NO;
              ScanlineConfigOptionScript: @{
                      @"synonyms": @[@"process", @"shell"],
                      @"type": @"string",
-                     @"description": @"Specify a shell command to execute on each intermediate scanned image. The token \"%INPUT%\" will be replaced with the path to the image."
+                     @"description": @"Specify a shell command to execute on each intermediate scanned image. The token \"%INPUT%\" will be replaced with the path to the image. The token \"%OUTPUT%\" will contain the base path to the output file."
                      },
              };
 }
