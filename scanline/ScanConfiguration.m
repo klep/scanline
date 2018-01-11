@@ -92,6 +92,11 @@ BOOL debugLogging = NO;
                      @"type": @"flag",
                      @"description": @"When specified, only the scanner with the exact name specified will be used (no fuzzy matching)"
                      },
+             ScanlineConfigOptionScript: @{
+                     @"synonyms": @[@"process", @"shell"],
+                     @"type": @"string",
+                     @"description": @"Specify a shell command to execute on each intermediate scanned image. The token \"%INPUT%\" will be replaced with the path to the image."
+                     },
              };
 }
 

@@ -27,6 +27,7 @@ static NSString * const ScanlineConfigOptionScanner = @"scanner";
 static NSString * const ScanlineConfigOptionResolution = @"resolution";
 static NSString * const ScanlineConfigOptionBrowseSecs = @"browsesecs";
 static NSString * const ScanlineConfigOptionExactName = @"exactname";
+static NSString * const ScanlineConfigOptionScript = @"script";
 
 @interface ScanConfiguration : NSObject
 

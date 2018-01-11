@@ -25,6 +25,7 @@ class ScanlineAppController: NSObject, ScannerBrowserDelegate, ScannerController
 //        configuration = ScanConfiguration(arguments: ["-scanner", "epson", "-v", "-resolution", "600"])
 //        configuration = ScanConfiguration(arguments: ["-list", "-v"])
 //        configuration = ScanConfiguration(arguments: ["-scanner", "epson", "-v", "scanlinetest"])
+//        configuration = ScanConfiguration(arguments: ["-scanner", "epson", "-script", "\"tesseract %INPUT% tesseract_output", "scanlinetest"])
         logger = Logger(configuration: configuration)
         scannerBrowser = ScannerBrowser(configuration: configuration, logger: logger)
         
@@ -275,6 +276,12 @@ class ScanlineOutputProcessor {
     }
     
     func process() -> Bool {
+        // Apply post-processing to each image, if specified
+        if let cmd = configuration.config[ScanlineConfigOptionScript] as? String {
+            for url in urls {
+                script(url: url, command: cmd)
+            }
+        }
         if configuration.config[ScanlineConfigOptionJPEG] != nil {
             for url in urls {
                 outputAndTag(url: url)
@@ -290,6 +297,39 @@ class ScanlineOutputProcessor {
         }
         
         return true
+    }
+    
+    func script(url: URL, command cmd: String) {
+        var parsedCommand = cmd.replacingOccurrences(of: "%INPUT%", with: "\"\(url.path)\"")
+        if parsedCommand.prefix(1) == "\"" {
+            parsedCommand = String(parsedCommand.suffix(from: parsedCommand.index(parsedCommand.startIndex, offsetBy:1)))
+        }
+        if parsedCommand.suffix(1) == "\"" {
+            parsedCommand = String(parsedCommand.prefix(upTo: parsedCommand.index(parsedCommand.endIndex, offsetBy:-1)))
+        }
+
+        var arguments: [String] = []
+        var inQuote = false
+        var argument = ""
+        for ch in parsedCommand {
+            if ch == "\"" {
+                inQuote = !inQuote
+                if !argument.isEmpty { arguments.append(argument) }
+                argument = ""
+            } else if ch == " " && !inQuote {
+                if !argument.isEmpty { arguments.append(argument) }
+                argument = ""
+            } else {
+                argument.append(ch)
+            }
+        }
+        if !argument.isEmpty { arguments.append(argument) }
+        
+        let task = Process()
+        task.launchPath = "/usr/bin/env"
+        task.arguments = arguments
+        task.launch()
+        task.waitUntilExit()
     }
     
     func combine(urls: [URL]) -> URL? {
