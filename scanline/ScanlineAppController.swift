@@ -338,7 +338,7 @@ class ScanlineOutputProcessor {
         var destinationFilePath = "\(destinationFileRoot).\(destinationFileExtension)"
         var i = 0
         while FileManager.default.fileExists(atPath: destinationFilePath) {
-            destinationFilePath = "\(destinationFileRoot).\(destinationFileExtension).\(i)"
+            destinationFilePath = "\(destinationFileRoot).\(i).\(destinationFileExtension)"
             i += 1
         }
         
@@ -373,7 +373,7 @@ class ScanlineOutputProcessor {
                 var aliasFilePath = "\(aliasFileRoot).\(destinationFileExtension)"
                 var i = 0
                 while FileManager.default.fileExists(atPath: aliasFilePath) {
-                    aliasFilePath = "\(aliasFileRoot).\(destinationFileExtension).\(i)"
+                    aliasFilePath = "\(aliasFileRoot).\(i).\(destinationFileExtension)"
                     i += 1
                 }
                 logger.verbose("Aliasing to \(aliasFilePath)")
