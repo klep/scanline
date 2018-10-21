@@ -175,7 +175,8 @@ class ScannerController: NSObject, ICScannerDeviceDelegate {
             logger.log("Press RETURN to scan next page or S to stop")
             let userInput = String(format: "%c", getchar())
             if !"sS".contains(userInput) {
-                self.scan()
+                logger.verbose("Continuing scan")
+                scanner.requestScan()
                 return
             }
         }
