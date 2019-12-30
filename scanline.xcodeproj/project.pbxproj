@@ -11,6 +11,7 @@
 		1730C50723BA4CFF00391200 /* IntExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1730C50223BA4CFE00391200 /* IntExtensions.swift */; };
 		1730C50923BA4CFF00391200 /* ScannerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1730C50423BA4CFF00391200 /* ScannerController.swift */; };
 		1730C50A23BA4CFF00391200 /* ScannerControllerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1730C50523BA4CFF00391200 /* ScannerControllerDelegate.swift */; };
+		1730C50C23BA521400391200 /* ScanConfigurationExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1730C50B23BA521400391200 /* ScanConfigurationExtension.swift */; };
 		FCD75D391FF2E1D50041D955 /* ScanConfigurationTests.m in Sources */ = {isa = PBXBuildFile; fileRef = FCD75D381FF2E1D50041D955 /* ScanConfigurationTests.m */; };
 		FCD75D451FF2E9300041D955 /* config_test.conf in Resources */ = {isa = PBXBuildFile; fileRef = FCD75D441FF2E9300041D955 /* config_test.conf */; };
 		FCD75D6A1FF2ED220041D955 /* ScanConfiguration.m in Sources */ = {isa = PBXBuildFile; fileRef = FCF90C461FD3536700EAF3D1 /* ScanConfiguration.m */; };
@@ -52,6 +53,7 @@
 		1730C50223BA4CFE00391200 /* IntExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IntExtensions.swift; sourceTree = "<group>"; };
 		1730C50423BA4CFF00391200 /* ScannerController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScannerController.swift; sourceTree = "<group>"; };
 		1730C50523BA4CFF00391200 /* ScannerControllerDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScannerControllerDelegate.swift; sourceTree = "<group>"; };
+		1730C50B23BA521400391200 /* ScanConfigurationExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScanConfigurationExtension.swift; sourceTree = "<group>"; };
 		FCD75D361FF2E1D50041D955 /* Scanline Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Scanline Tests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		FCD75D381FF2E1D50041D955 /* ScanConfigurationTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ScanConfigurationTests.m; sourceTree = "<group>"; };
 		FCD75D3A1FF2E1D50041D955 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -115,6 +117,7 @@
 		FCF90C3D1FD3534B00EAF3D1 /* scanline */ = {
 			isa = PBXGroup;
 			children = (
+				1730C50B23BA521400391200 /* ScanConfigurationExtension.swift */,
 				1730C50223BA4CFE00391200 /* IntExtensions.swift */,
 				1730C50123BA4CFE00391200 /* ScanlineOutputProcessor.swift */,
 				1730C50423BA4CFF00391200 /* ScannerController.swift */,
@@ -241,6 +244,7 @@
 				1730C50923BA4CFF00391200 /* ScannerController.swift in Sources */,
 				FCF90C3F1FD3534B00EAF3D1 /* main.swift in Sources */,
 				FCF90C481FD3536700EAF3D1 /* ScanConfiguration.m in Sources */,
+				1730C50C23BA521400391200 /* ScanConfigurationExtension.swift in Sources */,
 				FCF90C501FD39E3300EAF3D1 /* ScannerBrowser.swift in Sources */,
 				FCF90C4A1FD3537400EAF3D1 /* ScanlineAppController.swift in Sources */,
 				1730C50A23BA4CFF00391200 /* ScannerControllerDelegate.swift in Sources */,

@@ -36,7 +36,7 @@ class ScanlineAppController: NSObject, ScannerBrowserDelegate, ScannerController
     func go() {
         scannerBrowser.browse()
         
-        let timerExpiration:Double = Double(configuration.config[ScanlineConfigOptionBrowseSecs] as? String ?? "10") ?? 10.0
+        let timerExpiration = configuration.waitSeconds
         scannerBrowserTimer = Timer.scheduledTimer(withTimeInterval: timerExpiration, repeats: false) { _ in
             self.scannerBrowser.stopBrowsing()
         }
@@ -61,7 +61,7 @@ class ScanlineAppController: NSObject, ScannerBrowserDelegate, ScannerController
         scannerBrowserTimer?.invalidate()
         scannerBrowserTimer = nil
         
-        guard configuration.config[ScanlineConfigOptionList] == nil else {
+        guard !configuration.list else {
             exit()
             return
         }

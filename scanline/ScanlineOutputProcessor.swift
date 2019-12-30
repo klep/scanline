@@ -23,7 +23,7 @@ class ScanlineOutputProcessor {
     }
     
     func process() -> Bool {
-        if configuration.config[ScanlineConfigOptionJPEG] != nil {
+        if configuration.jpegOutput {
             for url in urls {
                 outputAndTag(url: url)
             }
@@ -59,7 +59,7 @@ class ScanlineOutputProcessor {
         let gregorian = NSCalendar(calendarIdentifier: .gregorian)!
         let dateComponents = gregorian.components([.year, .hour, .minute, .second], from: Date())
         
-        let outputRootDirectory = configuration.config[ScanlineConfigOptionDir] as! String
+        let outputRootDirectory = configuration.outputRootDir
         var path = outputRootDirectory
         
         // If there's a tag, move the file to the first tag location
@@ -75,9 +75,9 @@ class ScanlineOutputProcessor {
             logger.log("Error while creating directory \(path)")
             return
         }
-        let destinationFileExtension = (configuration.config[ScanlineConfigOptionJPEG] != nil ? "jpg" : "pdf")
+        let destinationFileExtension = (configuration.jpegOutput ? "jpg" : "pdf")
         let destinationFileRoot: String = { () -> String in
-            if let fileName = self.configuration.config[ScanlineConfigOptionName] {
+            if let fileName = self.configuration.outputFileName {
                 return "\(path)/\(fileName)"
             }
             return "\(path)/scan_\(dateComponents.hour!.f02ld())\(dateComponents.minute!.f02ld())\(dateComponents.second!.f02ld())"
@@ -113,7 +113,7 @@ class ScanlineOutputProcessor {
                     return
                 }
                 let aliasFileRoot = { () -> String in
-                    if let name = configuration.config[ScanlineConfigOptionName] {
+                    if let name = configuration.outputFileName {
                         return "\(aliasDirPath)/\(name)"
                     }
                     return "\(aliasDirPath)/scan_\(dateComponents.hour!.f02ld())\(dateComponents.minute!.f02ld())\(dateComponents.second!.f02ld())"
@@ -134,7 +134,7 @@ class ScanlineOutputProcessor {
             }
         }
         
-        if configuration.config[ScanlineConfigOptionOpen] != nil {
+        if configuration.shouldOpenAfterScan {
             logger.verbose("Opening file at \(destinationFilePath)")
             NSWorkspace.shared.openFile(destinationFilePath)
         }

@@ -18,9 +18,8 @@ class ScannerController: NSObject, ICScannerDeviceDelegate {
     var scannedURLs = [URL]()
     weak var delegate: ScannerControllerDelegate?
     var desiredFunctionalUnitType: ICScannerFunctionalUnitType {
-        return (configuration.config[ScanlineConfigOptionFlatbed] == nil) ?
-            ICScannerFunctionalUnitType.documentFeeder :
-            ICScannerFunctionalUnitType.flatbed
+        return configuration.flatbed ? ICScannerFunctionalUnitType.flatbed :
+            ICScannerFunctionalUnitType.documentFeeder
     }
     
     init(scanner: ICScannerDevice, configuration: ScanConfiguration, logger: Logger) {
@@ -97,7 +96,7 @@ class ScannerController: NSObject, ICScannerDeviceDelegate {
             return
         }
 
-        if self.configuration.config[ScanlineConfigOptionBatch] != nil {
+        if self.configuration.batchScan {
             logger.log("Press RETURN to scan next page or S to stop")
             let userInput = String(format: "%c", getchar())
             if !"sS".contains(userInput) {
@@ -132,12 +131,12 @@ class ScannerController: NSObject, ICScannerDeviceDelegate {
             configureFlatbed()
         }
         
-        let desiredResolution = Int(configuration.config[ScanlineConfigOptionResolution] as? String ?? "150") ?? 150
+        let desiredResolution = configuration.resolution
         if let resolutionIndex = functionalUnit.supportedResolutions.integerGreaterThanOrEqualTo(desiredResolution) {
             functionalUnit.resolution = resolutionIndex
         }
 
-        if configuration.config[ScanlineConfigOptionMono] != nil {
+        if configuration.mono {
             functionalUnit.pixelDataType = .BW
             functionalUnit.bitDepth = .depth1Bit
         } else {
@@ -157,16 +156,16 @@ class ScannerController: NSObject, ICScannerDeviceDelegate {
         guard let functionalUnit = scanner.selectedFunctionalUnit as? ICScannerFunctionalUnitDocumentFeeder else { return }
         
         functionalUnit.documentType = { () -> ICScannerDocumentType in
-            if configuration.config[ScanlineConfigOptionLegal] != nil {
+            if configuration.isLegal {
                 return .typeUSLegal
             }
-            if configuration.config[ScanlineConfigOptionA4] != nil {
+            if configuration.isA4 {
                 return .typeA4
             }
             return .typeUSLetter
         }()
         
-        functionalUnit.duplexScanningEnabled = (configuration.config[ScanlineConfigOptionDuplex] != nil)
+        functionalUnit.duplexScanningEnabled = configuration.duplex
     }
     
     fileprivate func configureFlatbed() {
