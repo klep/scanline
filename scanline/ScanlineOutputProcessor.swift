@@ -25,6 +25,14 @@ class ScanlineOutputProcessor {
     func process() -> Bool {
         if configuration.jpegOutput {
             for url in urls {
+                var image = NSImage(contentsOf: url)!
+                let data = image.jpgRepresentation(withCreationDate: configuration.creationDate)
+                do {
+                    try data?.write(to: url, options: .atomicWrite)
+                } catch {
+                    logger.log("Failed to write jpg")
+                    return false
+                }
                 outputAndTag(url: url)
             }
         } else {

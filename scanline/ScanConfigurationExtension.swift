@@ -70,4 +70,15 @@ extension ScanConfiguration {
             return nil
         }
     }
+    
+    var creationDate: Date? {
+        if let dateString = self.config[ScanlineConfigOptionCreationDate] as? String {
+            let dateFormatter = DateFormatter()
+            dateFormatter.dateFormat = "yyyy:MM:dd"
+            dateFormatter.locale = Locale(identifier: "en_US_POSIX")
+            return dateFormatter.date(from:dateString)
+        } else {
+            return nil
+        }
+    }
 }

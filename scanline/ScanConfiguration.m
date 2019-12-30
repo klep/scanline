@@ -97,6 +97,10 @@ BOOL debugLogging = NO;
                      @"type": @"string",
                      @"description": @"Specify the size of the area that should be scanned in cm (Default is the whole flatbed scan area)"
                      },
+             ScanlineConfigOptionCreationDate: @{
+                     @"type": @"string",
+                     @"description": @"When specified, the EXIF creation date is set to the given date (Format YYYY:MM:DD)"
+             },
              };
 }
 
