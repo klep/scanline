@@ -76,19 +76,10 @@ class ScanlineOutputProcessor {
             return
         }
         let destinationFileExtension = (configuration.jpegOutput ? "jpg" : "pdf")
-        let destinationFileRoot: String = { () -> String in
-            if let fileName = self.configuration.outputFileName {
-                return "\(path)/\(fileName)"
-            }
-            return "\(path)/scan_\(dateComponents.hour!.f02ld())\(dateComponents.minute!.f02ld())\(dateComponents.second!.f02ld())"
-        }()
         
-        var destinationFilePath = "\(destinationFileRoot).\(destinationFileExtension)"
-        var i = 0
-        while FileManager.default.fileExists(atPath: destinationFilePath) {
-            destinationFilePath = "\(destinationFileRoot).\(i).\(destinationFileExtension)"
-            i += 1
-        }
+        let basename = configuration.outputFileName ??  "scan_\(dateComponents.hour!.f02ld())\(dateComponents.minute!.f02ld())\(dateComponents.second!.f02ld())"
+        
+        let destinationFilePath = findOutputFilePath(in: path, withBasename: basename, withExtension: destinationFileExtension)
         
         logger.verbose("About to copy \(url.absoluteString) to \(destinationFilePath)")
 
@@ -101,7 +92,6 @@ class ScanlineOutputProcessor {
         }
 
         // Alias to all other tag locations
-        // todo: this is super repetitive with above...
         if configuration.tags.count > 1 {
             for tag in configuration.tags.subarray(with: NSMakeRange(1, configuration.tags.count - 1)) {
                 logger.verbose("Aliasing to tag \(tag)")
@@ -112,18 +102,8 @@ class ScanlineOutputProcessor {
                     logger.log("Error while creating directory \(aliasDirPath)")
                     return
                 }
-                let aliasFileRoot = { () -> String in
-                    if let name = configuration.outputFileName {
-                        return "\(aliasDirPath)/\(name)"
-                    }
-                    return "\(aliasDirPath)/scan_\(dateComponents.hour!.f02ld())\(dateComponents.minute!.f02ld())\(dateComponents.second!.f02ld())"
-                }()
-                var aliasFilePath = "\(aliasFileRoot).\(destinationFileExtension)"
-                var i = 0
-                while FileManager.default.fileExists(atPath: aliasFilePath) {
-                    aliasFilePath = "\(aliasFileRoot).\(i).\(destinationFileExtension)"
-                    i += 1
-                }
+                
+                let aliasFilePath = findOutputFilePath(in: aliasDirPath, withBasename: basename, withExtension: destinationFileExtension)
                 logger.verbose("Aliasing to \(aliasFilePath)")
                 do {
                     try FileManager.default.createSymbolicLink(atPath: aliasFilePath, withDestinationPath: destinationFilePath)
@@ -138,5 +118,17 @@ class ScanlineOutputProcessor {
             logger.verbose("Opening file at \(destinationFilePath)")
             NSWorkspace.shared.openFile(destinationFilePath)
         }
+    }
+    
+    func findOutputFilePath(in dir: String, withBasename basename: String, withExtension fileExtension: String) -> String {
+        let destinationFileRoot = "\(dir)/\(basename)"
+        
+        var destinationFilePath = "\(destinationFileRoot).\(fileExtension)"
+        var i = 0
+        while FileManager.default.fileExists(atPath: destinationFilePath) {
+            destinationFilePath = "\(destinationFileRoot).\(i).\(fileExtension)"
+            i += 1
+        }
+        return destinationFilePath
     }
 }
