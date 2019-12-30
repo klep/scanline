@@ -92,6 +92,11 @@ BOOL debugLogging = NO;
                      @"type": @"flag",
                      @"description": @"When specified, only the scanner with the exact name specified will be used (no fuzzy matching)"
                      },
+             ScanlineConfigOptionArea: @{
+                     @"synonyms": @[@"size"],
+                     @"type": @"string",
+                     @"description": @"Specify the size of the area that should be scanned in cm (Default is the whole flatbed scan area)"
+                     },
              };
 }
 

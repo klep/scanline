@@ -173,8 +173,13 @@ class ScannerController: NSObject, ICScannerDeviceDelegate {
         
         guard let functionalUnit = scanner.selectedFunctionalUnit as? ICScannerFunctionalUnitFlatbed else { return }
 
-        functionalUnit.measurementUnit = .inches
-        let physicalSize = functionalUnit.physicalSize
-        functionalUnit.scanArea = NSMakeRect(0, 0, physicalSize.width, physicalSize.height)
+        if let area = configuration.area {
+            functionalUnit.measurementUnit = .centimeters
+            functionalUnit.scanArea = NSMakeRect(0, 0, area.width, area.height)
+        } else {
+            functionalUnit.measurementUnit = .inches
+            let physicalSize = functionalUnit.physicalSize
+            functionalUnit.scanArea = NSMakeRect(0, 0, physicalSize.width, physicalSize.height)
+        }
     }
 }

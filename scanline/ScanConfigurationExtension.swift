@@ -61,4 +61,13 @@ extension ScanConfiguration {
     var list: Bool {
         return self.config[ScanlineConfigOptionList] != nil
     }
+    
+    var area: (width: CGFloat, height: CGFloat)? {
+        if let sizeString = self.config[ScanlineConfigOptionArea] as? String {
+            let size = sizeString.components(separatedBy: "x")
+            return (width: CGFloat(Float(size[0])!), height: CGFloat(Float(size[1])!))
+        } else {
+            return nil
+        }
+    }
 }
