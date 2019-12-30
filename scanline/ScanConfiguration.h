@@ -29,6 +29,7 @@ static NSString * const ScanlineConfigOptionBrowseSecs = @"browsesecs";
 static NSString * const ScanlineConfigOptionExactName = @"exactname";
 static NSString * const ScanlineConfigOptionArea = @"area";
 static NSString * const ScanlineConfigOptionCreationDate = @"creation-date";
+static NSString * const ScanlineConfigOptionAutoTrim = @"auto-trim";
 
 @interface ScanConfiguration : NSObject
 

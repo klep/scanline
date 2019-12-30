@@ -81,4 +81,8 @@ extension ScanConfiguration {
             return nil
         }
     }
+    
+    var autoTrimEnabled: Bool {
+        return self.config[ScanlineConfigOptionAutoTrim] != nil
+    }
 }

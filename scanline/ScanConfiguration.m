@@ -101,6 +101,11 @@ BOOL debugLogging = NO;
                      @"type": @"string",
                      @"description": @"When specified, the EXIF creation date is set to the given date (Format YYYY:MM:DD)"
              },
+             ScanlineConfigOptionAutoTrim: @{
+                     @"synonyms": @[@"trim-whitespace"],
+                     @"type": @"flag",
+                     @"description": @"Trims whitespace around the image (useful for photos)"
+             },
              };
 }
 

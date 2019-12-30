@@ -26,7 +26,10 @@ class ScanlineOutputProcessor {
         if configuration.jpegOutput {
             for url in urls {
                 var image = NSImage(contentsOf: url)!
-                let data = image.jpgRepresentation(withCreationDate: configuration.creationDate)
+                if configuration.autoTrimEnabled {
+                    image = image.trimmed()
+                }
+                let data = image.jpgRepresentation(withDate: configuration.creationDate)
                 do {
                     try data?.write(to: url, options: .atomicWrite)
                 } catch {
@@ -52,7 +55,11 @@ class ScanlineOutputProcessor {
         let document = PDFDocument()
         
         for url in urls {
-            if let page = PDFPage(image: NSImage(byReferencing: url)) {
+            var page: NSImage = NSImage(byReferencing: url)
+            if configuration.autoTrimEnabled {
+                page = page.trimmed()
+            }
+            if let page = PDFPage(image: page) {
                 document.insert(page, at: document.pageCount)
             }
         }
