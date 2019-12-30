@@ -137,6 +137,14 @@ class ScannerController: NSObject, ICScannerDeviceDelegate {
         }
     }
     
+    func device(_ device: ICDevice, didCloseSessionWithError error: Error) {
+        logger.verbose("didCloseSessionWithError: \(error.localizedDescription)")
+        
+        logger.log("Error received while attempting to close a session with the scanner.")
+        delegate?.scannerControllerDidFail(self)
+        exit(1)
+    }
+    
     func didRemove(_ device: ICDevice) {
     }
     
