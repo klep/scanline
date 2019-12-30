@@ -85,4 +85,12 @@ extension ScanConfiguration {
     var autoTrimEnabled: Bool {
         return self.config[ScanlineConfigOptionAutoTrim] != nil
     }
+    
+    var insets: Insets? {
+        if let insetsSpec = self.config[ScanlineConfigOptionInsets] as? String {
+            return Insets(fromString: insetsSpec)
+        } else {
+            return nil
+        }
+    }
 }

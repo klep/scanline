@@ -101,6 +101,12 @@ BOOL debugLogging = NO;
                      @"type": @"string",
                      @"description": @"When specified, the EXIF creation date is set to the given date (Format YYYY:MM:DD)"
              },
+             ScanlineConfigOptionInsets: @{
+                     @"synonyms": @[@"cutoff"],
+                     @"type": @"string",
+                     @"description": @"The number of pixels to cut off from each side (Format Left:Top:Right:Bottom)",
+                     @"default": @"0:0:0:0"
+             },
              ScanlineConfigOptionAutoTrim: @{
                      @"synonyms": @[@"trim-whitespace"],
                      @"type": @"flag",

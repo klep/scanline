@@ -30,6 +30,7 @@ static NSString * const ScanlineConfigOptionExactName = @"exactname";
 static NSString * const ScanlineConfigOptionArea = @"area";
 static NSString * const ScanlineConfigOptionCreationDate = @"creation-date";
 static NSString * const ScanlineConfigOptionAutoTrim = @"auto-trim";
+static NSString * const ScanlineConfigOptionInsets = @"insets";
 
 @interface ScanConfiguration : NSObject
 

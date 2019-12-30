@@ -27,7 +27,7 @@ class ScanlineOutputProcessor {
             for url in urls {
                 var image = NSImage(contentsOf: url)!
                 if configuration.autoTrimEnabled {
-                    image = image.trimmed()
+                    image = image.trimmed(withInsets: configuration.insets)
                 }
                 let data = image.jpgRepresentation(withDate: configuration.creationDate)
                 do {
@@ -57,7 +57,7 @@ class ScanlineOutputProcessor {
         for url in urls {
             var page: NSImage = NSImage(byReferencing: url)
             if configuration.autoTrimEnabled {
-                page = page.trimmed()
+                page = page.trimmed(withInsets: configuration.insets)
             }
             if let page = PDFPage(image: page) {
                 document.insert(page, at: document.pageCount)

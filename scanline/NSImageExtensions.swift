@@ -22,8 +22,11 @@ extension NSImage {
     }
     
     /// Creates a new version of the image where the white right and bottom areas are removed
-    func trimmed() -> NSImage {
-        let rect = self.cropRect
+    func trimmed(withInsets insets: Insets?) -> NSImage {
+        var rect = self.cropRect
+        if let insets = insets {
+            rect = rect.insetted(with: insets)
+        }
         if let imageRef = self.crop(toRect: rect) {
             return imageRef
         }
