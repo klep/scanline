@@ -50,7 +50,7 @@ class ScannerController: NSObject, ICScannerDeviceDelegate {
         guard error == nil else {
             logger.log("Error received while attempting to open a session with the scanner.")
             delegate?.scannerControllerDidFail(self)
-            return
+            exit(1)
         }
     }
     
@@ -76,7 +76,7 @@ class ScannerController: NSObject, ICScannerDeviceDelegate {
         // NOTE: Despite the fact that `functionalUnit` is not an optional, it still sometimes comes in as `nil` even when `error` is `nil`
         if functionalUnit != nil && functionalUnit.type == self.desiredFunctionalUnitType {
             configureScanner()
-            logger.log("Starting scan...")
+            logger.verbose("Starting scan...")
             scanner.requestScan()
         }
     }
@@ -93,7 +93,7 @@ class ScannerController: NSObject, ICScannerDeviceDelegate {
         guard error == nil else {
             logger.log("ERROR: \(error!.localizedDescription)")
             delegate?.scannerControllerDidFail(self)
-            return
+            exit(1)
         }
 
         if self.configuration.batchScan {

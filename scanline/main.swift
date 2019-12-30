@@ -12,5 +12,3 @@ let appController = ScanlineAppController(arguments: CommandLine.arguments)
 appController.go()
 
 CFRunLoopRun()
-
-print("Done")

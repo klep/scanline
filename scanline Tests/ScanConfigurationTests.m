@@ -8,7 +8,7 @@
 
 #import <XCTest/XCTest.h>
 
-#import "ScanConfiguration.h"
+#import "../scanline/ScanConfiguration.h"
 
 @interface ScanConfigurationTests : XCTestCase
 
