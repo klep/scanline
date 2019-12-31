@@ -31,6 +31,7 @@ static NSString * const ScanlineConfigOptionArea = @"area";
 static NSString * const ScanlineConfigOptionCreationDate = @"creation-date";
 static NSString * const ScanlineConfigOptionAutoTrim = @"auto-trim";
 static NSString * const ScanlineConfigOptionInsets = @"insets";
+static NSString * const ScanlineConfigOptionQuality = @"quality";
 
 @interface ScanConfiguration : NSObject
 

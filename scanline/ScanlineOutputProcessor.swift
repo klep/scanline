@@ -29,7 +29,7 @@ class ScanlineOutputProcessor {
                 if configuration.autoTrimEnabled {
                     image = image.trimmed(withInsets: configuration.insets)
                 }
-                let data = image.jpgRepresentation(withDate: configuration.creationDate)
+                let data = image.jpgRepresentation(withCreationDate: configuration.creationDate, quality: configuration.quality)
                 do {
                     try data?.write(to: url, options: .atomicWrite)
                 } catch {

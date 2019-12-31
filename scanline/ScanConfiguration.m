@@ -112,6 +112,11 @@ BOOL debugLogging = NO;
                      @"type": @"flag",
                      @"description": @"Trims whitespace around the image (useful for photos)"
              },
+             ScanlineConfigOptionQuality: @{
+                     @"type": @"string",
+                     @"description": @"Specifes the quality of the image. Only used when -jpg is enabled. Value must be between 0 (low quality, small file) and 100 (best, big file). (Default is 90)",
+                     @"default": @"90"
+             },
              };
 }
 

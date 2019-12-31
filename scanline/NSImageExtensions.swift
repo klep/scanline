@@ -116,9 +116,9 @@ extension NSImage {
     }
     
     /// A JPEG representation of the image.
-    func jpgRepresentation(withCreationDate date: Date?) -> Data? {
+    func jpgRepresentation(withCreationDate date: Date?, quality: Double) -> Data? {
         if let tiff = self.tiffRepresentation(withCreationDate: date), let tiffData = NSBitmapImageRep(data: tiff) {
-            return tiffData.representation(using: .jpeg, properties: [:])
+            return tiffData.representation(using: .jpeg, properties: [.compressionFactor: quality])
         }
         
         return nil

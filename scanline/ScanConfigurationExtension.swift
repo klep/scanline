@@ -62,6 +62,14 @@ extension ScanConfiguration {
         return self.config[ScanlineConfigOptionList] != nil
     }
     
+    var scannerName: String? {
+        return self.config[ScanlineConfigOptionScanner] as? String
+    }
+    
+    var exactName: Bool {
+        return self.config[ScanlineConfigOptionExactName] != nil
+    }
+    
     var area: (width: CGFloat, height: CGFloat)? {
         if let sizeString = self.config[ScanlineConfigOptionArea] as? String {
             let size = sizeString.components(separatedBy: "x")
@@ -91,6 +99,14 @@ extension ScanConfiguration {
             return Insets(fromString: insetsSpec)
         } else {
             return nil
+        }
+    }
+    
+    var quality: Double {
+        if let quality = self.config[ScanlineConfigOptionCreationDate] as? String {
+            return Double(Int(quality)!) / 100.0
+        } else {
+            return 90.0
         }
     }
 }
