@@ -126,7 +126,10 @@ class ScannerController: NSObject, ICScannerDeviceDelegate {
         logger.verbose("didEncounterError: \(error?.localizedDescription ?? "[no error]")")
         delegate?.scannerControllerDidFail(self)
     }
-    
+    func device(_ device: ICDevice, didCloseSessionWithError error: Error?) {
+        logger.verbose("didCloseSessionWithError: \(error?.localizedDescription ?? "[no error]")")
+        delegate?.scannerControllerDidFail(self)
+    }
     func device(_ device: ICDevice, didOpenSessionWithError error: Error?) {
         logger.verbose("didOpenSessionWithError: \(error?.localizedDescription ?? "[no error]")")
         
@@ -222,7 +225,12 @@ class ScannerController: NSObject, ICScannerDeviceDelegate {
         scanner.transferMode = .fileBased
         scanner.downloadsDirectory = URL(fileURLWithPath: NSTemporaryDirectory())
         scanner.documentName = "Scan"
-        scanner.documentUTI = kUTTypeJPEG as String
+        
+        if configuration.config[ScanlineConfigOptionTIFF] != nil {
+            scanner.documentUTI = kUTTypeTIFF as String
+        } else {
+            scanner.documentUTI = kUTTypeJPEG as String
+        }
     }
 
     fileprivate func configureDocumentFeeder() {
@@ -276,7 +284,7 @@ class ScanlineOutputProcessor {
     }
     
     func process() -> Bool {
-        if configuration.config[ScanlineConfigOptionJPEG] != nil {
+        if configuration.config[ScanlineConfigOptionJPEG] != nil || configuration.config[ScanlineConfigOptionTIFF] != nil {
             for url in urls {
                 outputAndTag(url: url)
             }
@@ -328,7 +336,16 @@ class ScanlineOutputProcessor {
             logger.log("Error while creating directory \(path)")
             return
         }
-        let destinationFileExtension = (configuration.config[ScanlineConfigOptionJPEG] != nil ? "jpg" : "pdf")
+        
+        let destinationFileExtension: String
+        if configuration.config[ScanlineConfigOptionTIFF] != nil {
+            destinationFileExtension = "tif"
+        } else if configuration.config[ScanlineConfigOptionJPEG] != nil {
+            destinationFileExtension = "jpg"
+        } else {
+            destinationFileExtension = "pdf"
+        }
+        
         let destinationFileRoot: String = { () -> String in
             if let fileName = self.configuration.config[ScanlineConfigOptionName] {
                 return "\(path)/\(fileName)"
