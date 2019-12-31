@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		1730C4ED23B4ADEA00391200 /* CGRectExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1730C4EC23B4ADEA00391200 /* CGRectExtensions.swift */; };
 		1730C4EF23BA281F00391200 /* NSImageExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1730C4EE23BA281F00391200 /* NSImageExtensions.swift */; };
 		1730C4F123BA284A00391200 /* Insets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1730C4F023BA284A00391200 /* Insets.swift */; };
 		1730C4F323BA287200391200 /* ArrayExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1730C4F223BA287200391200 /* ArrayExtensions.swift */; };
@@ -17,6 +16,7 @@
 		1730C4FD23BA3D7500391200 /* ScanlineOutputProcessor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1730C4FC23BA3D7500391200 /* ScanlineOutputProcessor.swift */; };
 		1730C4FF23BA3DA100391200 /* ScannerControllerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1730C4FE23BA3DA100391200 /* ScannerControllerDelegate.swift */; };
 		1730C50023BA3E7000391200 /* ScanConfiguration.h in Sources */ = {isa = PBXBuildFile; fileRef = FCF90C471FD3536700EAF3D1 /* ScanConfiguration.h */; };
+		1730C51423BB6BBB00391200 /* CGRectExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1730C51323BB6BBB00391200 /* CGRectExtensions.swift */; };
 		FCD75D391FF2E1D50041D955 /* ScanConfigurationTests.m in Sources */ = {isa = PBXBuildFile; fileRef = FCD75D381FF2E1D50041D955 /* ScanConfigurationTests.m */; };
 		FCD75D451FF2E9300041D955 /* config_test.conf in Resources */ = {isa = PBXBuildFile; fileRef = FCD75D441FF2E9300041D955 /* config_test.conf */; };
 		FCD75D6A1FF2ED220041D955 /* ScanConfiguration.m in Sources */ = {isa = PBXBuildFile; fileRef = FCF90C461FD3536700EAF3D1 /* ScanConfiguration.m */; };
@@ -54,7 +54,6 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		1730C4EC23B4ADEA00391200 /* CGRectExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = CGRectExtensions.swift; path = image/CGRectExtensions.swift; sourceTree = "<group>"; };
 		1730C4EE23BA281F00391200 /* NSImageExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NSImageExtensions.swift; sourceTree = "<group>"; };
 		1730C4F023BA284A00391200 /* Insets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Insets.swift; sourceTree = "<group>"; };
 		1730C4F223BA287200391200 /* ArrayExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArrayExtensions.swift; sourceTree = "<group>"; };
@@ -63,6 +62,7 @@
 		1730C4FA23BA3D5300391200 /* ScannerController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScannerController.swift; sourceTree = "<group>"; };
 		1730C4FC23BA3D7500391200 /* ScanlineOutputProcessor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScanlineOutputProcessor.swift; sourceTree = "<group>"; };
 		1730C4FE23BA3DA100391200 /* ScannerControllerDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScannerControllerDelegate.swift; sourceTree = "<group>"; };
+		1730C51323BB6BBB00391200 /* CGRectExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CGRectExtensions.swift; sourceTree = "<group>"; };
 		FCD75D361FF2E1D50041D955 /* Scanline Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Scanline Tests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		FCD75D381FF2E1D50041D955 /* ScanConfigurationTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ScanConfigurationTests.m; sourceTree = "<group>"; };
 		FCD75D3A1FF2E1D50041D955 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -126,14 +126,6 @@
 		FCF90C3D1FD3534B00EAF3D1 /* scanline */ = {
 			isa = PBXGroup;
 			children = (
-				1730C51123BA6D2600391200 /* ArrayExtensions.swift */,
-				1730C50F23BA6D0E00391200 /* CGRectExtensions.swift */,
-				1730C50D23BA6BAC00391200 /* NSImageExtensions.swift */,
-				1730C50B23BA521400391200 /* ScanConfigurationExtension.swift */,
-				1730C50223BA4CFE00391200 /* IntExtensions.swift */,
-				1730C50123BA4CFE00391200 /* ScanlineOutputProcessor.swift */,
-				1730C50423BA4CFF00391200 /* ScannerController.swift */,
-				1730C50523BA4CFF00391200 /* ScannerControllerDelegate.swift */,
 				FCF90C3E1FD3534B00EAF3D1 /* main.swift */,
 				FCF90C491FD3537400EAF3D1 /* ScanlineAppController.swift */,
 				FCF90C471FD3536700EAF3D1 /* ScanConfiguration.h */,
@@ -141,7 +133,7 @@
 				FCF90C451FD3536700EAF3D1 /* scanline-Bridging-Header.h */,
 				FCF90C4B1FD3543D00EAF3D1 /* Logger.swift */,
 				FCF90C4F1FD39E3300EAF3D1 /* ScannerBrowser.swift */,
-				1730C4EC23B4ADEA00391200 /* CGRectExtensions.swift */,
+				1730C51323BB6BBB00391200 /* CGRectExtensions.swift */,
 				1730C4EE23BA281F00391200 /* NSImageExtensions.swift */,
 				1730C4F023BA284A00391200 /* Insets.swift */,
 				1730C4F223BA287200391200 /* ArrayExtensions.swift */,
@@ -268,8 +260,8 @@
 				1730C4FF23BA3DA100391200 /* ScannerControllerDelegate.swift in Sources */,
 				FCF90C501FD39E3300EAF3D1 /* ScannerBrowser.swift in Sources */,
 				1730C4F723BA2C7800391200 /* IntExtensions.swift in Sources */,
-				1730C4ED23B4ADEA00391200 /* CGRectExtensions.swift in Sources */,
 				1730C4F523BA292900391200 /* ScanConfigurationExtension.swift in Sources */,
+				1730C51423BB6BBB00391200 /* CGRectExtensions.swift in Sources */,
 				1730C4F123BA284A00391200 /* Insets.swift in Sources */,
 				1730C4FB23BA3D5300391200 /* ScannerController.swift in Sources */,
 				FCF90C4A1FD3537400EAF3D1 /* ScanlineAppController.swift in Sources */,
