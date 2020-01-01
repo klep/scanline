@@ -284,7 +284,8 @@ class ScanlineOutputProcessor {
     }
     
     func process() -> Bool {
-        if configuration.config[ScanlineConfigOptionJPEG] != nil || configuration.config[ScanlineConfigOptionTIFF] != nil {
+        let wantsPDF = configuration.config[ScanlineConfigOptionJPEG] == nil && configuration.config[ScanlineConfigOptionTIFF] == nil
+        if !wantsPDF {
             for url in urls {
                 outputAndTag(url: url)
             }
