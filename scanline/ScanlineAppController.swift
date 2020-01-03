@@ -126,10 +126,12 @@ class ScannerController: NSObject, ICScannerDeviceDelegate {
         logger.verbose("didEncounterError: \(error?.localizedDescription ?? "[no error]")")
         delegate?.scannerControllerDidFail(self)
     }
-    func device(_ device: ICDevice, didCloseSessionWithError error: Error?) {
-        logger.verbose("didCloseSessionWithError: \(error?.localizedDescription ?? "[no error]")")
+    
+    func device(_ device: ICDevice, didCloseSessionWithError error: Error) {
+        logger.verbose("didCloseSessionWithError: \(error.localizedDescription)")
         delegate?.scannerControllerDidFail(self)
     }
+    
     func device(_ device: ICDevice, didOpenSessionWithError error: Error?) {
         logger.verbose("didOpenSessionWithError: \(error?.localizedDescription ?? "[no error]")")
         
