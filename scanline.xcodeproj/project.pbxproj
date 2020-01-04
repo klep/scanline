@@ -95,6 +95,18 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		17E8D42C23C1138400E6D9F8 /* extensions */ = {
+			isa = PBXGroup;
+			children = (
+				1730C4F223BA287200391200 /* ArrayExtensions.swift */,
+				1730C51323BB6BBB00391200 /* CGRectExtensions.swift */,
+				1730C4F623BA2C7800391200 /* IntExtensions.swift */,
+				1730C4EE23BA281F00391200 /* NSImageExtensions.swift */,
+				1730C4F423BA292900391200 /* ScanConfigurationExtension.swift */,
+			);
+			path = extensions;
+			sourceTree = "<group>";
+		};
 		FCD75D371FF2E1D50041D955 /* Scanline Tests */ = {
 			isa = PBXGroup;
 			children = (
@@ -133,15 +145,11 @@
 				FCF90C451FD3536700EAF3D1 /* scanline-Bridging-Header.h */,
 				FCF90C4B1FD3543D00EAF3D1 /* Logger.swift */,
 				FCF90C4F1FD39E3300EAF3D1 /* ScannerBrowser.swift */,
-				1730C51323BB6BBB00391200 /* CGRectExtensions.swift */,
-				1730C4EE23BA281F00391200 /* NSImageExtensions.swift */,
 				1730C4F023BA284A00391200 /* Insets.swift */,
-				1730C4F223BA287200391200 /* ArrayExtensions.swift */,
-				1730C4F423BA292900391200 /* ScanConfigurationExtension.swift */,
-				1730C4F623BA2C7800391200 /* IntExtensions.swift */,
 				1730C4FA23BA3D5300391200 /* ScannerController.swift */,
 				1730C4FC23BA3D7500391200 /* ScanlineOutputProcessor.swift */,
 				1730C4FE23BA3DA100391200 /* ScannerControllerDelegate.swift */,
+				17E8D42C23C1138400E6D9F8 /* extensions */,
 			);
 			path = scanline;
 			sourceTree = "<group>";
