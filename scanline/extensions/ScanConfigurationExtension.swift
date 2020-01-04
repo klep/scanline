@@ -6,7 +6,9 @@ import Foundation
 
 extension ScanConfiguration {
     
-    private let logger = Logger(configuration: self)
+    private var logger: Logger {
+        Logger(configuration: self)
+    }
     
     var resolution: Int {
         return Int(self.config[ScanlineConfigOptionResolution] as? String ?? "150") ?? 150
@@ -68,10 +70,14 @@ extension ScanConfiguration {
         return self.config[ScanlineConfigOptionExactName] != nil
     }
     
+    var verbose: Bool {
+        return self.config[ScanlineConfigOptionVerbose] != nil
+    }
+    
     var area: (width: CGFloat, height: CGFloat)? {
         if let sizeString = self.config[ScanlineConfigOptionArea] as? String {
             let size = sizeString.components(separatedBy: "x")
-            guard (size.count != 2) {
+            guard size.count == 2 else {
                 logger.log("Area $\(sizeString) does not match the expected format. It is expected to be <width>x<height>. You are missing the x separator.")
                 return nil
             }
@@ -114,7 +120,7 @@ extension ScanConfiguration {
     
     var quality: Double {
         if let qualityString = self.config[ScanlineConfigOptionQuality] as? String {
-            guard let quality = Int(quality) else {
+            guard let quality = Int(qualityString) else {
                 logger.log("$\(qualityString) is not a valid number!")
                 return 90.0
             }

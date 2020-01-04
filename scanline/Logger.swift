@@ -13,7 +13,7 @@ class Logger: NSObject {
     }
     
     func verbose(_ message: String) {
-        guard configuration.config[ScanlineConfigOptionVerbose] != nil else { return }
+        guard configuration.verbose else { return }
         print(message)
     }
     
