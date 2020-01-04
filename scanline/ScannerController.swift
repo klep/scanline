@@ -46,7 +46,11 @@ class ScannerController: NSObject, ICScannerDeviceDelegate {
         guard error == nil else {
             logger.log("Error received while attempting to open a session with the scanner.")
             delegate?.scannerControllerDidFail(self)
-            exit(1)
+            if(configuration.batchScan) {
+                return
+            } else {
+                exit(1)
+            }
         }
     }
     
@@ -55,7 +59,11 @@ class ScannerController: NSObject, ICScannerDeviceDelegate {
         
         logger.log("Error received while attempting to close a session with the scanner.")
         delegate?.scannerControllerDidFail(self)
-        exit(1)
+        if(configuration.batchScan) {
+            return
+        } else {
+            exit(1)
+        }
     }
     
     func didRemove(_ device: ICDevice) {

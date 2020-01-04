@@ -91,7 +91,7 @@ BOOL debugLogging = NO;
              ScanlineConfigOptionArea: @{
                      @"synonyms": @[@"size"],
                      @"type": @"string",
-                     @"description": @"Specify the size of the area that should be scanned in cm (Default is the whole flatbed scan area)"
+                     @"description": @"Specify the size of the area that should be scanned in cm. Forat is <width>x<height>, e.g. 20x20 (Default is the whole flatbed scan area)"
                      },
              ScanlineConfigOptionCreationDate: @{
                      @"type": @"string",

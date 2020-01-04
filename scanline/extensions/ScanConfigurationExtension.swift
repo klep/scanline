@@ -6,6 +6,8 @@ import Foundation
 
 extension ScanConfiguration {
     
+    private let logger = Logger(configuration: self)
+    
     var resolution: Int {
         return Int(self.config[ScanlineConfigOptionResolution] as? String ?? "150") ?? 150
     }
@@ -69,7 +71,19 @@ extension ScanConfiguration {
     var area: (width: CGFloat, height: CGFloat)? {
         if let sizeString = self.config[ScanlineConfigOptionArea] as? String {
             let size = sizeString.components(separatedBy: "x")
-            return (width: CGFloat(Float(size[0])!), height: CGFloat(Float(size[1])!))
+            guard (size.count != 2) {
+                logger.log("Area $\(sizeString) does not match the expected format. It is expected to be <width>x<height>. You are missing the x separator.")
+                return nil
+            }
+            guard let width = Float(size[0]),
+                let height = Float(size[1]) else {
+                logger.log("Area $\(sizeString) does not match the expected format. The given width or height is not a valid number.")
+                return nil
+            }
+            if (!self.flatbed) {
+                logger.log("The -area option does have no effect. It is only used when specified together with -flatbed.")
+            }
+            return (width: CGFloat(width), height: CGFloat(height))
         } else {
             return nil
         }
@@ -80,7 +94,7 @@ extension ScanConfiguration {
             let dateFormatter = DateFormatter()
             dateFormatter.dateFormat = "yyyy:MM:dd"
             dateFormatter.locale = Locale(identifier: "en_US_POSIX")
-            return dateFormatter.date(from:dateString)
+            return dateFormatter.date(from: dateString)
         } else {
             return nil
         }
@@ -99,8 +113,12 @@ extension ScanConfiguration {
     }
     
     var quality: Double {
-        if let quality = self.config[ScanlineConfigOptionQuality] as? String {
-            return Double(Int(quality)!) / 100.0
+        if let qualityString = self.config[ScanlineConfigOptionQuality] as? String {
+            guard let quality = Int(quality) else {
+                logger.log("$\(qualityString) is not a valid number!")
+                return 90.0
+            }
+            return Double(quality) / 100.0
         } else {
             return 90.0
         }
