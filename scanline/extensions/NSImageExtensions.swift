@@ -1,9 +1,5 @@
 //
-//  UIImageExtensions.swift
-//  scanline
-//
-//  Created by Florian Dreier on 12/26/19.
-//  Copyright © 2019 Scott J. Kleper. All rights reserved.
+//  This code is part of scanline and published under MIT license.
 //
 
 import Foundation

@@ -1,9 +1,5 @@
 //
-//  ScanConfiguration.h
-//  scanline
-//
-//  Created by Scott J. Kleper on 9/26/13.
-//
+//  This code is part of scanline and published under MIT license.
 //
 
 #import <Foundation/Foundation.h>
