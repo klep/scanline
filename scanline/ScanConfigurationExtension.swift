@@ -103,7 +103,7 @@ extension ScanConfiguration {
     }
     
     var quality: Double {
-        if let quality = self.config[ScanlineConfigOptionCreationDate] as? String {
+        if let quality = self.config[ScanlineConfigOptionQuality] as? String {
             return Double(Int(quality)!) / 100.0
         } else {
             return 90.0

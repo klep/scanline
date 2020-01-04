@@ -36,32 +36,23 @@ extension NSImage {
     /// Determines the rectangle that contains the actual image (ignoring white areas in the right and bottom areas)
     private var cropRect: CGRect {
         let cgImage = self.cgImage(forProposedRect: nil, context: nil, hints: nil)!
-        guard let context = createARGBBitmapContextFromImage(inImage: cgImage) else { return CGRect.zero }
+        guard let provider = cgImage.dataProvider, let rawData = provider.data else { return CGRect.zero }
+        let data: UnsafePointer<UInt8> = CFDataGetBytePtr(rawData)
         
-        let rect = CGRect(x: 0, y: 0, width: cgImage.width, height: cgImage.height)
-        context.draw(cgImage, in: rect)
-        
-        guard let data = context.data?.assumingMemoryBound(to: UInt8.self) else {
-            return CGRect.zero
-        }
-        
-        let heightInt = Int(height)
-        let widthInt = Int(width)
+        let widthInt = Int(cgImage.width)
+        let heightInt = Int(cgImage.height)
         
         var nonWhiteXCounter = Array(repeating: 0, count: widthInt)
         var nonWhiteYCounter = Array(repeating: 0, count: heightInt)
         
         // Filter through data and look for non-transparent pixels.
         for y in (0 ..< heightInt) {
-            let cgY = CGFloat(y)
             for x in (0 ..< widthInt) {
-                let cgX = CGFloat(x)
-                let pixelIndex = (width * cgY + cgX) * 4 /* 4 for A, R, G, B */
+                let pixelIndex = (widthInt * y + x) * 4 /* 4 for A, R, G, B */
                 
                 if data[Int(pixelIndex)] == 0  { continue } // crop transparent
                 
-                if data[Int(pixelIndex+1)] > 0xE0 && data[Int(pixelIndex+2)] > 0xE0 && data[Int(pixelIndex+3)] > 0xE0 { continue } // crop white
-                
+                if data[Int(pixelIndex+1)] > 0xD0 && data[Int(pixelIndex+2)] > 0xD0 && data[Int(pixelIndex+3)] > 0xD0 { continue } // crop white
                 
                 nonWhiteXCounter[x] = nonWhiteXCounter[x] + 1;
                 nonWhiteYCounter[y] = nonWhiteYCounter[y] + 1;
@@ -83,25 +74,6 @@ extension NSImage {
             }
         }
         return CGRect(x: 0, y: 0, width: highX, height: highY)
-    }
-    
-    private func createARGBBitmapContextFromImage(inImage: CGImage) -> CGContext? {
-        let width = inImage.width
-        let height = inImage.height
-        
-        let bitmapBytesPerRow = width * 4
-        let bitmapByteCount = bitmapBytesPerRow * height
-        
-        let colorSpace = CGColorSpaceCreateDeviceRGB()
-        
-        let bitmapData = malloc(bitmapByteCount)
-        if bitmapData == nil {
-            return nil
-        }
-        
-        return CGContext(data: bitmapData, width: width, height: height, bitsPerComponent: 8,
-                         bytesPerRow: bitmapBytesPerRow, space: colorSpace,
-                         bitmapInfo: CGImageAlphaInfo.premultipliedFirst.rawValue)
     }
     
     /// Resize the image, to nearly fit the supplied cropping size
