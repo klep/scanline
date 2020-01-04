@@ -6,7 +6,6 @@ import Foundation
 import Cocoa
 
 extension NSImage {
-    
     /// The width of the image.
     var width: CGFloat {
         return size.width
@@ -21,7 +20,7 @@ extension NSImage {
     func trimmed(withInsets insets: Insets?) -> NSImage {
         var rect = self.cropRect
         if let insets = insets {
-            rect = rect.insetted(with: insets)
+            rect = rect.inset(with: insets)
         }
         if let imageRef = self.crop(toRect: rect) {
             return imageRef
@@ -54,22 +53,25 @@ extension NSImage {
                 nonWhiteYCounter[y] = nonWhiteYCounter[y] + 1;
             }
         }
-        
-        var highX = widthInt
-        var highY = heightInt
-        for x in (0 ..< widthInt).reversed() {
-            if (nonWhiteXCounter.doesValueAroundIndexPassFivePercent(index: x, total: heightInt)) {
-                highX = x
-                break
-            }
-        }
-        for y in (0 ..< heightInt).reversed() {
-            if (nonWhiteYCounter.doesValueAroundIndexPassFivePercent(index: y, total: widthInt)) {
-                highY = y
-                break
-            }
-        }
+
+        let highX = getMaxNonWhiteIndex(nonWhiteCounters: nonWhiteXCounter, threshold: Int(Double(heightInt) * 0.05))
+        let highY = getMaxNonWhiteIndex(nonWhiteCounters: nonWhiteYCounter, threshold: Int(Double(widthInt) * 0.05))
         return CGRect(x: 0, y: 0, width: highX, height: highY)
+    }
+    
+    /// Determines the right/bottom edge of a scanned image
+    private func getMaxNonWhiteIndex(nonWhiteCounters: Array<Int>, threshold: Int) -> Int {
+        for index in nonWhiteCounters.indices.reversed() {
+            // As some scanners produce strange artifacts e.g. "HP Deskjet 3050" does include
+            // a pink line at the rightmost border of the scanned image we only consider a line
+            // being non white and therefore the beginning of the image when als the lines left/above
+            // it are also non white
+            let isNonWhite = nonWhiteCounters[safe: (index - 3) ..< (index + 1)].allSatisfy({$0 > threshold})
+            if (isNonWhite) {
+                return index
+            }
+        }
+        return 0
     }
     
     /// Resize the image, to nearly fit the supplied cropping size
