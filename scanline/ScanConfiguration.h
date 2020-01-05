@@ -1,9 +1,5 @@
 //
-//  ScanConfiguration.h
-//  scanline
-//
-//  Created by Scott J. Kleper on 9/26/13.
-//
+//  This code is part of scanline and published under MIT license.
 //
 
 #import <Foundation/Foundation.h>
@@ -27,6 +23,11 @@ static NSString * const ScanlineConfigOptionScanner = @"scanner";
 static NSString * const ScanlineConfigOptionResolution = @"resolution";
 static NSString * const ScanlineConfigOptionBrowseSecs = @"browsesecs";
 static NSString * const ScanlineConfigOptionExactName = @"exactname";
+static NSString * const ScanlineConfigOptionArea = @"area";
+static NSString * const ScanlineConfigOptionCreationDate = @"creation-date";
+static NSString * const ScanlineConfigOptionAutoTrim = @"auto-trim";
+static NSString * const ScanlineConfigOptionInsets = @"insets";
+static NSString * const ScanlineConfigOptionQuality = @"quality";
 
 @interface ScanConfiguration : NSObject
 

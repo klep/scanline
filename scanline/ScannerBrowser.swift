@@ -1,9 +1,5 @@
 //
-//  ScannerBrowser.swift
-//  scanline
-//
-//  Created by Scott J. Kleper on 12/2/17.
-//  Copyright © 2017 Scott J. Kleper. All rights reserved.
+//  This code is part of scanline and published under MIT license.
 //
 
 import Foundation
@@ -42,7 +38,7 @@ class ScannerBrowser: NSObject, ICDeviceBrowserDelegate {
         logger.verbose("Searching for available scanners")
         searching = true
 
-        if configuration.config[ScanlineConfigOptionList] != nil {
+        if configuration.list {
             logger.log("Available scanners:")
         }
         deviceBrowser.start()
@@ -57,11 +53,11 @@ class ScannerBrowser: NSObject, ICDeviceBrowserDelegate {
     
     func deviceMatchesSpecified(device: ICScannerDevice) -> Bool {
         // If no name was specified, this is perforce an exact match
-        guard let desiredName = configuration.config[ScanlineConfigOptionScanner] as? String else { return configuration.config[ScanlineConfigOptionList] == nil }
+        guard let desiredName = configuration.scannerName else { return !configuration.list }
         guard let deviceName = device.name else { return false }
         
         // "Fuzzy" match -- case-free compare of prefix
-        if configuration.config[ScanlineConfigOptionExactName] == nil &&
+        if !configuration.exactName &&
             deviceName.lowercased().starts(with: desiredName.lowercased()) {
             return true
         }
@@ -74,7 +70,7 @@ class ScannerBrowser: NSObject, ICDeviceBrowserDelegate {
     }
     
     func deviceBrowser(_ browser: ICDeviceBrowser, didAdd device: ICDevice, moreComing: Bool) {
-        if configuration.config[ScanlineConfigOptionList] != nil {
+        if configuration.list {
             logger.log("* \(device.name ?? "[Nameless Device]")")
         }
         

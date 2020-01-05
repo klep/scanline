@@ -1,9 +1,5 @@
 //
-//  ScanConfiguration.m
-//  scanline
-//
-//  Created by Scott J. Kleper on 9/26/13.
-//
+//  This code is part of scanline and published under MIT license.
 //
 
 #import "ScanConfiguration.h"
@@ -92,6 +88,31 @@ BOOL debugLogging = NO;
                      @"type": @"flag",
                      @"description": @"When specified, only the scanner with the exact name specified will be used (no fuzzy matching)"
                      },
+             ScanlineConfigOptionArea: @{
+                     @"synonyms": @[@"size"],
+                     @"type": @"string",
+                     @"description": @"Specify the size of the area that should be scanned in cm. Forat is <width>x<height>, e.g. 20x20 (Default is the whole flatbed scan area)"
+                     },
+             ScanlineConfigOptionCreationDate: @{
+                     @"type": @"string",
+                     @"description": @"When specified, the EXIF creation date is set to the given date (Format YYYY:MM:DD)"
+             },
+             ScanlineConfigOptionInsets: @{
+                     @"synonyms": @[@"cutoff"],
+                     @"type": @"string",
+                     @"description": @"The number of pixels to cut off from each side (Format Left:Top:Right:Bottom)",
+                     @"default": @"0:0:0:0"
+             },
+             ScanlineConfigOptionAutoTrim: @{
+                     @"synonyms": @[@"trim-whitespace"],
+                     @"type": @"flag",
+                     @"description": @"Trims whitespace around the image (useful for photos)"
+             },
+             ScanlineConfigOptionQuality: @{
+                     @"type": @"string",
+                     @"description": @"Specifes the quality of the image. Only used when -jpg is enabled. Value must be between 0 (low quality, small file) and 100 (best, big file). (Default is 90)",
+                     @"default": @"90"
+             },
              };
 }
 
