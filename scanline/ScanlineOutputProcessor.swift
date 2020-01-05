@@ -19,35 +19,53 @@ class ScanlineOutputProcessor {
     }
     
     func process() -> Bool {
+        var outputUrls = [URL]()
         if configuration.jpegOutput {
             for url in urls {
-                var image = NSImage(contentsOf: url)!
-                if configuration.autoTrimEnabled {
-                    image = image.trimmed(withInsets: configuration.insets)
-                }
-                let data = image.jpgRepresentation(withCreationDate: configuration.creationDate, quality: configuration.quality)
-                do {
-                    try data?.write(to: url, options: .atomicWrite)
-                } catch {
-                    logger.log("Failed to write jpg")
+                guard updateImage(at: url),
+                    let outputUrl = outputAndTag(url: url) else {
+                    logger.log("Error while creating image")
                     return false
                 }
-                outputAndTag(url: url)
+                outputUrls.append(outputUrl)
             }
         } else {
             // Combine into a single PDF
-            if let combinedURL = combine(urls: urls) {
-                outputAndTag(url: combinedURL)
-            } else {
+            guard let combinedURL = combineToPdf(urls: urls),
+                let outputUrl = outputAndTag(url: combinedURL) else {
                 logger.log("Error while creating PDF")
                 return false
             }
+            outputUrls.append(outputUrl)
+        }
+                
+        if configuration.shouldOpenAfterScan {
+            logger.verbose("Opening file(s) at \(outputUrls)")
+            NSWorkspace.shared.open(outputUrls, withAppBundleIdentifier: nil, options: NSWorkspace.LaunchOptions.default, additionalEventParamDescriptor: nil, launchIdentifiers: nil)
         }
         
         return true
     }
     
-    func combine(urls: [URL]) -> URL? {
+    func updateImage(at url: URL) -> Bool {
+        guard var image = NSImage(contentsOf: url) else {
+            logger.log("Failed to read temporary image from $\(url)!")
+            return false
+        }
+        if configuration.autoTrimEnabled {
+            image = image.trimmed(withInsets: configuration.insets)
+        }
+        let data = image.jpgRepresentation(withCreationDate: configuration.creationDate, quality: configuration.quality)
+        do {
+            try data?.write(to: url, options: .atomicWrite)
+        } catch {
+            logger.log("Failed to write jpg")
+            return false
+        }
+        return true
+    }
+    
+    func combineToPdf(urls: [URL]) -> URL? {
         let document = PDFDocument()
         
         for url in urls {
@@ -66,7 +84,7 @@ class ScanlineOutputProcessor {
         return URL(fileURLWithPath: tempFilePath)
     }
 
-    func outputAndTag(url: URL) {
+    func outputAndTag(url: URL) -> URL? {
         let gregorian = NSCalendar(calendarIdentifier: .gregorian)!
         let dateComponents = gregorian.components([.year, .hour, .minute, .second], from: Date())
         
@@ -84,7 +102,7 @@ class ScanlineOutputProcessor {
             try FileManager.default.createDirectory(atPath: path, withIntermediateDirectories: true, attributes: nil)
         } catch {
             logger.log("Error while creating directory \(path)")
-            return
+            return nil
         }
         let destinationFileExtension = (configuration.jpegOutput ? "jpg" : "pdf")
         
@@ -99,7 +117,7 @@ class ScanlineOutputProcessor {
             try FileManager.default.copyItem(at: url, to: destinationURL)
         } catch {
             logger.log("Error while copying file to \(destinationURL.absoluteString)")
-            return
+            return nil
         }
 
         // Alias to all other tag locations
@@ -111,7 +129,7 @@ class ScanlineOutputProcessor {
                     try FileManager.default.createDirectory(atPath: aliasDirPath, withIntermediateDirectories: true, attributes: nil)
                 } catch {
                     logger.log("Error while creating directory \(aliasDirPath)")
-                    return
+                    return nil
                 }
                 
                 let aliasFilePath = findOutputFilePath(in: aliasDirPath, withBasename: basename, withExtension: destinationFileExtension)
@@ -120,15 +138,12 @@ class ScanlineOutputProcessor {
                     try FileManager.default.createSymbolicLink(atPath: aliasFilePath, withDestinationPath: destinationFilePath)
                 } catch {
                     logger.log("Error while creating alias at \(aliasFilePath)")
-                    return
+                    return nil
                 }
             }
         }
         
-        if configuration.shouldOpenAfterScan {
-            logger.verbose("Opening file at \(destinationFilePath)")
-            NSWorkspace.shared.openFile(destinationFilePath)
-        }
+        return destinationURL
     }
     
     func findOutputFilePath(in dir: String, withBasename basename: String, withExtension fileExtension: String) -> String {
