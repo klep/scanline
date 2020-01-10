@@ -40,6 +40,10 @@ BOOL debugLogging = NO;
                      @"synonyms": @[@"jpg"],
                      @"description": @"Scan to a JPEG file (default is PDF)"
                      },
+             ScanlineConfigOptionTIFF: @{
+                     @"synonyms": @[@"tif"],
+                     @"description": @"Scan to a TIFF file (default is PDF)"
+                     },
              ScanlineConfigOptionLegal: @{
                      @"description": @"Scan a legal size page"
                      },
