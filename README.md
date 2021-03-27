@@ -32,17 +32,10 @@ In December, 2017, the Swift rewrite of scanline was merged into `master`. Let m
 
 ## Installing scanline
 
-You can download the latest binary from:
+You can download a signed, notarized installer from:
 
-https://github.com/klep/scanline/blob/master/build/Products/Debug/scanline?raw=true
+https://github.com/klep/scanline/blob/master/scanline-1.0.pkg?raw=true
 
-Note that you may need to chmod it so it's executable:
-
-```
-cd [directory where you want it]
-chmod a+x scanline
-./scanline -help
-```
 
 ## Contributing to scanline
 
