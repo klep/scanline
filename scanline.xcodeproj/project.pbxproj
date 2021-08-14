@@ -3,25 +3,51 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 48;
+	objectVersion = 54;
 	objects = {
 
 /* Begin PBXBuildFile section */
+		FC4DE2222648287D00E2A900 /* libscanlineTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC4DE2212648287D00E2A900 /* libscanlineTests.swift */; };
+		FC4DE2242648287D00E2A900 /* libscanline.h in Headers */ = {isa = PBXBuildFile; fileRef = FC4DE2162648287D00E2A900 /* libscanline.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		FC4DE22D264848B600E2A900 /* ScannerBrowser.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCF90C4F1FD39E3300EAF3D1 /* ScannerBrowser.swift */; };
+		FC4DE22E264848B600E2A900 /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCF90C4B1FD3543D00EAF3D1 /* Logger.swift */; };
+		FC4DE22F264848B600E2A900 /* ScanConfiguration.m in Sources */ = {isa = PBXBuildFile; fileRef = FCF90C461FD3536700EAF3D1 /* ScanConfiguration.m */; };
+		FC4DE2322648496400E2A900 /* ScanConfiguration.h in Headers */ = {isa = PBXBuildFile; fileRef = FCF90C471FD3536700EAF3D1 /* ScanConfiguration.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		FC4DE23426484B4E00E2A900 /* libscanline.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FC4DE2142648287D00E2A900 /* libscanline.framework */; };
+		FC4DE26C264E1B9E00E2A900 /* libscanline.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FC4DE2142648287D00E2A900 /* libscanline.framework */; };
+		FC4DE26D264E1B9E00E2A900 /* libscanline.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = FC4DE2142648287D00E2A900 /* libscanline.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		FC4DE2AF264E1FB000E2A900 /* ScannerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC4DE2AE264E1FB000E2A900 /* ScannerController.swift */; };
+		FC4DE2B1264E1FEC00E2A900 /* ScanlineOutputProcessor.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC4DE2B0264E1FEC00E2A900 /* ScanlineOutputProcessor.swift */; };
 		FCD75D391FF2E1D50041D955 /* ScanConfigurationTests.m in Sources */ = {isa = PBXBuildFile; fileRef = FCD75D381FF2E1D50041D955 /* ScanConfigurationTests.m */; };
 		FCD75D451FF2E9300041D955 /* config_test.conf in Resources */ = {isa = PBXBuildFile; fileRef = FCD75D441FF2E9300041D955 /* config_test.conf */; };
-		FCD75D6A1FF2ED220041D955 /* ScanConfiguration.m in Sources */ = {isa = PBXBuildFile; fileRef = FCF90C461FD3536700EAF3D1 /* ScanConfiguration.m */; };
 		FCD75D6B1FF2ED4D0041D955 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCF90C3E1FD3534B00EAF3D1 /* main.swift */; };
 		FCD75D6C1FF2ED4D0041D955 /* ScanlineAppController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCF90C491FD3537400EAF3D1 /* ScanlineAppController.swift */; };
-		FCD75D6F1FF2ED4D0041D955 /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCF90C4B1FD3543D00EAF3D1 /* Logger.swift */; };
-		FCD75D701FF2ED4D0041D955 /* ScannerBrowser.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCF90C4F1FD39E3300EAF3D1 /* ScannerBrowser.swift */; };
 		FCF90C3F1FD3534B00EAF3D1 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCF90C3E1FD3534B00EAF3D1 /* main.swift */; };
-		FCF90C481FD3536700EAF3D1 /* ScanConfiguration.m in Sources */ = {isa = PBXBuildFile; fileRef = FCF90C461FD3536700EAF3D1 /* ScanConfiguration.m */; };
 		FCF90C4A1FD3537400EAF3D1 /* ScanlineAppController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCF90C491FD3537400EAF3D1 /* ScanlineAppController.swift */; };
-		FCF90C4C1FD3543D00EAF3D1 /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCF90C4B1FD3543D00EAF3D1 /* Logger.swift */; };
-		FCF90C501FD39E3300EAF3D1 /* ScannerBrowser.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCF90C4F1FD39E3300EAF3D1 /* ScannerBrowser.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		FC4DE21E2648287D00E2A900 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = FCF90C331FD3534B00EAF3D1 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = FC4DE2132648287D00E2A900;
+			remoteInfo = libscanline;
+		};
+		FC4DE22B2648489000E2A900 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = FCF90C331FD3534B00EAF3D1 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = FC4DE2132648287D00E2A900;
+			remoteInfo = libscanline;
+		};
+		FC4DE26E264E1B9E00E2A900 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = FCF90C331FD3534B00EAF3D1 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = FC4DE2132648287D00E2A900;
+			remoteInfo = libscanline;
+		};
 		FCD75D421FF2E8310041D955 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = FCF90C331FD3534B00EAF3D1 /* Project object */;
@@ -32,6 +58,17 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
+		FC4DE270264E1B9E00E2A900 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				FC4DE26D264E1B9E00E2A900 /* libscanline.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		FCF90C391FD3534B00EAF3D1 /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
@@ -44,6 +81,18 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		FC4DE2142648287D00E2A900 /* libscanline.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = libscanline.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		FC4DE2162648287D00E2A900 /* libscanline.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = libscanline.h; sourceTree = "<group>"; };
+		FC4DE2172648287D00E2A900 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		FC4DE21C2648287D00E2A900 /* libscanlineTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = libscanlineTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		FC4DE2212648287D00E2A900 /* libscanlineTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = libscanlineTests.swift; sourceTree = "<group>"; };
+		FC4DE2232648287D00E2A900 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		FC4DE23C264E052800E2A900 /* ScanlineKit.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ScanlineKit.h; sourceTree = "<group>"; };
+		FC4DE23D264E052800E2A900 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		FC4DE247264E052800E2A900 /* ScanlineKitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScanlineKitTests.swift; sourceTree = "<group>"; };
+		FC4DE249264E052800E2A900 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		FC4DE2AE264E1FB000E2A900 /* ScannerController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScannerController.swift; sourceTree = "<group>"; };
+		FC4DE2B0264E1FEC00E2A900 /* ScanlineOutputProcessor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScanlineOutputProcessor.swift; sourceTree = "<group>"; };
 		FCD75D361FF2E1D50041D955 /* Scanline Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Scanline Tests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		FCD75D381FF2E1D50041D955 /* ScanConfigurationTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ScanConfigurationTests.m; sourceTree = "<group>"; };
 		FCD75D3A1FF2E1D50041D955 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -59,6 +108,21 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		FC4DE2112648287D00E2A900 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		FC4DE2192648287D00E2A900 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				FC4DE23426484B4E00E2A900 /* libscanline.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		FCD75D331FF2E1D50041D955 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -70,12 +134,62 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FC4DE26C264E1B9E00E2A900 /* libscanline.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		FC4DE2152648287D00E2A900 /* libscanline */ = {
+			isa = PBXGroup;
+			children = (
+				FCF90C471FD3536700EAF3D1 /* ScanConfiguration.h */,
+				FCF90C461FD3536700EAF3D1 /* ScanConfiguration.m */,
+				FCF90C4B1FD3543D00EAF3D1 /* Logger.swift */,
+				FCF90C4F1FD39E3300EAF3D1 /* ScannerBrowser.swift */,
+				FC4DE2162648287D00E2A900 /* libscanline.h */,
+				FC4DE2172648287D00E2A900 /* Info.plist */,
+				FC4DE2AE264E1FB000E2A900 /* ScannerController.swift */,
+				FC4DE2B0264E1FEC00E2A900 /* ScanlineOutputProcessor.swift */,
+			);
+			path = libscanline;
+			sourceTree = "<group>";
+		};
+		FC4DE2202648287D00E2A900 /* libscanlineTests */ = {
+			isa = PBXGroup;
+			children = (
+				FC4DE2212648287D00E2A900 /* libscanlineTests.swift */,
+				FC4DE2232648287D00E2A900 /* Info.plist */,
+			);
+			path = libscanlineTests;
+			sourceTree = "<group>";
+		};
+		FC4DE23B264E052800E2A900 /* ScanlineKit */ = {
+			isa = PBXGroup;
+			children = (
+				FC4DE23C264E052800E2A900 /* ScanlineKit.h */,
+				FC4DE23D264E052800E2A900 /* Info.plist */,
+			);
+			path = ScanlineKit;
+			sourceTree = "<group>";
+		};
+		FC4DE246264E052800E2A900 /* ScanlineKitTests */ = {
+			isa = PBXGroup;
+			children = (
+				FC4DE247264E052800E2A900 /* ScanlineKitTests.swift */,
+				FC4DE249264E052800E2A900 /* Info.plist */,
+			);
+			path = ScanlineKitTests;
+			sourceTree = "<group>";
+		};
+		FC4DE26B264E1B9E00E2A900 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		FCD75D371FF2E1D50041D955 /* Scanline Tests */ = {
 			isa = PBXGroup;
 			children = (
@@ -91,7 +205,12 @@
 			children = (
 				FCF90C3D1FD3534B00EAF3D1 /* scanline */,
 				FCD75D371FF2E1D50041D955 /* Scanline Tests */,
+				FC4DE2152648287D00E2A900 /* libscanline */,
+				FC4DE2202648287D00E2A900 /* libscanlineTests */,
+				FC4DE23B264E052800E2A900 /* ScanlineKit */,
+				FC4DE246264E052800E2A900 /* ScanlineKitTests */,
 				FCF90C3C1FD3534B00EAF3D1 /* Products */,
+				FC4DE26B264E1B9E00E2A900 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -100,6 +219,8 @@
 			children = (
 				FCF90C3B1FD3534B00EAF3D1 /* scanline */,
 				FCD75D361FF2E1D50041D955 /* Scanline Tests.xctest */,
+				FC4DE2142648287D00E2A900 /* libscanline.framework */,
+				FC4DE21C2648287D00E2A900 /* libscanlineTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -109,18 +230,62 @@
 			children = (
 				FCF90C3E1FD3534B00EAF3D1 /* main.swift */,
 				FCF90C491FD3537400EAF3D1 /* ScanlineAppController.swift */,
-				FCF90C471FD3536700EAF3D1 /* ScanConfiguration.h */,
-				FCF90C461FD3536700EAF3D1 /* ScanConfiguration.m */,
 				FCF90C451FD3536700EAF3D1 /* scanline-Bridging-Header.h */,
-				FCF90C4B1FD3543D00EAF3D1 /* Logger.swift */,
-				FCF90C4F1FD39E3300EAF3D1 /* ScannerBrowser.swift */,
 			);
 			path = scanline;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
 
+/* Begin PBXHeadersBuildPhase section */
+		FC4DE20F2648287D00E2A900 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				FC4DE2322648496400E2A900 /* ScanConfiguration.h in Headers */,
+				FC4DE2242648287D00E2A900 /* libscanline.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
 /* Begin PBXNativeTarget section */
+		FC4DE2132648287D00E2A900 /* libscanline */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = FC4DE2292648287D00E2A900 /* Build configuration list for PBXNativeTarget "libscanline" */;
+			buildPhases = (
+				FC4DE20F2648287D00E2A900 /* Headers */,
+				FC4DE2102648287D00E2A900 /* Sources */,
+				FC4DE2112648287D00E2A900 /* Frameworks */,
+				FC4DE2122648287D00E2A900 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = libscanline;
+			productName = libscanline;
+			productReference = FC4DE2142648287D00E2A900 /* libscanline.framework */;
+			productType = "com.apple.product-type.framework";
+		};
+		FC4DE21B2648287D00E2A900 /* libscanlineTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = FC4DE22A2648287D00E2A900 /* Build configuration list for PBXNativeTarget "libscanlineTests" */;
+			buildPhases = (
+				FC4DE2182648287D00E2A900 /* Sources */,
+				FC4DE2192648287D00E2A900 /* Frameworks */,
+				FC4DE21A2648287D00E2A900 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				FC4DE21F2648287D00E2A900 /* PBXTargetDependency */,
+			);
+			name = libscanlineTests;
+			productName = libscanlineTests;
+			productReference = FC4DE21C2648287D00E2A900 /* libscanlineTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 		FCD75D351FF2E1D50041D955 /* Scanline Tests */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = FCD75D3B1FF2E1D50041D955 /* Build configuration list for PBXNativeTarget "Scanline Tests" */;
@@ -146,10 +311,13 @@
 				FCF90C371FD3534B00EAF3D1 /* Sources */,
 				FCF90C381FD3534B00EAF3D1 /* Frameworks */,
 				FCF90C391FD3534B00EAF3D1 /* CopyFiles */,
+				FC4DE270264E1B9E00E2A900 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				FC4DE22C2648489000E2A900 /* PBXTargetDependency */,
+				FC4DE26F264E1B9E00E2A900 /* PBXTargetDependency */,
 			);
 			name = scanline;
 			productName = scanline;
@@ -162,27 +330,34 @@
 		FCF90C331FD3534B00EAF3D1 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastSwiftUpdateCheck = 0910;
-				LastUpgradeCheck = 0910;
+				LastSwiftUpdateCheck = 1250;
+				LastUpgradeCheck = 1250;
 				ORGANIZATIONNAME = "Scott J. Kleper";
 				TargetAttributes = {
+					FC4DE2132648287D00E2A900 = {
+						CreatedOnToolsVersion = 12.5;
+					};
+					FC4DE21B2648287D00E2A900 = {
+						CreatedOnToolsVersion = 12.5;
+					};
 					FCD75D351FF2E1D50041D955 = {
 						CreatedOnToolsVersion = 9.2;
+						LastSwiftMigration = 1220;
 						ProvisioningStyle = Automatic;
 					};
 					FCF90C3A1FD3534B00EAF3D1 = {
 						CreatedOnToolsVersion = 9.1;
-						LastSwiftMigration = 0910;
-						ProvisioningStyle = Automatic;
+						LastSwiftMigration = 1220;
 					};
 				};
 			};
 			buildConfigurationList = FCF90C361FD3534B00EAF3D1 /* Build configuration list for PBXProject "scanline" */;
-			compatibilityVersion = "Xcode 8.0";
+			compatibilityVersion = "Xcode 12.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,
+				Base,
 			);
 			mainGroup = FCF90C321FD3534B00EAF3D1;
 			productRefGroup = FCF90C3C1FD3534B00EAF3D1 /* Products */;
@@ -191,11 +366,27 @@
 			targets = (
 				FCF90C3A1FD3534B00EAF3D1 /* scanline */,
 				FCD75D351FF2E1D50041D955 /* Scanline Tests */,
+				FC4DE2132648287D00E2A900 /* libscanline */,
+				FC4DE21B2648287D00E2A900 /* libscanlineTests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		FC4DE2122648287D00E2A900 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		FC4DE21A2648287D00E2A900 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		FCD75D341FF2E1D50041D955 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -207,15 +398,32 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		FC4DE2102648287D00E2A900 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				FC4DE2AF264E1FB000E2A900 /* ScannerController.swift in Sources */,
+				FC4DE22D264848B600E2A900 /* ScannerBrowser.swift in Sources */,
+				FC4DE22E264848B600E2A900 /* Logger.swift in Sources */,
+				FC4DE2B1264E1FEC00E2A900 /* ScanlineOutputProcessor.swift in Sources */,
+				FC4DE22F264848B600E2A900 /* ScanConfiguration.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		FC4DE2182648287D00E2A900 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				FC4DE2222648287D00E2A900 /* libscanlineTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		FCD75D321FF2E1D50041D955 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 				FCD75D6B1FF2ED4D0041D955 /* main.swift in Sources */,
 				FCD75D6C1FF2ED4D0041D955 /* ScanlineAppController.swift in Sources */,
-				FCD75D6F1FF2ED4D0041D955 /* Logger.swift in Sources */,
-				FCD75D701FF2ED4D0041D955 /* ScannerBrowser.swift in Sources */,
-				FCD75D6A1FF2ED220041D955 /* ScanConfiguration.m in Sources */,
 				FCD75D391FF2E1D50041D955 /* ScanConfigurationTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -225,16 +433,28 @@
 			buildActionMask = 2147483647;
 			files = (
 				FCF90C3F1FD3534B00EAF3D1 /* main.swift in Sources */,
-				FCF90C481FD3536700EAF3D1 /* ScanConfiguration.m in Sources */,
-				FCF90C501FD39E3300EAF3D1 /* ScannerBrowser.swift in Sources */,
 				FCF90C4A1FD3537400EAF3D1 /* ScanlineAppController.swift in Sources */,
-				FCF90C4C1FD3543D00EAF3D1 /* Logger.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		FC4DE21F2648287D00E2A900 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = FC4DE2132648287D00E2A900 /* libscanline */;
+			targetProxy = FC4DE21E2648287D00E2A900 /* PBXContainerItemProxy */;
+		};
+		FC4DE22C2648489000E2A900 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = FC4DE2132648287D00E2A900 /* libscanline */;
+			targetProxy = FC4DE22B2648489000E2A900 /* PBXContainerItemProxy */;
+		};
+		FC4DE26F264E1B9E00E2A900 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = FC4DE2132648287D00E2A900 /* libscanline */;
+			targetProxy = FC4DE26E264E1B9E00E2A900 /* PBXContainerItemProxy */;
+		};
 		FCD75D431FF2E8310041D955 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = FCF90C3A1FD3534B00EAF3D1 /* scanline */;
@@ -243,6 +463,114 @@
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
+		FC4DE2252648287D00E2A900 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = 3M8T4B982V;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INFOPLIST_FILE = libscanline/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 10.12;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = ch.boatlaun.libscanline;
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 5.0;
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Debug;
+		};
+		FC4DE2262648287D00E2A900 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = 3M8T4B982V;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INFOPLIST_FILE = libscanline/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 10.12;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = ch.boatlaun.libscanline;
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 5.0;
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Release;
+		};
+		FC4DE2272648287D00E2A900 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = 3M8T4B982V;
+				INFOPLIST_FILE = libscanlineTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 11.3;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = ch.boatlaun.libscanlineTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		FC4DE2282648287D00E2A900 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = 3M8T4B982V;
+				INFOPLIST_FILE = libscanlineTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 11.3;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = ch.boatlaun.libscanlineTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
 		FCD75D3C1FF2E1D50041D955 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -254,12 +582,16 @@
 					"$(PROJECT_DIR)/scanline\\ Tests",
 				);
 				INFOPLIST_FILE = "Scanline Tests/Info.plist";
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = "com.klep.Scanline-Tests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "scanline/scanline-Bridging-Header.h";
 				SWIFT_OBJC_INTERFACE_HEADER_NAME = "scanline-Swift.h";
-				SWIFT_VERSION = 4.0;
+				SWIFT_VERSION = 5.0;
 			};
 			name = Debug;
 		};
@@ -274,12 +606,16 @@
 					"$(PROJECT_DIR)/scanline\\ Tests",
 				);
 				INFOPLIST_FILE = "Scanline Tests/Info.plist";
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = "com.klep.Scanline-Tests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "scanline/scanline-Bridging-Header.h";
 				SWIFT_OBJC_INTERFACE_HEADER_NAME = "scanline-Swift.h";
-				SWIFT_VERSION = 4.0;
+				SWIFT_VERSION = 5.0;
 			};
 			name = Release;
 		};
@@ -297,6 +633,7 @@
 				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
@@ -304,8 +641,10 @@
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
@@ -331,7 +670,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				MACOSX_DEPLOYMENT_TARGET = 10.13;
+				MACOSX_DEPLOYMENT_TARGET = 10.12;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = macosx;
@@ -354,6 +693,7 @@
 				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
@@ -361,8 +701,10 @@
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
@@ -382,10 +724,11 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				MACOSX_DEPLOYMENT_TARGET = 10.13;
+				MACOSX_DEPLOYMENT_TARGET = 10.12;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = macosx;
-				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
 			};
 			name = Release;
 		};
@@ -393,12 +736,23 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
+				DEVELOPMENT_TEAM = 3M8T4B982V;
+				DSTROOT = $SRCROOT/build/pkgroot;
+				ENABLE_HARDENED_RUNTIME = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 10.12;
+				PRODUCT_BUNDLE_IDENTIFIER = ch.boatlaun.scanline;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "scanline/scanline-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 4.0;
+				SWIFT_VERSION = 5.0;
 			};
 			name = Debug;
 		};
@@ -406,17 +760,46 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
+				DEVELOPMENT_TEAM = 3M8T4B982V;
+				DSTROOT = $SRCROOT/build/pkgroot;
+				ENABLE_HARDENED_RUNTIME = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 10.12;
+				PRODUCT_BUNDLE_IDENTIFIER = ch.boatlaun.scanline;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "scanline/scanline-Bridging-Header.h";
-				SWIFT_VERSION = 4.0;
+				SWIFT_VERSION = 5.0;
 			};
 			name = Release;
 		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		FC4DE2292648287D00E2A900 /* Build configuration list for PBXNativeTarget "libscanline" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				FC4DE2252648287D00E2A900 /* Debug */,
+				FC4DE2262648287D00E2A900 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		FC4DE22A2648287D00E2A900 /* Build configuration list for PBXNativeTarget "libscanlineTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				FC4DE2272648287D00E2A900 /* Debug */,
+				FC4DE2282648287D00E2A900 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		FCD75D3B1FF2E1D50041D955 /* Build configuration list for PBXNativeTarget "Scanline Tests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

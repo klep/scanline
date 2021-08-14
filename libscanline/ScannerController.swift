@@ -1,115 +1,33 @@
 //
-//  ScanlineAppController.swift
-//  scanline
+//  ScannerController.swift
+//  libscanline
 //
-//  Created by Scott J. Kleper on 12/2/17.
+//  Created by Scott J. Kleper on 5/13/21.
+//  Copyright © 2021 Scott J. Kleper. All rights reserved.
 //
 
 import Foundation
 import ImageCaptureCore
-import libscanline
 
-class ScanlineAppController: NSObject, ScannerBrowserDelegate, ScannerControllerDelegate {
-    let configuration: ScanConfiguration
-    let logger: Logger
-    let scannerBrowser: ScannerBrowser
-    var scannerBrowserTimer: Timer?
-
-    var scannerController: ScannerController?
-    
-    init(arguments: [String]) {
-        configuration = ScanConfiguration(arguments: Array(arguments[1..<arguments.count]))
-//        configuration = ScanConfiguration(arguments: ["-flatbed", "-open", "-verbose"])
-//        configuration = ScanConfiguration(arguments: ["-flatbed", "house", "-v"])
-//        configuration = ScanConfiguration(arguments: ["-scanner", "Dell Color MFP E525w (31:4D:90)", "-exact", "-v"])
-//        configuration = ScanConfiguration(arguments: ["-scanner", "epson", "-v", "-resolution", "600"])
-//        configuration = ScanConfiguration(arguments: ["-list", "-v"])
-//        configuration = ScanConfiguration(arguments: ["-scanner", "epson", "-v", "scanlinetest"])
-        logger = Logger(configuration: configuration)
-        scannerBrowser = ScannerBrowser(configuration: configuration, logger: logger)
-        
-        super.init()
-        
-        scannerBrowser.delegate = self
-    }
-
-    func go() {
-        scannerBrowser.browse()
-        
-        let timerExpiration:Double = Double(configuration.config[ScanlineConfigOptionBrowseSecs] as? String ?? "10") ?? 10.0
-        scannerBrowserTimer = Timer.scheduledTimer(withTimeInterval: timerExpiration, repeats: false) { _ in
-            self.scannerBrowser.stopBrowsing()
-        }
-        
-        logger.verbose("Waiting up to \(timerExpiration) seconds to find scanners")
-    }
-
-    func exit() {
-        CFRunLoopStop(CFRunLoopGetCurrent())
-    }
-
-    func scan(scanner: ICScannerDevice) {
-        scannerController = ScannerController(scanner: scanner, configuration: configuration, logger: logger)
-        scannerController?.delegate = self
-        scannerController?.scan()
-    }
-
-    // MARK: - ScannerBrowserDelegate
-    
-    func scannerBrowser(_ scannerBrowser: ScannerBrowser, didFinishBrowsingWithScanner scanner: ICScannerDevice?) {
-        logger.verbose("Found scanner: \(scanner?.name ?? "[nil]")")
-        scannerBrowserTimer?.invalidate()
-        scannerBrowserTimer = nil
-        
-        guard configuration.config[ScanlineConfigOptionList] == nil else {
-            exit()
-            return
-        }
-        
-        guard let scanner = scanner else {
-            logger.log("No scanner was found.")
-            exit()
-            return
-        }
-        
-        scan(scanner: scanner)
-    }
-    
-    func scannerBrowser(_ scannerBrowser: ScannerBrowser, didUpdateAvailableScanners availableScanners: [String]) {
-        // No-op
-    }
-
-    // MARK: - ScannerControllerDelegate
-    
-    func scannerControllerDidFail(_ scannerController: ScannerController) {
-        logger.log("Failed to scan document.")
-        exit()
-    }
-    
-    func scannerControllerDidSucceed(_ scannerController: ScannerController) {
-        exit()
-    }
-
-}
-
-protocol ScannerControllerDelegate: class {
+public protocol ScannerControllerDelegate: AnyObject {
     func scannerControllerDidFail(_ scannerController: ScannerController)
     func scannerControllerDidSucceed(_ scannerController: ScannerController)
+    func scannerController(_ scannerController: ScannerController, didObtainResolutions resolutions: IndexSet)
 }
 
-class ScannerController: NSObject, ICScannerDeviceDelegate {
+public class ScannerController: NSObject, ICScannerDeviceDelegate {
     let scanner: ICScannerDevice
     let configuration: ScanConfiguration
     let logger: Logger
     var scannedURLs = [URL]()
-    weak var delegate: ScannerControllerDelegate?
+    public weak var delegate: ScannerControllerDelegate?
     var desiredFunctionalUnitType: ICScannerFunctionalUnitType {
         return (configuration.config[ScanlineConfigOptionFlatbed] == nil) ?
             ICScannerFunctionalUnitType.documentFeeder :
             ICScannerFunctionalUnitType.flatbed
     }
     
-    init(scanner: ICScannerDevice, configuration: ScanConfiguration, logger: Logger) {
+    public init(scanner: ICScannerDevice, configuration: ScanConfiguration, logger: Logger) {
         self.scanner = scanner
         self.configuration = configuration
         self.logger = logger
@@ -119,24 +37,33 @@ class ScannerController: NSObject, ICScannerDeviceDelegate {
         self.scanner.delegate = self
     }
     
-    func scan() {
+    public func getSupportedResolutions() {
+        guard scanner.hasOpenSession else {
+            scanner.requestOpenSession()
+            return
+        }
+        
+        obtainResolutions()
+    }
+    
+    public func scan() {
         logger.verbose("Opening session with scanner")
         scanner.requestOpenSession()
     }
     
     // MARK: - ICScannerDeviceDelegate
 
-    func device(_ device: ICDevice, didEncounterError error: Error?) {
+    public func device(_ device: ICDevice, didEncounterError error: Error?) {
         logger.verbose("didEncounterError: \(error?.localizedDescription ?? "[no error]")")
         delegate?.scannerControllerDidFail(self)
     }
     
-    func device(_ device: ICDevice, didCloseSessionWithError error: Error?) {
+    public func device(_ device: ICDevice, didCloseSessionWithError error: Error?) {
         logger.verbose("didCloseSessionWithError: \(error?.localizedDescription ?? "[no error]")")
         delegate?.scannerControllerDidFail(self)
     }
     
-    func device(_ device: ICDevice, didOpenSessionWithError error: Error?) {
+    public func device(_ device: ICDevice, didOpenSessionWithError error: Error?) {
         logger.verbose("didOpenSessionWithError: \(error?.localizedDescription ?? "[no error]")")
         
         guard error == nil else {
@@ -146,35 +73,40 @@ class ScannerController: NSObject, ICScannerDeviceDelegate {
         }
     }
     
-    func didRemove(_ device: ICDevice) {
+    public func didRemove(_ device: ICDevice) {
     }
     
-    func deviceDidBecomeReady(_ device: ICDevice) {
+    public func deviceDidBecomeReady(_ device: ICDevice) {
         logger.verbose("deviceDidBecomeReady")
-        selectFunctionalUnit()
+        
+        switch pendingAction {
+        case .none:
+            break
+        case .obtainResolutions:
+            obtainResolutions()
+        case .scan:
+            selectFunctionalUnit()
+        }
     }
     
-    func scannerDevice(_ scanner: ICScannerDevice, didSelect functionalUnit: ICScannerFunctionalUnit, error: Error?) {
+    public func scannerDevice(_ scanner: ICScannerDevice, didSelect functionalUnit: ICScannerFunctionalUnit, error: Error?) {
         logger.verbose("didSelectFunctionalUnit: \(functionalUnit) error: \(error?.localizedDescription ?? "[no error]")")
         
         // NOTE: Despite the fact that `functionalUnit` is not an optional, it still sometimes comes in as `nil` even when `error` is `nil`
-        // Oddly, in debug builds, you can check non-optionals for `nil`, but in release builds, that always returns `false`, so we check
-        // its address instead.
-        let address = unsafeBitCast(functionalUnit, to: Int.self)
-        if address != 0x0 && functionalUnit.type == self.desiredFunctionalUnitType {
+        if functionalUnit != nil && functionalUnit.type == self.desiredFunctionalUnitType {
             configureScanner()
             logger.log("Starting scan...")
             scanner.requestScan()
         }
     }
 
-    func scannerDevice(_ scanner: ICScannerDevice, didScanTo url: URL) {
+    public func scannerDevice(_ scanner: ICScannerDevice, didScanTo url: URL) {
         logger.verbose("didScanTo \(url)")
         
         scannedURLs.append(url)
     }
     
-    func scannerDevice(_ scanner: ICScannerDevice, didCompleteScanWithError error: Error?) {
+    public func scannerDevice(_ scanner: ICScannerDevice, didCompleteScanWithError error: Error?) {
         logger.verbose("didCompleteScanWithError \(error?.localizedDescription ?? "[no error]")")
         
         guard error == nil else {
@@ -202,6 +134,16 @@ class ScannerController: NSObject, ICScannerDeviceDelegate {
     }
     
     // MARK: Private Methods
+    
+    enum PendingAction {
+        case none, obtainResolutions, scan
+    }
+    
+    private var pendingAction: PendingAction = .scan
+    
+    func obtainResolutions() {
+        delegate?.scannerController(self, didObtainResolutions: scanner.selectedFunctionalUnit.supportedResolutions)
+    }
     
     fileprivate func selectFunctionalUnit() {
         scanner.requestSelect(self.desiredFunctionalUnitType)
@@ -268,50 +210,5 @@ class ScannerController: NSObject, ICScannerDeviceDelegate {
         functionalUnit.measurementUnit = .inches
         let physicalSize = functionalUnit.physicalSize
         functionalUnit.scanArea = NSMakeRect(0, 0, physicalSize.width, physicalSize.height)
-    }
-}
-
-extension Int {
-    // format to 2 decimal places
-    func f02ld() -> String {
-        return String(format: "%02ld", self)
-    }
-    
-    func fld() -> String {
-        return String(format: "%ld", self)
-    }
-}
-class ScanlineOutputProcessor {
-    let logger: Logger
-    let configuration: ScanConfiguration
-    let urls: [URL]
-    
-    init(urls: [URL], configuration: ScanConfiguration, logger: Logger) {
-        self.urls = urls
-        self.configuration = configuration
-        self.logger = logger
-    }
-    
-    func process() -> Bool {
-        let wantsPDF = configuration.config[ScanlineConfigOptionJPEG] == nil && configuration.config[ScanlineConfigOptionTIFF] == nil
-        if !wantsPDF {
-            for url in urls {
-                outputAndTag(url: url)
-            }
-        } else {
-            // Combine into a single PDF
-            if let combinedURL = combine(urls: urls) {
-                outputAndTag(url: combinedURL)
-            } else {
-                logger.log("Error while creating PDF")
-                return false
-            }
-        }
-        
-        return true
-    }
-    
-    func scannerController(_ scannerController: ScannerController, didObtainResolutions resolutions: IndexSet) {
-        // No-op
     }
 }

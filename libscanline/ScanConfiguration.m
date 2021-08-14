@@ -7,7 +7,6 @@
 //
 
 #import "ScanConfiguration.h"
-#import "scanline-Swift.h"
 
 BOOL debugLogging = NO;
 

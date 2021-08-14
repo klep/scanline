@@ -1,5 +1,8 @@
 # Xcode
 .DS_Store
+scanline.xcodeproj/xcshareddata/
+build/
+derived_data/
 *.pbxuser
 !default.pbxuser
 *.mode1v3
