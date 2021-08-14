@@ -34,12 +34,19 @@ In December, 2017, the Swift rewrite of scanline was merged into `master`. Let m
 
 You can download a signed, notarized installer from:
 
-https://github.com/klep/scanline/blob/master/scanline-1.0.pkg?raw=true
+https://github.com/klep/scanline/blob/master/scanline-1.0.1.pkg?raw=true
 
+## Building Your Own Installer
+
+The bundled installer is signed and notarized by Boat Launch, Inc., a company founded by the author and maintainer of scanline. This is provided merely a convenience, and you are welcome to build and sign your own installer if you wish. 
+
+I used the instructions at https://scriptingosx.com/2019/09/notarize-a-command-line-tool/ 
+
+Note that, of course, you'll need to set your own Team / Bundle ID / Certificate
 
 ## Contributing to scanline
 
-scanline was a quick and dirty first project. While portions of the code have been rewritten more recently, a lot of it displays some pretty unevolved style. I welcome your pull requests, but please know what you're getting yourself into!
+If you're interested in making a change, fix, or enhancement to scanline, please do! I'd appreciate a heads up on any bigger changes, and I'm happy to review any PRs.
 
 You can also contact me with any questions or suggestions and I'll do my best to work them in eventually.
 

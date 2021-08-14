@@ -12,6 +12,9 @@
 !default.xcworkspace
 xcuserdata
 profile
+scanline.xcodeproj/xcshareddata/
+derived_data/
+build/
 *.moved-aside
 DerivedData
 .idea/
