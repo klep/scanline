@@ -7,6 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		FC4184A926CDDFD000308408 /* ScanConfiguration.m in Sources */ = {isa = PBXBuildFile; fileRef = FCF90C461FD3536700EAF3D1 /* ScanConfiguration.m */; };
+		FC4184AA26CDDFD300308408 /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCF90C4B1FD3543D00EAF3D1 /* Logger.swift */; };
+		FC4184AB26CDDFD500308408 /* ScannerBrowser.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCF90C4F1FD39E3300EAF3D1 /* ScannerBrowser.swift */; };
+		FC4184AC26CDDFD800308408 /* ScannerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC4DE2AE264E1FB000E2A900 /* ScannerController.swift */; };
+		FC4184AD26CDDFDB00308408 /* ScanlineOutputProcessor.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC4DE2B0264E1FEC00E2A900 /* ScanlineOutputProcessor.swift */; };
 		FC4DE2222648287D00E2A900 /* libscanlineTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC4DE2212648287D00E2A900 /* libscanlineTests.swift */; };
 		FC4DE2242648287D00E2A900 /* libscanline.h in Headers */ = {isa = PBXBuildFile; fileRef = FC4DE2162648287D00E2A900 /* libscanline.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		FC4DE22D264848B600E2A900 /* ScannerBrowser.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCF90C4F1FD39E3300EAF3D1 /* ScannerBrowser.swift */; };
@@ -14,8 +19,6 @@
 		FC4DE22F264848B600E2A900 /* ScanConfiguration.m in Sources */ = {isa = PBXBuildFile; fileRef = FCF90C461FD3536700EAF3D1 /* ScanConfiguration.m */; };
 		FC4DE2322648496400E2A900 /* ScanConfiguration.h in Headers */ = {isa = PBXBuildFile; fileRef = FCF90C471FD3536700EAF3D1 /* ScanConfiguration.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		FC4DE23426484B4E00E2A900 /* libscanline.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FC4DE2142648287D00E2A900 /* libscanline.framework */; };
-		FC4DE26C264E1B9E00E2A900 /* libscanline.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FC4DE2142648287D00E2A900 /* libscanline.framework */; };
-		FC4DE26D264E1B9E00E2A900 /* libscanline.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = FC4DE2142648287D00E2A900 /* libscanline.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		FC4DE2AF264E1FB000E2A900 /* ScannerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC4DE2AE264E1FB000E2A900 /* ScannerController.swift */; };
 		FC4DE2B1264E1FEC00E2A900 /* ScanlineOutputProcessor.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC4DE2B0264E1FEC00E2A900 /* ScanlineOutputProcessor.swift */; };
 		FCD75D391FF2E1D50041D955 /* ScanConfigurationTests.m in Sources */ = {isa = PBXBuildFile; fileRef = FCD75D381FF2E1D50041D955 /* ScanConfigurationTests.m */; };
@@ -28,20 +31,6 @@
 
 /* Begin PBXContainerItemProxy section */
 		FC4DE21E2648287D00E2A900 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = FCF90C331FD3534B00EAF3D1 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = FC4DE2132648287D00E2A900;
-			remoteInfo = libscanline;
-		};
-		FC4DE22B2648489000E2A900 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = FCF90C331FD3534B00EAF3D1 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = FC4DE2132648287D00E2A900;
-			remoteInfo = libscanline;
-		};
-		FC4DE26E264E1B9E00E2A900 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = FCF90C331FD3534B00EAF3D1 /* Project object */;
 			proxyType = 1;
@@ -64,18 +53,18 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				FC4DE26D264E1B9E00E2A900 /* libscanline.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		FCF90C391FD3534B00EAF3D1 /* CopyFiles */ = {
+		FCF90C391FD3534B00EAF3D1 /* Copy Files */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = /usr/share/man/man1/;
 			dstSubfolderSpec = 0;
 			files = (
 			);
+			name = "Copy Files";
 			runOnlyForDeploymentPostprocessing = 1;
 		};
 /* End PBXCopyFilesBuildPhase section */
@@ -134,7 +123,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				FC4DE26C264E1B9E00E2A900 /* libscanline.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -310,14 +298,12 @@
 			buildPhases = (
 				FCF90C371FD3534B00EAF3D1 /* Sources */,
 				FCF90C381FD3534B00EAF3D1 /* Frameworks */,
-				FCF90C391FD3534B00EAF3D1 /* CopyFiles */,
+				FCF90C391FD3534B00EAF3D1 /* Copy Files */,
 				FC4DE270264E1B9E00E2A900 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
 			dependencies = (
-				FC4DE22C2648489000E2A900 /* PBXTargetDependency */,
-				FC4DE26F264E1B9E00E2A900 /* PBXTargetDependency */,
 			);
 			name = scanline;
 			productName = scanline;
@@ -434,6 +420,11 @@
 			files = (
 				FCF90C3F1FD3534B00EAF3D1 /* main.swift in Sources */,
 				FCF90C4A1FD3537400EAF3D1 /* ScanlineAppController.swift in Sources */,
+				FC4184AC26CDDFD800308408 /* ScannerController.swift in Sources */,
+				FC4184AB26CDDFD500308408 /* ScannerBrowser.swift in Sources */,
+				FC4184A926CDDFD000308408 /* ScanConfiguration.m in Sources */,
+				FC4184AA26CDDFD300308408 /* Logger.swift in Sources */,
+				FC4184AD26CDDFDB00308408 /* ScanlineOutputProcessor.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -444,16 +435,6 @@
 			isa = PBXTargetDependency;
 			target = FC4DE2132648287D00E2A900 /* libscanline */;
 			targetProxy = FC4DE21E2648287D00E2A900 /* PBXContainerItemProxy */;
-		};
-		FC4DE22C2648489000E2A900 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = FC4DE2132648287D00E2A900 /* libscanline */;
-			targetProxy = FC4DE22B2648489000E2A900 /* PBXContainerItemProxy */;
-		};
-		FC4DE26F264E1B9E00E2A900 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = FC4DE2132648287D00E2A900 /* libscanline */;
-			targetProxy = FC4DE26E264E1B9E00E2A900 /* PBXContainerItemProxy */;
 		};
 		FCD75D431FF2E8310041D955 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;

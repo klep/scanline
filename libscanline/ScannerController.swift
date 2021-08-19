@@ -93,7 +93,10 @@ public class ScannerController: NSObject, ICScannerDeviceDelegate {
         logger.verbose("didSelectFunctionalUnit: \(functionalUnit) error: \(error?.localizedDescription ?? "[no error]")")
         
         // NOTE: Despite the fact that `functionalUnit` is not an optional, it still sometimes comes in as `nil` even when `error` is `nil`
-        if functionalUnit != nil && functionalUnit.type == self.desiredFunctionalUnitType {
+        // Oddly, in debug builds, you can check non-optionals for `nil`, but in release builds, that always returns `false`, so we check
+        // its address instead.
+        let address = unsafeBitCast(functionalUnit, to: Int.self)
+        if address != 0x0 && functionalUnit.type == self.desiredFunctionalUnitType {
             configureScanner()
             logger.log("Starting scan...")
             scanner.requestScan()

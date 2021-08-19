@@ -10,18 +10,18 @@ import Foundation
 import AppKit
 import Quartz
 
-class ScanlineOutputProcessor {
+public class ScanlineOutputProcessor {
     let logger: Logger
     let configuration: ScanConfiguration
     let urls: [URL]
     
-    init(urls: [URL], configuration: ScanConfiguration, logger: Logger) {
+    public init(urls: [URL], configuration: ScanConfiguration, logger: Logger) {
         self.urls = urls
         self.configuration = configuration
         self.logger = logger
     }
     
-    func process() -> Bool {
+    public func process() -> Bool {
         let wantsPDF = configuration.config[ScanlineConfigOptionJPEG] == nil && configuration.config[ScanlineConfigOptionTIFF] == nil
         if !wantsPDF {
             for url in urls {
@@ -40,7 +40,7 @@ class ScanlineOutputProcessor {
         return true
     }
     
-    func combine(urls: [URL]) -> URL? {
+    public func combine(urls: [URL]) -> URL? {
         let document = PDFDocument()
         
         for url in urls {
@@ -55,7 +55,7 @@ class ScanlineOutputProcessor {
         return URL(fileURLWithPath: tempFilePath)
     }
 
-    func outputAndTag(url: URL) {
+    public func outputAndTag(url: URL) {
         let gregorian = NSCalendar(calendarIdentifier: .gregorian)!
         let dateComponents = gregorian.components([.year, .hour, .minute, .second], from: Date())
         

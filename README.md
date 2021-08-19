@@ -48,6 +48,8 @@ To build libscanline:
 
 xcodebuild clean build -project scanline.xcodeproj -scheme libscanline -configuration Release -sdk macosx11.3 -derivedDataPath derived_data BUILD_LIBRARY_FOR_DISTRIBUTION=YES
 
+The project is structured so that the command line tool is a separate target that also includes all of the source files from libscanline. Ideally, it would simply embed libscanline, but that would require making the command line tool part of an app bundle, or dynamically linking to libscanline.
+
 
 ## Contributing to scanline
 
