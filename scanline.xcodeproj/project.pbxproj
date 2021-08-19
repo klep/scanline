@@ -66,10 +66,6 @@
 		FC4DE21C2648287D00E2A900 /* libscanlineTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = libscanlineTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		FC4DE2212648287D00E2A900 /* ConfigurationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfigurationTests.swift; sourceTree = "<group>"; };
 		FC4DE2232648287D00E2A900 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		FC4DE23C264E052800E2A900 /* ScanlineKit.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ScanlineKit.h; sourceTree = "<group>"; };
-		FC4DE23D264E052800E2A900 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		FC4DE247264E052800E2A900 /* ScanlineKitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScanlineKitTests.swift; sourceTree = "<group>"; };
-		FC4DE249264E052800E2A900 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		FC4DE2AE264E1FB000E2A900 /* ScannerController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScannerController.swift; sourceTree = "<group>"; };
 		FC4DE2B0264E1FEC00E2A900 /* ScanlineOutputProcessor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScanlineOutputProcessor.swift; sourceTree = "<group>"; };
 		FCD75D441FF2E9300041D955 /* config_test.conf */ = {isa = PBXFileReference; lastKnownFileType = text; path = config_test.conf; sourceTree = "<group>"; };
@@ -134,24 +130,6 @@
 			path = libscanlineTests;
 			sourceTree = "<group>";
 		};
-		FC4DE23B264E052800E2A900 /* ScanlineKit */ = {
-			isa = PBXGroup;
-			children = (
-				FC4DE23C264E052800E2A900 /* ScanlineKit.h */,
-				FC4DE23D264E052800E2A900 /* Info.plist */,
-			);
-			path = ScanlineKit;
-			sourceTree = "<group>";
-		};
-		FC4DE246264E052800E2A900 /* ScanlineKitTests */ = {
-			isa = PBXGroup;
-			children = (
-				FC4DE247264E052800E2A900 /* ScanlineKitTests.swift */,
-				FC4DE249264E052800E2A900 /* Info.plist */,
-			);
-			path = ScanlineKitTests;
-			sourceTree = "<group>";
-		};
 		FC4DE26B264E1B9E00E2A900 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -165,8 +143,6 @@
 				FCF90C3D1FD3534B00EAF3D1 /* scanline */,
 				FC4DE2152648287D00E2A900 /* libscanline */,
 				FC4DE2202648287D00E2A900 /* libscanlineTests */,
-				FC4DE23B264E052800E2A900 /* ScanlineKit */,
-				FC4DE246264E052800E2A900 /* ScanlineKitTests */,
 				FCF90C3C1FD3534B00EAF3D1 /* Products */,
 				FC4DE26B264E1B9E00E2A900 /* Frameworks */,
 			);
