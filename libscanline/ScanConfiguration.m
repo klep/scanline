@@ -216,7 +216,7 @@ BOOL debugLogging = NO;
             } else {
                 NSDictionary *configDetails = [ScanConfiguration configOptions][canonicalKey];
                 if ([(NSString *)configDetails[@"type"] isEqualToString:@"string"]) {
-                    if (i < [inArguments count] && [inArguments objectAtIndex:i+1] != nil) {
+                    if (i+1 < [inArguments count]) {
                         NSString *value = [inArguments objectAtIndex:++i];
                         self.config[canonicalKey] = value;
                     } else {

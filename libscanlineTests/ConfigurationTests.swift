@@ -11,7 +11,7 @@ import XCTest
 
 class ConfigurationTests: XCTestCase {
     private lazy var testConfigPath = Bundle(for: ConfigurationTests.self).path(forResource: "config_test", ofType: "conf") ?? ""
-    
+        
     func testLoadConfigurationFromFile() {
         let testConfig = ScanConfiguration(arguments: [], configFilePath: testConfigPath)
         
@@ -66,5 +66,13 @@ class ConfigurationTests: XCTestCase {
         
         XCTAssertFalse(testConfig.config[ScanlineConfigOptionLetter] as? Bool == true)
         XCTAssertTrue(testConfig.config[ScanlineConfigOptionLegal] as? Bool == true)
+    }
+    
+    func testMissingSecondParameter() {
+        // This would throw an array out of bounds error previously.
+        _ = ScanConfiguration(arguments: ["-scanner"], configFilePath: testConfigPath)
+        
+        let testConfig = ScanConfiguration(arguments: ["-scanner", "epson"])
+        XCTAssertEqual(testConfig.config[ScanlineConfigOptionScanner] as? String ?? "", "epson")
     }
 }
