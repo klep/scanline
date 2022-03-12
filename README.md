@@ -30,19 +30,19 @@ scanline -help
 
 You can download a signed, notarized installer from:
 
-https://github.com/klep/scanline/blob/master/scanline-1.0.1.pkg?raw=true
+https://github.com/klep/scanline/blob/master/scanline-2.0.pkg?raw=true
 
 ## Building Your Own Installer
 
 The bundled installer is signed and notarized by Boat Launch, Inc., a company founded by the author and maintainer of scanline. This is provided merely a convenience, and you are welcome to build and sign your own installer if you wish. 
 
-I used the instructions at https://scriptingosx.com/2019/09/notarize-a-command-line-tool/ 
+I used the instructions at https://scriptingosx.com/2021/07/notarize-a-command-line-tool-with-notarytool/ 
 
 Note that, of course, you'll need to set your own Team / Bundle ID / Certificate
 
 ## libscanline
 
-In 2021, scanline was refactored to separate out the core functionality from the command line interface. libscanline is a macOS framework that can be embedded in any application that wants to easily support the functionality of scanline. 
+In early 2022, scanline was refactored to separate out the core functionality from the command line interface. libscanline is a macOS framework that can be embedded in any application that wants to easily support the functionality of scanline. 
 
 To build libscanline:
 
