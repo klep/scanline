@@ -10,6 +10,8 @@
 
 #define SKLog(FORMAT, ...) printf("%s\n", [[NSString stringWithFormat:FORMAT, ##__VA_ARGS__] UTF8String]);
 
+NS_ASSUME_NONNULL_BEGIN
+
 static NSString * const ScanlineConfigOptionDuplex = @"duplex";
 static NSString * const ScanlineConfigOptionBatch = @"batch";
 static NSString * const ScanlineConfigOptionList = @"list";
@@ -34,12 +36,14 @@ static NSString * const ScanlineConfigOptionExactName = @"exactname";
 @property (strong, nonatomic) NSMutableArray *tags;
 @property (strong, nonatomic) NSMutableDictionary *config;
 
-- (id)init;
-- (id)initWithArguments:(NSArray *)inArguments;
-- (id)initWithArguments:(NSArray *)inArguments configFilePath:(NSString *)configFilePath;
+- (nonnull id)init;
+- (nonnull id)initWithArguments:(nonnull NSArray *)inArguments;
+- (nonnull id)initWithArguments:(nonnull NSArray *)inArguments configFilePath:(NSString *)configFilePath;
 
-+ (NSDictionary*)configOptions;
++ (nonnull NSDictionary *)configOptions;
 
 @end
 
 extern BOOL verboseLogging;
+
+NS_ASSUME_NONNULL_END

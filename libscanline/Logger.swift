@@ -8,20 +8,20 @@
 
 import Foundation
 
-class Logger: NSObject {
+public class Logger: NSObject {
     let configuration: ScanConfiguration
     
-    init(configuration: ScanConfiguration) {
+    public init(configuration: ScanConfiguration) {
         self.configuration = configuration
         super.init()
     }
     
-    func verbose(_ message: String) {
+    public func verbose(_ message: String) {
         guard configuration.config[ScanlineConfigOptionVerbose] != nil else { return }
         print(message)
     }
     
-    func log(_ message: String) {
+    public func log(_ message: String) {
         print(message)
     }
 }

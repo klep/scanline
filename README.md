@@ -26,23 +26,30 @@ You can see all of scanline's options by typing:
 scanline -help
 ```
 
-## Swift Rewrite
-
-In December, 2017, the Swift rewrite of scanline was merged into `master`. Let me know if you experience any new issues.
-
 ## Installing scanline
 
 You can download a signed, notarized installer from:
 
-https://github.com/klep/scanline/blob/master/scanline-1.0.1.pkg?raw=true
+https://github.com/klep/scanline/blob/master/scanline-2.0.pkg?raw=true
 
 ## Building Your Own Installer
 
 The bundled installer is signed and notarized by Boat Launch, Inc., a company founded by the author and maintainer of scanline. This is provided merely a convenience, and you are welcome to build and sign your own installer if you wish. 
 
-I used the instructions at https://scriptingosx.com/2019/09/notarize-a-command-line-tool/ 
+I used the instructions at https://scriptingosx.com/2021/07/notarize-a-command-line-tool-with-notarytool/ 
 
 Note that, of course, you'll need to set your own Team / Bundle ID / Certificate
+
+## libscanline
+
+In early 2022, scanline was refactored to separate out the core functionality from the command line interface. libscanline is a macOS framework that can be embedded in any application that wants to easily support the functionality of scanline. 
+
+To build libscanline:
+
+xcodebuild clean build -project scanline.xcodeproj -scheme libscanline -configuration Release -sdk macosx11.3 -derivedDataPath derived_data BUILD_LIBRARY_FOR_DISTRIBUTION=YES
+
+The project is structured so that the command line tool is a separate target that also includes all of the source files from libscanline. Ideally, it would simply embed libscanline, but that would require making the command line tool part of an app bundle, or dynamically linking to libscanline.
+
 
 ## Contributing to scanline
 
