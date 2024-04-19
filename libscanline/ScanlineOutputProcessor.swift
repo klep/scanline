@@ -9,6 +9,8 @@
 import Foundation
 import AppKit
 import Quartz
+import Vision
+import Carbon
 
 public class ScanlineOutputProcessor {
     let logger: Logger
@@ -22,6 +24,33 @@ public class ScanlineOutputProcessor {
     }
     
     public func process() -> Bool {
+        if let firstURL = urls.first {
+            let img = NSImage(byReferencing: firstURL)
+            guard let imgRef = img.cgImage(forProposedRect: nil, context: nil, hints: nil) else {
+                fputs("Error: failed to convert NSImage to CGImage for '\(firstURL)'\n", stderr)
+                return false
+            }
+            
+            let request = VNRecognizeTextRequest { (request, error) in
+                let observations = request.results as? [VNRecognizedTextObservation] ?? []
+                let strings: [String] = observations.map { $0.topCandidates(1).first?.string ?? ""}
+                
+                print("Recognized text: \(strings)")
+                
+                let summary = SKSummaryCreateWithString(strings.joined(separator: "\n") as CFString).takeRetainedValue()
+                let paragraphSummary = SKSummaryCopyParagraphSummaryString(summary, 4).takeRetainedValue()
+                let summaryText = String(paragraphSummary)
+                print("!!! SUMMARY: \(summaryText)")
+            }
+            
+            request.recognitionLevel = .accurate
+            request.usesLanguageCorrection = true
+            request.revision = VNRecognizeTextRequestRevision2
+            request.recognitionLanguages = ["en"]
+            
+            try? VNImageRequestHandler(cgImage: imgRef, options: [:]).perform([request])
+        }
+        
         let wantsPDF = configuration.config[ScanlineConfigOptionJPEG] == nil && configuration.config[ScanlineConfigOptionTIFF] == nil
         if !wantsPDF {
             for url in urls {

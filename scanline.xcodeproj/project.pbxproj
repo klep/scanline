@@ -68,6 +68,7 @@
 		FC4DE2232648287D00E2A900 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		FC4DE2AE264E1FB000E2A900 /* ScannerController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScannerController.swift; sourceTree = "<group>"; };
 		FC4DE2B0264E1FEC00E2A900 /* ScanlineOutputProcessor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScanlineOutputProcessor.swift; sourceTree = "<group>"; };
+		FCA265102BD1E2B3007E1462 /* scanlineRelease.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = scanlineRelease.entitlements; sourceTree = "<group>"; };
 		FCD75D441FF2E9300041D955 /* config_test.conf */ = {isa = PBXFileReference; lastKnownFileType = text; path = config_test.conf; sourceTree = "<group>"; };
 		FCF90C3B1FD3534B00EAF3D1 /* scanline */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = scanline; sourceTree = BUILT_PRODUCTS_DIR; };
 		FCF90C3E1FD3534B00EAF3D1 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
@@ -161,6 +162,7 @@
 		FCF90C3D1FD3534B00EAF3D1 /* scanline */ = {
 			isa = PBXGroup;
 			children = (
+				FCA265102BD1E2B3007E1462 /* scanlineRelease.entitlements */,
 				FCF90C3E1FD3534B00EAF3D1 /* main.swift */,
 				FCF90C491FD3537400EAF3D1 /* ScanlineAppController.swift */,
 				FCF90C451FD3536700EAF3D1 /* scanline-Bridging-Header.h */,
@@ -578,7 +580,7 @@
 					"@executable_path/../Frameworks",
 					"@loader_path/../Frameworks",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 10.12;
+				MACOSX_DEPLOYMENT_TARGET = 11.0;
 				PRODUCT_BUNDLE_IDENTIFIER = ch.boatlaun.scanline;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -592,9 +594,11 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_IDENTITY = "Developer ID Application";
-				CODE_SIGN_STYLE = Manual;
-				DEVELOPMENT_TEAM = 3M8T4B982V;
+				CODE_SIGN_ENTITLEMENTS = scanline/scanlineRelease.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "-";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = "";
 				DSTROOT = $SRCROOT/build/pkgroot;
 				ENABLE_HARDENED_RUNTIME = YES;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -602,7 +606,7 @@
 					"@executable_path/../Frameworks",
 					"@loader_path/../Frameworks",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 10.12;
+				MACOSX_DEPLOYMENT_TARGET = 11.0;
 				PRODUCT_BUNDLE_IDENTIFIER = ch.boatlaun.scanline;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
