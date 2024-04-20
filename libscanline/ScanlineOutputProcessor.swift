@@ -11,6 +11,7 @@ import AppKit
 import Quartz
 import Vision
 import Carbon
+import CoreImage
 
 public class ScanlineOutputProcessor {
     let logger: Logger
@@ -35,7 +36,7 @@ public class ScanlineOutputProcessor {
         request.recognitionLevel = .accurate
         request.revision = VNRecognizeTextRequestRevision2
         request.recognitionLanguages = ["en"]
-
+        
         let requestHandler = VNImageRequestHandler(url: imageURL)
         do {
             try requestHandler.perform([request])
@@ -44,11 +45,50 @@ public class ScanlineOutputProcessor {
         }
     }
     
+    private func rotate(imageAt url: URL, byDegrees rotationDegrees: Int) -> Bool {
+        guard let dataProvider = CGDataProvider(filename: url.path),
+              let cgImage = CGImage(jpegDataProviderSource: dataProvider, decode: nil, shouldInterpolate: false, intent: .defaultIntent) else {
+            return false
+        }
+        
+        let ciImage = CIImage(cgImage: cgImage)
+        
+        let radians = CGFloat(rotationDegrees) / 180.0 * CGFloat(CGFloat.pi)
+        let rotate = CGAffineTransform(rotationAngle: CGFloat(radians))
+        let rotatedImage = ciImage.transformed(by: rotate)
+        let context = CIContext(options: nil)
+        
+        guard let cgImage = context.createCGImage(rotatedImage, from: rotatedImage.extent),
+              let mutableData = CFDataCreateMutable(nil, 0),
+              let destination = CGImageDestinationCreateWithData(mutableData, kUTTypeJPEG, 1, nil) else { return false }
+        
+        CGImageDestinationAddImage(destination, cgImage, nil)
+        if !CGImageDestinationFinalize(destination) {
+            return false
+        }
+        do {
+            try (mutableData as NSData).write(to: url)
+        } catch {
+            return false
+        }
+
+        return true
+    }
+    
     public func process() -> Bool {
         let wantsOCR = configuration.config[ScanlineConfigOptionOCR] != nil
         if wantsOCR {
             for url in urls {
                 extractText(fromImageAt: url)
+            }
+        }
+        
+        if let rotationDegrees = Int(configuration.config[ScanlineConfigOptionRotate] as? String ?? "0"), rotationDegrees != 0 {
+            logger.log("Rotating by \(rotationDegrees) degrees")
+            for url in urls {
+                if !rotate(imageAt: url, byDegrees: rotationDegrees) {
+                    logger.log("Error while rotating image")
+                }
             }
         }
         
@@ -84,7 +124,7 @@ public class ScanlineOutputProcessor {
         
         return URL(fileURLWithPath: tempFilePath)
     }
-
+    
     public func outputAndTag(url: URL) {
         let gregorian = NSCalendar(calendarIdentifier: .gregorian)!
         let dateComponents = gregorian.components([.year, .hour, .minute, .second], from: Date())
@@ -98,7 +138,7 @@ public class ScanlineOutputProcessor {
         }
         
         logger.verbose("Output path: \(path)")
-
+        
         do {
             try FileManager.default.createDirectory(atPath: path, withIntermediateDirectories: true, attributes: nil)
         } catch {
@@ -130,7 +170,7 @@ public class ScanlineOutputProcessor {
         }
         
         logger.verbose("About to copy \(url.absoluteString) to \(destinationFilePath)")
-
+        
         let destinationURL = URL(fileURLWithPath: destinationFilePath)
         do {
             try FileManager.default.copyItem(at: url, to: destinationURL)
@@ -138,7 +178,7 @@ public class ScanlineOutputProcessor {
             logger.log("Error while copying file to \(destinationURL.absoluteString)")
             return
         }
-
+        
         // Alias to all other tag locations
         // todo: this is super repetitive with above...
         if configuration.tags.count > 1 {
@@ -190,3 +230,33 @@ fileprivate extension Int {
         return String(format: "%ld", self)
     }
 }
+
+fileprivate extension CIImage {
+    
+}
+//fileprivate extension UIImage {
+//    // HT: https://stackoverflow.com/questions/27092354/rotating-uiimage-in-swift
+//    func rotate(degrees: Int) -> UIImage? {
+//        let radians = CGFloat(degrees) / 180.0 * CGFloat(M_PI)
+//
+//        var newSize = CGRect(origin: CGPoint.zero, size: self.size).applying(CGAffineTransform(rotationAngle: CGFloat(radians))).size
+//        // Trim off the extremely small float value to prevent core graphics from rounding it up
+//        newSize.width = floor(newSize.width)
+//        newSize.height = floor(newSize.height)
+//
+//        UIGraphicsBeginImageContextWithOptions(newSize, false, self.scale)
+//        guard let context = UIGraphicsGetCurrentContext() else { return nil }
+//
+//        // Move origin to middle
+//        context.translateBy(x: newSize.width/2, y: newSize.height/2)
+//        // Rotate around middle
+//        context.rotate(by: CGFloat(radians))
+//        // Draw the image at its center
+//        self.draw(in: CGRect(x: -self.size.width/2, y: -self.size.height/2, width: self.size.width, height: self.size.height))
+//
+//        let newImage = UIGraphicsGetImageFromCurrentImageContext()
+//        UIGraphicsEndImageContext()
+//
+//        return newImage
+//    }
+//}
