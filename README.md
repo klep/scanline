@@ -10,6 +10,7 @@ scanline has evolved to support many different purposes and options. Some of the
 * Scan from the document feeder or flatbed
 * Scan in various formats, sizes, and modes all driven from command line options
 * Provide defaults in a config file (~/.scanline.conf)
+* Convert the scanned document to text (-ocr)
 
 Here are some example command lines:
 
@@ -30,7 +31,7 @@ scanline -help
 
 You can download a signed, notarized installer from:
 
-https://github.com/klep/scanline/blob/master/scanline-2.0.pkg?raw=true
+https://github.com/klep/scanline/blob/master/scanline-2.1.pkg?raw=true
 
 ## Building Your Own Installer
 
