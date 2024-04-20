@@ -13,4 +13,3 @@ appController.go()
 
 CFRunLoopRun()
 
-print("Done")

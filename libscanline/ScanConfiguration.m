@@ -95,6 +95,9 @@ BOOL debugLogging = NO;
                      @"type": @"flag",
                      @"description": @"When specified, only the scanner with the exact name specified will be used (no fuzzy matching)"
                      },
+             ScanlineConfigOptionOCR: @{
+                     @"description": @"Converts the scanned image(s) to text and outputs to stdout"
+                     },
              };
 }
 

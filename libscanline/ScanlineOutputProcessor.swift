@@ -23,32 +23,33 @@ public class ScanlineOutputProcessor {
         self.logger = logger
     }
     
+    private func extractText(fromImageAt imageURL: URL) {
+        let request = VNRecognizeTextRequest { (request, error) in
+            let observations = request.results as? [VNRecognizedTextObservation] ?? []
+            let strings: [String] = observations.map { $0.topCandidates(1).first?.string ?? ""}
+            
+            // Print directly to stdout
+            print("\(strings.joined(separator: "\n"))")
+        }
+        
+        request.recognitionLevel = .accurate
+        request.revision = VNRecognizeTextRequestRevision2
+        request.recognitionLanguages = ["en"]
+
+        let requestHandler = VNImageRequestHandler(url: imageURL)
+        do {
+            try requestHandler.perform([request])
+        } catch {
+            logger.log("Error while performing text recognition")
+        }
+    }
+    
     public func process() -> Bool {
-        if let firstURL = urls.first {
-            let img = NSImage(byReferencing: firstURL)
-            guard let imgRef = img.cgImage(forProposedRect: nil, context: nil, hints: nil) else {
-                fputs("Error: failed to convert NSImage to CGImage for '\(firstURL)'\n", stderr)
-                return false
+        let wantsOCR = configuration.config[ScanlineConfigOptionOCR] != nil
+        if wantsOCR {
+            for url in urls {
+                extractText(fromImageAt: url)
             }
-            
-            let request = VNRecognizeTextRequest { (request, error) in
-                let observations = request.results as? [VNRecognizedTextObservation] ?? []
-                let strings: [String] = observations.map { $0.topCandidates(1).first?.string ?? ""}
-                
-                print("Recognized text: \(strings)")
-                
-                let summary = SKSummaryCreateWithString(strings.joined(separator: "\n") as CFString).takeRetainedValue()
-                let paragraphSummary = SKSummaryCopyParagraphSummaryString(summary, 4).takeRetainedValue()
-                let summaryText = String(paragraphSummary)
-                print("!!! SUMMARY: \(summaryText)")
-            }
-            
-            request.recognitionLevel = .accurate
-            request.usesLanguageCorrection = true
-            request.revision = VNRecognizeTextRequestRevision2
-            request.recognitionLanguages = ["en"]
-            
-            try? VNImageRequestHandler(cgImage: imgRef, options: [:]).perform([request])
         }
         
         let wantsPDF = configuration.config[ScanlineConfigOptionJPEG] == nil && configuration.config[ScanlineConfigOptionTIFF] == nil
@@ -174,7 +175,7 @@ public class ScanlineOutputProcessor {
         
         if configuration.config[ScanlineConfigOptionOpen] != nil {
             logger.verbose("Opening file at \(destinationFilePath)")
-            NSWorkspace.shared.openFile(destinationFilePath)
+            NSWorkspace.shared.open(URL(fileURLWithPath: destinationFilePath))
         }
     }
 }

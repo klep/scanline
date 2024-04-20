@@ -22,6 +22,11 @@ public class Logger: NSObject {
     }
     
     public func log(_ message: String) {
-        print(message)
+        if configuration.config[ScanlineConfigOptionOCR] != nil {
+            // If we're outputting the scanned text to stdout, we should log all other messages to stderr
+            fputs("\(message)\n", stderr)
+        } else {
+            print(message)
+        }
     }
 }
