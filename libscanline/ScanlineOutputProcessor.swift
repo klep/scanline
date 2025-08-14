@@ -24,24 +24,17 @@ public class ScanlineOutputProcessor {
         self.logger = logger
     }
     
-    private func extractText(fromImageAt imageURL: URL) {
-        let request = VNRecognizeTextRequest { (request, error) in
-            let observations = request.results as? [VNRecognizedTextObservation] ?? []
-            let strings: [String] = observations.map { $0.topCandidates(1).first?.string ?? ""}
-            
-            // Print directly to stdout
-            print("\(strings.joined(separator: "\n"))")
-        }
-        
+    private func extractText(fromImageAt imageURL: URL) async -> String {
+        var request = RecognizeTextRequest()
         request.recognitionLevel = .accurate
-        request.revision = VNRecognizeTextRequestRevision3
-        request.recognitionLanguages = ["en"]
-        
-        let requestHandler = VNImageRequestHandler(url: imageURL)
+
         do {
-            try requestHandler.perform([request])
+            let observations = try await request.perform(on: imageURL)
+            let strings = observations.map { $0.topCandidates(1).first?.string ?? "" }
+            return strings.joined(separator: "\n")
         } catch {
             logger.log("Error while performing text recognition")
+            return ""
         }
     }
     
@@ -75,11 +68,12 @@ public class ScanlineOutputProcessor {
         return true
     }
     
-    public func process() -> Bool {
+    public func process() async -> Bool {
         let wantsOCR = configuration.config[ScanlineConfigOptionOCR] != nil
         if wantsOCR {
             for url in urls {
-                extractText(fromImageAt: url)
+                let summary = await extractText(fromImageAt: url)
+                print(summary)
             }
         }
         
