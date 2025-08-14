@@ -7,7 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "ScanConfiguration.h"
+#import <libscanline/ScanConfiguration.h>
 
 //! Project version number for libscanline.
 FOUNDATION_EXPORT double libscanlineVersionNumber;
@@ -16,5 +16,6 @@ FOUNDATION_EXPORT double libscanlineVersionNumber;
 FOUNDATION_EXPORT const unsigned char libscanlineVersionString[];
 
 // In this header, you should import all the public headers of your framework using statements like #import <libscanline/PublicHeader.h>
+
 
 
