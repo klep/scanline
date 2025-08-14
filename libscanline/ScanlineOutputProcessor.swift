@@ -34,7 +34,7 @@ public class ScanlineOutputProcessor {
         }
         
         request.recognitionLevel = .accurate
-        request.revision = VNRecognizeTextRequestRevision2
+        request.revision = VNRecognizeTextRequestRevision3
         request.recognitionLanguages = ["en"]
         
         let requestHandler = VNImageRequestHandler(url: imageURL)
@@ -60,7 +60,7 @@ public class ScanlineOutputProcessor {
         
         guard let cgImage = context.createCGImage(rotatedImage, from: rotatedImage.extent),
               let mutableData = CFDataCreateMutable(nil, 0),
-              let destination = CGImageDestinationCreateWithData(mutableData, kUTTypeJPEG, 1, nil) else { return false }
+              let destination = CGImageDestinationCreateWithData(mutableData, UTType.jpeg.identifier as CFString, 1, nil) else { return false }
         
         CGImageDestinationAddImage(destination, cgImage, nil)
         if !CGImageDestinationFinalize(destination) {

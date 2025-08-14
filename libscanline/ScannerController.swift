@@ -8,6 +8,7 @@
 
 import Foundation
 import ImageCaptureCore
+import Quartz
 
 public protocol ScannerControllerDelegate: AnyObject {
     func scannerControllerDidFail(_ scannerController: ScannerController)
@@ -181,9 +182,9 @@ public class ScannerController: NSObject, ICScannerDeviceDelegate {
         scanner.documentName = "Scan"
         
         if configuration.config[ScanlineConfigOptionTIFF] != nil {
-            scanner.documentUTI = kUTTypeTIFF as String
+            scanner.documentUTI = UTType.tiff.identifier
         } else {
-            scanner.documentUTI = kUTTypeJPEG as String
+            scanner.documentUTI = UTType.jpeg.identifier
         }
     }
 
