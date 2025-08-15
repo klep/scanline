@@ -106,7 +106,7 @@ BOOL debugLogging = NO;
              ScanlineConfigOptionSummarize: @{
                     @"synonyms": @[@"summary"],
                     @"type": @"flag",
-                    @"description": @"Use on-device OCR and Apple Intelligence to output a .summary.text file with a brief description of the document's text. 🚨 Generative AI - Use at your own risk! 🚨"
+                    @"description": @"Use on-device OCR and Apple Intelligence to output a .summary.txt file with a brief description of the document's text. 🚨 Generative AI - Use at your own risk! 🚨"
                     },
              ScanlineConfigOptionAutoname: @{
                     @"type": @"flag",
