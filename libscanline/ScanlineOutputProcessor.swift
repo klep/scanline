@@ -39,7 +39,7 @@ public class ScanlineOutputProcessor {
                 The user has assigned the following tags to the document, which might be helpful in naming: \(tags.joined(separator: ","))
                 
                 Please respond with a filename that meets the following criteria:
-                - It has no special characters or spaces (use dashes instead)
+                - It has no special characters or spaces (use dashes instead). It must be a valid macOS filename.
                 - It captures what the document is about (e.g. "mortgage-statement-2025-07", "legal-settlement", "jenny-divorce-final")
                 - If an appropriate name cannot be determined, return "scan"
                 - If you can identify the organization it's from (e.g. Fidelity, DMV, IRS, etc.), put that in the filename
@@ -55,7 +55,14 @@ public class ScanlineOutputProcessor {
             
             do {
                 let response = try await session.respond(to: String(prompt))
-                return response.content
+                let proposedFilename = response.content
+                if proposedFilename == "scan" {
+                    return defaultFilename
+                }
+                if isValidMacOSFilename(proposedFilename) {
+                    return proposedFilename
+                }
+                
             } catch {
                 logger.log("Error while auto naming: \(error)")
             }
@@ -63,7 +70,7 @@ public class ScanlineOutputProcessor {
             logger.log("Unable to auto name because this version of macOS does not have Apple Intelligence")
         }
         
-        return "scan"
+        return defaultFilename
     }
 
     private func summarize(_ text: String) async -> String {
@@ -220,6 +227,13 @@ public class ScanlineOutputProcessor {
         return URL(fileURLWithPath: tempFilePath)
     }
     
+    private var defaultFilename: String {
+        let gregorian = NSCalendar(calendarIdentifier: .gregorian)!
+        let dateComponents = gregorian.components([.year, .hour, .minute, .second], from: Date())
+        
+        return "scan_\(dateComponents.hour!.f02ld())\(dateComponents.minute!.f02ld())\(dateComponents.second!.f02ld())"
+    }
+    
     public func outputAndTag(url: URL) {
         let gregorian = NSCalendar(calendarIdentifier: .gregorian)!
         let dateComponents = gregorian.components([.year, .hour, .minute, .second], from: Date())
@@ -254,7 +268,7 @@ public class ScanlineOutputProcessor {
             if let fileName = self.configuration.config[ScanlineConfigOptionName] {
                 return "\(path)/\(fileName)"
             }
-            return "\(path)/scan_\(dateComponents.hour!.f02ld())\(dateComponents.minute!.f02ld())\(dateComponents.second!.f02ld())"
+            return "\(path)/\(defaultFilename)"
         }()
         
         var destinationFilePath = "\(destinationFileRoot).\(destinationFileExtension)"
@@ -290,7 +304,7 @@ public class ScanlineOutputProcessor {
                     if let name = configuration.config[ScanlineConfigOptionName] {
                         return "\(aliasDirPath)/\(name)"
                     }
-                    return "\(aliasDirPath)/scan_\(dateComponents.hour!.f02ld())\(dateComponents.minute!.f02ld())\(dateComponents.second!.f02ld())"
+                    return "\(aliasDirPath)/\(defaultFilename)"
                 }()
                 var aliasFilePath = "\(aliasFileRoot).\(destinationFileExtension)"
                 var i = 0
@@ -330,6 +344,23 @@ public class ScanlineOutputProcessor {
             logger.verbose("Opening file at \(destinationFilePath)")
             NSWorkspace.shared.open(URL(fileURLWithPath: destinationFilePath))
         }
+    }
+    
+    /// Returns true if the given string is a valid filename for macOS file systems.
+    private func isValidMacOSFilename(_ filename: String) -> Bool {
+        // Cannot be empty
+        guard !filename.isEmpty else { return false }
+        // Cannot be "." or ".."
+        guard filename != "." && filename != ".." else { return false }
+        // Cannot contain colon (:) or null character
+        if filename.contains(":") || filename.contains("\u{0000}") {
+            return false
+        }
+        // Must not exceed 255 bytes in UTF-8
+        if filename.lengthOfBytes(using: .utf8) > 255 {
+            return false
+        }
+        return true
     }
 }
 
