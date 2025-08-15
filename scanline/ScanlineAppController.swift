@@ -18,7 +18,7 @@ class ScanlineAppController: NSObject {
     
     init(arguments: [String]) {
         configuration = ScanConfiguration(arguments: Array(arguments[1..<arguments.count]))
-//        configuration = ScanConfiguration(arguments: ["-flatbed", "-ocr", "-verbose"])
+//        configuration = ScanConfiguration(arguments: ["-flatbed", "-summarize", "-verbose", "-autoname", "ubs", "investments", "retirement", "kids"])
 //        configuration = ScanConfiguration(arguments: ["-flatbed", "-rotate", "180", "-verbose"])
 //        configuration = ScanConfiguration(arguments: ["-flatbed", "house", "-v"])
 //        configuration = ScanConfiguration(arguments: ["-scanner", "Dell Color MFP E525w (31:4D:90)", "-exact", "-v"])
