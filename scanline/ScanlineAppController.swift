@@ -46,7 +46,9 @@ class ScanlineAppController: NSObject {
 
     func exit() {
         logger.log("Done")
-        CFRunLoopStop(CFRunLoopGetCurrent())
+        DispatchQueue.main.async {
+            CFRunLoopStop(CFRunLoopGetCurrent())
+        }
     }
 
     func scan(scanner: ICScannerDevice) {
