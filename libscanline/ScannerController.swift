@@ -130,10 +130,14 @@ public class ScannerController: NSObject, ICScannerDeviceDelegate {
         }
 
         let outputProcessor = ScanlineOutputProcessor(urls: self.scannedURLs, configuration: configuration, logger: logger)
-        if outputProcessor.process() {
-            delegate?.scannerControllerDidSucceed(self)
-        } else {
-            delegate?.scannerControllerDidFail(self)
+
+        Task {
+            let succeeded = await outputProcessor.process()
+            if succeeded {
+                delegate?.scannerControllerDidSucceed(self)
+            } else {
+                delegate?.scannerControllerDidFail(self)
+            }
         }
     }
     

@@ -103,6 +103,15 @@ BOOL debugLogging = NO;
                      @"description": @"Specify degrees to rotate the scanned images",
                      @"default": @"0"
                      },
+             ScanlineConfigOptionSummarize: @{
+                    @"synonyms": @[@"summary"],
+                    @"type": @"flag",
+                    @"description": @"Use on-device OCR and Apple Intelligence to output a .summary.txt file with a brief description of the document's text. 🚨 Generative AI - Use at your own risk! 🚨"
+                    },
+             ScanlineConfigOptionAutoname: @{
+                    @"type": @"flag",
+                    @"description": @"Use on-device OCR and Apple Intelligence to create a concise and accurate name for the output file. 🚨 Generative AI - Use at your own risk! 🚨"
+                    }
              };
 }
 
