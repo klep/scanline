@@ -73,7 +73,7 @@ public class ScanlineOutputProcessor {
         return defaultFilename
     }
 
-    private func summarize(_ text: String) async -> String {
+    private func summarize(_ text: String) async -> String? {
         if #available(macOS 26.0, *) {
             guard SystemLanguageModel.default.availability == .available else {
                 logger.log("Unable to summarize because language model is not available")
@@ -102,7 +102,7 @@ public class ScanlineOutputProcessor {
             logger.log("Unable to summarize because this version of macOS does not have Apple Intelligence")
         }
         
-        return ""
+        return nil
     }
     
     private func extractText(fromImageAt imageURL: URL) async -> String {
@@ -154,9 +154,10 @@ public class ScanlineOutputProcessor {
         let wantsAutoname = configuration.config[ScanlineConfigOptionAutoname] != nil
         
         if wantsSummary {
-            let summaryText = await summarize(fullText)
-            logger.verbose("Summary: \(summaryText)")
-            summaries[url] = summaryText
+            if let summaryText = await summarize(fullText) {
+                logger.verbose("Summary: \(summaryText)")
+                summaries[url] = summaryText
+            }
         }
         
         if wantsAutoname && configuration.config[ScanlineConfigOptionName] == nil {
