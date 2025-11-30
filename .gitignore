@@ -1,5 +1,6 @@
 # Xcode
 .DS_Store
+.claude
 scanline.xcodeproj/xcshareddata/
 build/
 derived_data/

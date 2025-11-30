@@ -7,6 +7,12 @@
 
 import Foundation
 import ImageCaptureCore
+import Darwin
+
+enum ExitCode: Int32 {
+    case success = 0
+    case failure = 1
+}
 
 class ScanlineAppController: NSObject {
     let configuration: ScanConfiguration
@@ -44,10 +50,11 @@ class ScanlineAppController: NSObject {
         logger.verbose("Waiting up to \(timerExpiration) seconds to find scanners")
     }
 
-    func exit() {
+    func exit(with code: ExitCode = .success) {
         logger.log("Done")
         DispatchQueue.main.async {
             CFRunLoopStop(CFRunLoopGetCurrent())
+            Darwin.exit(code.rawValue)
         }
     }
 
@@ -65,13 +72,13 @@ extension ScanlineAppController: ScannerBrowserDelegate {
         scannerBrowserTimer = nil
         
         guard configuration.config[ScanlineConfigOptionList] == nil else {
-            exit()
+            exit(with: .success)
             return
         }
         
         guard let scanner = scanner else {
             logger.log("No scanner was found.")
-            exit()
+            exit(with: .failure)
             return
         }
         
@@ -90,10 +97,10 @@ extension ScanlineAppController: ScannerControllerDelegate {
 
     func scannerControllerDidFail(_ scannerController: ScannerController) {
         logger.log("Failed to scan document.")
-        exit()
+        exit(with: .failure)
     }
     
     func scannerControllerDidSucceed(_ scannerController: ScannerController) {
-        exit()
+        exit(with: .success)
     }
 }
