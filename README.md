@@ -32,7 +32,7 @@ scanline -help
 
 You can download a signed, notarized installer from:
 
-https://github.com/klep/scanline/blob/master/scanline-2.2.pkg?raw=true
+https://github.com/klep/scanline/blob/master/scanline-2.3.pkg?raw=true
 
 ## Building Your Own Installer
 
