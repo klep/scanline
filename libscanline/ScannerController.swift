@@ -184,8 +184,10 @@ public class ScannerController: NSObject, ICScannerDeviceDelegate {
         scanner.transferMode = .fileBased
         scanner.downloadsDirectory = URL(fileURLWithPath: NSTemporaryDirectory())
         scanner.documentName = "Scan"
-        
-        if configuration.config[ScanlineConfigOptionTIFF] != nil {
+
+        if configuration.config[ScanlineConfigOptionPNG] != nil {
+            scanner.documentUTI = UTType.png.identifier
+        } else if configuration.config[ScanlineConfigOptionTIFF] != nil {
             scanner.documentUTI = UTType.tiff.identifier
         } else {
             scanner.documentUTI = UTType.jpeg.identifier

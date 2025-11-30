@@ -193,7 +193,7 @@ public class ScanlineOutputProcessor {
             }
         }
         
-        let wantsPDF = configuration.config[ScanlineConfigOptionJPEG] == nil && configuration.config[ScanlineConfigOptionTIFF] == nil
+        let wantsPDF = configuration.config[ScanlineConfigOptionJPEG] == nil && configuration.config[ScanlineConfigOptionTIFF] == nil && configuration.config[ScanlineConfigOptionPNG] == nil
         if !wantsPDF {
             for url in urls {
                 await handleAI(for: url, withFullText: fullText)
@@ -257,7 +257,9 @@ public class ScanlineOutputProcessor {
         }
         
         let destinationFileExtension: String
-        if configuration.config[ScanlineConfigOptionTIFF] != nil {
+        if configuration.config[ScanlineConfigOptionPNG] != nil {
+            destinationFileExtension = "png"
+        } else if configuration.config[ScanlineConfigOptionTIFF] != nil {
             destinationFileExtension = "tif"
         } else if configuration.config[ScanlineConfigOptionJPEG] != nil {
             destinationFileExtension = "jpg"
