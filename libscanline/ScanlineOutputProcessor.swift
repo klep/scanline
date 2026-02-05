@@ -164,6 +164,7 @@ public class ScanlineOutputProcessor {
             let filename = await autoName(for: fullText, tags: configuration.tagStrings)
             logger.verbose("Autonaming to \(filename)")
             configuration.config[ScanlineConfigOptionName] = filename
+            print("autoname: \(filename)")
         }
     }
 
